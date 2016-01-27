@@ -11,8 +11,13 @@ app.get('/', function(request, response) {
 	}
 })
 
-app.param('gameid', function(request, response, gameid) {
+app.param('gameid', function(request, response, next, gameid) {
 	response.send(gameid);
+	next();
+});
+
+app.get('/:gameid', function(request, response) {
+	response.send("welcome to game room?");
 });
 
 app.post('/newgame', function(request, response) {
