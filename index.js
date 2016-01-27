@@ -7,8 +7,7 @@ app.get('/', function(request, response) {
 	if(request.url.query == ""){
  		response.sendFile( __dirname + "/" + "index.html");
 	} else {
-		response.send("Welcome to game room\n");
-		response.send("query: " + request.url.query);
+		response.send("Welcome to game room\nquery: " + request.url.query);
 		//Handle game room
 	}
 })
