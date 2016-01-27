@@ -12,7 +12,8 @@ app.get('/', function(request, response) {
 })
 
 app.param('gameid', function(request, response, next, gameid) {
-	response.send(gameid);
+	response.send("welcome to room: " + gameid);
+	// Handle game room stuff
 	next();
 });
 
