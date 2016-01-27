@@ -1,6 +1,7 @@
 var express = require('express')
 var app = express()
 
+var gamelist = [];
 app.set('port', (process.env.PORT || 5000))
 
 app.get('/', function(request, response) {
@@ -26,7 +27,15 @@ app.get('/:gameid', function(request, response) {
 
 app.post('/newgame', function(request, response) {
 	//TODO: Check all existing games, create a new one and send the ID back as a redirect (Instead of /GameNumberUno)
-	response.redirect('/GAMeNUMeroUno');
+    var x;
+   
+    do{
+	x = Math.random;
+    }
+    while(gamelist.indexOf(x) != -1);
+    gamelist.push(x);
+	
+    response.redirect('/' + x);
 });
 
 app.listen(app.get('port'), function() {
