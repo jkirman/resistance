@@ -24,7 +24,7 @@ app.get('/:gameid', function(request, response) {
 app.post('/newgame', function(request, response) {
 	// Should check all existing games and determine a new game id to send back
 	// Should make a new game object with that id
-	response.redirect('/GAMeID');
+	response.redirect('/GAMeNUMeroUno');
 });
 
 app.listen(app.get('port'), function() {
