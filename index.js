@@ -4,7 +4,7 @@ var app = express()
 app.set('port', (process.env.PORT || 5000))
 
 app.get('/', function(request, response) {
-	if(request.url.query == ""){
+	if(request.url.query == null || request.url.query == ""){
  		response.sendFile( __dirname + "/" + "index.html");
 	} else {
 		response.send("Welcome to game room\nquery: " + request.url.query);
