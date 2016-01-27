@@ -35,10 +35,21 @@ app.get('/:gameid', function(request, response) {
 });
 
 app.post('/newgame', function(request, response){
+
 	//TODO: Check all existing games, create a new one and send the ID back as a redirect (Instead of /GameNumberUno)
 	// Should check all existing games and determine a new game id to send back
 	// Should make a new game object with that id
-	response.redirect('/GAMeNUMeroUno');
+	
+    var x;
+   
+    do{
+	x = Math.floor(Math.random * 10000);
+    }
+    while(gamelist.indexOf(x) != -1);
+    gamelist.push(x);
+	
+    response.redirect('/' + x);
+
 });
 
 app.listen(app.get('port'), function() {
