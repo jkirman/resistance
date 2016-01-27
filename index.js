@@ -43,7 +43,7 @@ app.post('/newgame', function(request, response){
     var x;
    
     do{
-	x = Math.floor(Math.random * 10000);
+	x = Math.floor(Math.random() * 10000);
     }
     while(gamelist.indexOf(x) != -1);
     gamelist.push(x);
