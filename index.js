@@ -17,11 +17,14 @@ app.get('/', function(request, response) {
 
 app.param('gameid', function(request, response, next, gameid) {
 
-	//TODO: Check if the gameID is valid, if not, redirect back to empty request
+    //Check if the gameID is valid, if not, redirect back to empty request
+    if(gamelist.indexOf(gameid) == -1){
+	response.redirect('/');
+    } else {    
 	response.send("welcome to room: " + gameid);
+    }
 	//TODO: Make a new Player and add them to the game, also send them all the info for the game they're in
 
-	response.send("welcome to room: " + gameid);
 	// Handle game room stuff
 
 	next();
@@ -36,8 +39,9 @@ app.get('/:gameid', function(request, response) {
 
 app.post('/newgame', function(request, response){
 
-	//TODO: Check all existing games, create a new one and send the ID back as a redirect (Instead of /GameNumberUno)
-	// Should check all existing games and determine a new game id to send back
+	//Check all existing games, create a new one and send the ID back as a redirect (Instead of /GameNumberUno)
+	
+    // Should check all existing games and determine a new game id to send back
 	// Should make a new game object with that id
 	
     var x;
