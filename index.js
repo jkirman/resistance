@@ -7,10 +7,13 @@ app.get('/', function(request, response) {
 	if(request.url.query == null || request.url.query == ""){
  		response.sendFile( __dirname + "/" + "index.html");
 	} else {
-		response.send("Welcome to game room\nquery: " + request.url.query);
-		//Handle game room
+		response.send("error?");
 	}
 })
+
+app.param('gameid', function(request, response, gameid) {
+	response.send(gameid);
+});
 
 app.post('/newgame', function(request, response) {
 	// Should check all existing games and determine a new game id to send back
