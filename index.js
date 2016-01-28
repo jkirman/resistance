@@ -18,16 +18,9 @@ app.get('/', function(request, response) {
 app.param('gameid', function(request, response, next, gameid) {
     
     console.log("In param, the game id is " + gameid + "\nand the index it is at is " + gamelist.indexOf(gameid) + "and the contents of the list are now: " + gamelist.toString());
-    var found = false;
-    for(i in gamelist){
-	if (i == gameid){
-	 found = true;  
-	}
-    }
-    console.log("Was the gameid found: " + found);
-    
+        
     //Check if the gameID is valid, if not, redirect back to empty request
-    if(!found){
+    if(gamelist.indexOf(parseInt(gameid)) == -1){
 	response.redirect('/'); //THIS IS ALWAYS HAPPENING
     } else {    
 	response.send("welcome to room: " + gameid);
