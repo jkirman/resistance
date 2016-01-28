@@ -17,7 +17,7 @@ app.get('/', function(request, response) {
 
 app.param('gameid', function(request, response, next, gameid) {
     
-    console.log("the game id is " + gameid + "\nand the it is at " + gamelist.indexOf(gameid));
+    console.log("In param, the game id is " + gameid + "\nand the index it is at is " + gamelist.indexOf(gameid) + "and the contents of the list are now: " + gamelist.toString());
 
     //Check if the gameID is valid, if not, redirect back to empty request
     if(gamelist.indexOf(gameid) == -1){
@@ -53,7 +53,7 @@ app.post('/newgame', function(request, response){
     }
     while(gamelist.indexOf(x) != -1);
     gamelist.push(x);
-	
+    console.log("Game lise is now: " + gamelist.toString());
     response.redirect('/' + x);
 
 });
