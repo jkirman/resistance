@@ -53,7 +53,8 @@ app.post('/newgame', function(request, response){
     }
     while(gamelist.indexOf(x) != -1);
     gamelist.push(x);
-    console.log("Game lise is now: " + gamelist.toString());
+    console.log("Game list is now: " + gamelist.toString());
+    console.log("Index of gameid is now: " + gamelist.indexOf(x));
     response.redirect('/' + x);
 
 });
