@@ -17,7 +17,7 @@ app.get('/', function(request, response) {
 
 app.param('gameid', function(request, response, next, gameid) {
     
-    alert("the game id is " + gameid + "\nand the it is at " + gamelist.indexOf(gameid));
+    console.log("the game id is " + gameid + "\nand the it is at " + gamelist.indexOf(gameid));
 
     //Check if the gameID is valid, if not, redirect back to empty request
     if(gamelist.indexOf(gameid) == -1){
