@@ -1,15 +1,11 @@
 var express = require('express')
 var app = express();
 var path = require('path')
-var http = require('http')
-var server = http.createServer(app);
 
 var gamelist = [];
 app.set('port', (process.env.PORT || 5000))
 
-server.configure(function(){
-    app.use(express.static(path.join(__dirname, 'public')));
-});
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', function(request, response) {
 	if(request.url.query == null || request.url.query == ""){
