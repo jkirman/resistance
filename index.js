@@ -1,5 +1,6 @@
 var express = require('express')
 var app = express()
+var path = require('path')
 
 var gamelist = [];
 app.set('port', (process.env.PORT || 5000))
