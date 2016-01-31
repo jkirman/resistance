@@ -9,7 +9,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', function(request, response) {
 	
-    console.log("Request: " + request);
+    console.log("Request: " + request.Url);
     console.log("Response: " + response);
     
     if(request.url.query == null || request.url.query == ""){
