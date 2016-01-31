@@ -7,7 +7,7 @@ app.set('port', (process.env.PORT || 5000))
 
 app.configure(function(){
     app.use(express.static(path.join(__dirname, 'public')));
-}
+})
 
 app.get('/', function(request, response) {
 	if(request.url.query == null || request.url.query == ""){
