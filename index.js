@@ -1,5 +1,5 @@
 var express = require('express')
-var app = express()
+var app = module.exports = express.createServer();
 var path = require('path')
 
 var gamelist = [];
