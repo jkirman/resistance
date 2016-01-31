@@ -1,11 +1,13 @@
 var express = require('express')
-var app = module.exports = express.createServer();
+var app = express();
 var path = require('path')
+var http = require('http')
+var server = http.createServer(app);
 
 var gamelist = [];
 app.set('port', (process.env.PORT || 5000))
 
-app.configure(function(){
+server.configure(function(){
     app.use(express.static(path.join(__dirname, 'public')));
 });
 
