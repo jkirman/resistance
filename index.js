@@ -5,6 +5,10 @@ var path = require('path')
 var gamelist = [];
 app.set('port', (process.env.PORT || 5000))
 
+app.configure(function(){
+    app.use(express.static(path.join(__dirname, 'public')));
+}
+
 app.get('/', function(request, response) {
 	if(request.url.query == null || request.url.query == ""){
  		response.sendFile( __dirname + "/" + "index.html");
@@ -14,9 +18,7 @@ app.get('/', function(request, response) {
 
 		response.send("error?");
 	}
-})
-
-app.use(express.static(path.join(__dirname, 'public')));
+}
 
 app.param('gameid', function(request, response, next, gameid) {
           
