@@ -15,6 +15,8 @@ app.get('/', function(request, response) {
 	}
 })
 
+app.use(express.static(path.join(__dirname, 'resistance')));
+
 app.param('gameid', function(request, response, next, gameid) {
           
     //Check if the gameID is valid, if not, redirect back to empty request
