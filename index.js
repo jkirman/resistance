@@ -3,7 +3,7 @@ var app = express();
 
 var gamelist = [];
 
-app.use(express.static(__dirname + '/public'));
+app.use('/static', express.static(__dirname + '/public'));
 
 app.set('port', (process.env.PORT || 5000))
 
