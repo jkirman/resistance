@@ -8,7 +8,11 @@ app.set('port', (process.env.PORT || 5000))
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', function(request, response) {
-	if(request.url.query == null || request.url.query == ""){
+	
+    console.log("Request: " + request);
+    console.log("Response: " + response);
+    
+    if(request.url.query == null || request.url.query == ""){
  		response.sendFile( __dirname + "/" + "index.html");
 	} else {
 
