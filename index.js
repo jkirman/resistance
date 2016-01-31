@@ -16,8 +16,7 @@ app.get('/', function(request, response) {
 	}
 })
 
-//app.use(express.static(path.join(__dirname, "stylesheets")));
-app.use(express.static('stylesheets'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.param('gameid', function(request, response, next, gameid) {
           
