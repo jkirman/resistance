@@ -1,0 +1,242 @@
+2016-01-27T23:52:07.592340+00:00 heroku[router]: at=info method=POST
+path="/newgame" host=doorindustries-resistance-s.herokuapp.com
+request_id=70b003e9-a4b6-4084-bc46-453714d2b25d fwd="142.157.112.41"
+dyno=web.1 connect=1ms service=1ms status=302 bytes=246
+2016-01-27T23:52:07.632232+00:00 heroku[router]: at=info method=GET
+path="/7179" host=doorindustries-resistance-s.herokuapp.com
+request_id=b6a914cb-9033-4091-ab15-c36d1817078c fwd="142.157.112.41"
+dyno=web.1 connect=0ms service=1ms status=302 bytes=234
+2016-01-27T23:52:07.651658+00:00 app[web.1]: Error: Can't set headers
+after they are sent.  2016-01-27T23:52:07.651663+00:00 app[web.1]: at
+ServerResponse.OutgoingMessage.setHeader (_http_outgoing.js:335:11)
+2016-01-27T23:52:07.651664+00:00 app[web.1]: at ServerResponse.header
+(/app/node_modules/express/lib/response.js:718:10)
+2016-01-27T23:52:07.651665+00:00 app[web.1]: at ServerResponse.send
+(/app/node_modules/express/lib/response.js:163:12)
+2016-01-27T23:52:07.651665+00:00 app[web.1]: at /app/index.js:37:11
+2016-01-27T23:52:07.651666+00:00 app[web.1]: at Layer.handle [as
+handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+2016-01-27T23:52:07.651694+00:00 app[web.1]: at Route.dispatch
+(/app/node_modules/express/lib/router/route.js:112:3)
+2016-01-27T23:52:07.651667+00:00 app[web.1]: at next
+(/app/node_modules/express/lib/router/route.js:131:13)
+2016-01-27T23:52:07.651695+00:00 app[web.1]: at Layer.handle [as
+handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+2016-01-27T23:52:07.651696+00:00 app[web.1]: at
+/app/node_modules/express/lib/router/index.js:277:22
+2016-01-27T23:52:07.651697+00:00 app[web.1]: at param
+(/app/node_modules/express/lib/router/index.js:349:14)
+2016-01-27T23:52:07.677734+00:00 heroku[router]: at=info method=GET
+path="/" host=doorindustries-resistance-s.herokuapp.com
+request_id=1b501556-5b6f-47c7-8419-ea1507f75fb7 fwd="142.157.112.41"
+dyno=web.1 connect=0ms service=4ms status=304 bytes=237
+2016-01-27T23:52:07.751190+00:00 heroku[router]: at=info method=GET
+path="/stylesheets/index.css"
+host=doorindustries-resistance-s.herokuapp.com
+request_id=0bf84587-5faa-47fa-b244-77e1376b8aa9 fwd="142.157.112.41"
+dyno=web.1 connect=0ms service=1ms status=404 bytes=232
+2016-01-27T23:52:11.105085+00:00 heroku[router]: at=info method=POST
+path="/newgame" host=doorindustries-resistance-s.herokuapp.com
+request_id=6ab99575-76bb-41e9-a335-ab19da617ad8 fwd="142.157.112.41"
+dyno=web.1 connect=0ms service=1ms status=302 bytes=246
+2016-01-27T23:52:11.175170+00:00 heroku[router]: at=info method=GET
+path="/5010" host=doorindustries-resistance-s.herokuapp.com
+request_id=09eba104-2177-47ac-9f68-c8b2c6c8b3b8 fwd="142.157.112.41"
+dyno=web.1 connect=0ms service=1ms status=302 bytes=234
+2016-01-27T23:52:11.226270+00:00 heroku[router]: at=info method=GET
+path="/" host=doorindustries-resistance-s.herokuapp.com
+request_id=163b9a14-a199-40af-88bd-15c8f037759a fwd="142.157.112.41"
+dyno=web.1 connect=1ms service=1ms status=304 bytes=237
+2016-01-27T23:52:11.194664+00:00 app[web.1]: Error: Can't set headers
+after they are sent.  2016-01-27T23:52:11.194677+00:00 app[web.1]: at
+ServerResponse.send (/app/node_modules/express/lib/response.js:163:12)
+2016-01-27T23:52:11.194681+00:00 app[web.1]: at Layer.handle [as
+handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+2016-01-27T23:52:11.194669+00:00 app[web.1]: at
+ServerResponse.OutgoingMessage.setHeader (_http_outgoing.js:335:11)
+2016-01-27T23:52:11.194670+00:00 app[web.1]: at ServerResponse.header
+(/app/node_modules/express/lib/response.js:718:10)
+2016-01-27T23:52:11.194680+00:00 app[web.1]: at next
+(/app/node_modules/express/lib/router/route.js:131:13)
+2016-01-27T23:52:11.194678+00:00 app[web.1]: at /app/index.js:37:11
+2016-01-27T23:52:11.194679+00:00 app[web.1]: at Layer.handle [as
+handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+2016-01-27T23:52:11.194680+00:00 app[web.1]: at Route.dispatch
+(/app/node_modules/express/lib/router/route.js:112:3)
+2016-01-27T23:52:11.194682+00:00 app[web.1]: at
+/app/node_modules/express/lib/router/index.js:277:22
+2016-01-27T23:52:11.194683+00:00 app[web.1]: at param
+(/app/node_modules/express/lib/router/index.js:349:14)
+2016-01-27T23:52:11.330018+00:00 heroku[router]: at=info method=GET
+path="/stylesheets/index.css"
+host=doorindustries-resistance-s.herokuapp.com
+request_id=55482744-5136-45a4-8b97-d38cc0b04a96 fwd="142.157.112.41"
+dyno=web.1 connect=0ms service=1ms status=404 bytes=232
+2016-01-28T00:27:28.040197+00:00 heroku[web.1]: Idling
+2016-01-28T00:27:28.040935+00:00 heroku[web.1]: State changed from up
+to down 2016-01-28T00:27:34.671954+00:00 heroku[web.1]: Stopping all
+processes with SIGTERM 2016-01-28T00:27:37.953565+00:00 heroku[web.1]:
+Process exited with status 143 2016-01-28T02:50:39.992515+00:00
+heroku[web.1]: Unidling 2016-01-28T02:50:39.992883+00:00
+heroku[web.1]: State changed from down to starting
+2016-01-28T02:50:40.833594+00:00 heroku[web.1]: Starting process with
+command `qqnode index.js` 2016-01-28T02:50:41.993889+00:00 app[web.1]:
+Node app is running at localhost:41802
+2016-01-28T02:50:43.048516+00:00 heroku[router]: at=info method=GET
+path="/" host=doorindustries-resistance-s.herokuapp.com
+request_id=770c2e20-c58e-462d-b5ee-f80898edb47f fwd="23.233.111.67"
+dyno=web.1 connect=0ms service=16ms status=304 bytes=237
+2016-01-28T02:50:42.406962+00:00 heroku[web.1]: State changed from
+starting to up 2016-01-28T02:50:44.228821+00:00 heroku[router]:
+at=info method=GET path="/stylesheets/index.css"
+host=doorindustries-resistance-s.herokuapp.com
+request_id=e3f271ec-ab0a-435a-a419-d67e4980b45a fwd="23.233.111.67"
+dyno=web.1 connect=0ms service=5ms status=404 bytes=232
+2016-01-28T02:50:48.727344+00:00 heroku[router]: at=info method=POST
+path="/newgame" host=doorindustries-resistance-s.herokuapp.com
+request_id=762a6626-5db3-4b5c-863b-ce8a5fe53e51 fwd="23.233.111.67"
+dyno=web.1 connect=0ms service=21ms status=302 bytes=246
+2016-01-28T02:50:48.818937+00:00 app[web.1]: at
+ServerResponse.OutgoingMessage.setHeader (_http_outgoing.js:335:11)
+2016-01-28T02:50:48.818940+00:00 app[web.1]: at Layer.handle [as
+handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+2016-01-28T02:50:48.818939+00:00 app[web.1]: at /app/index.js:37:11
+2016-01-28T02:50:48.818935+00:00 app[web.1]: Error: Can't set headers
+after they are sent.  2016-01-28T02:50:48.818939+00:00 app[web.1]: at
+ServerResponse.send (/app/node_modules/express/lib/response.js:163:12)
+2016-01-28T02:50:48.818941+00:00 app[web.1]: at next
+(/app/node_modules/express/lib/router/route.js:131:13)
+2016-01-28T02:50:48.818942+00:00 app[web.1]: at Layer.handle [as
+handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+2016-01-28T02:50:48.818942+00:00 app[web.1]: at
+/app/node_modules/express/lib/router/index.js:277:22
+2016-01-28T02:50:48.818938+00:00 app[web.1]: at ServerResponse.header
+(/app/node_modules/express/lib/response.js:718:10)
+2016-01-28T02:50:48.818941+00:00 app[web.1]: at Route.dispatch
+(/app/node_modules/express/lib/router/route.js:112:3)
+2016-01-28T02:50:48.818943+00:00 app[web.1]: at param
+(/app/node_modules/express/lib/router/index.js:349:14)
+2016-01-28T02:50:48.819055+00:00 heroku[router]: at=info method=GET
+path="/9357" host=doorindustries-resistance-s.herokuapp.com
+request_id=28ea6b49-1535-4dce-bf70-18d2c275039b fwd="23.233.111.67"
+dyno=web.1 connect=0ms service=2ms status=302 bytes=234
+2016-01-28T02:50:48.976371+00:00 heroku[router]: at=info method=GET
+path="/" host=doorindustries-resistance-s.herokuapp.com
+request_id=5bd4ed84-bf78-4295-b720-1d68c0a96f16 fwd="23.233.111.67"
+dyno=web.1 connect=3ms service=2ms status=304 bytes=237
+2016-01-28T02:50:49.149006+00:00 heroku[router]: at=info method=GET
+path="/stylesheets/index.css"
+host=doorindustries-resistance-s.herokuapp.com
+request_id=f47a1985-8cc9-4917-a7a9-25588050f394 fwd="23.233.111.67"
+dyno=web.1 connect=0ms service=1ms status=404 bytes=232
+2016-01-28T02:52:04.990530+00:00 heroku[router]: at=info method=POST
+path="/newgame" host=doorindustries-resistance-s.herokuapp.com
+request_id=28c5beac-16bf-4604-9f77-6e280d6c25b2 fwd="23.233.111.67"
+dyno=web.1 connect=3ms service=3ms status=302 bytes=246
+2016-01-28T02:52:05.079581+00:00 heroku[router]: at=info method=GET
+path="/2485" host=doorindustries-resistance-s.herokuapp.com
+request_id=6f96ee06-3b58-4694-bd60-7c2c69e83b66 fwd="23.233.111.67"
+dyno=web.1 connect=4ms service=4ms status=302 bytes=234
+2016-01-28T02:52:05.079563+00:00 app[web.1]: Error: Can't set headers
+after they are sent.  2016-01-28T02:52:05.079567+00:00 app[web.1]: at
+ServerResponse.OutgoingMessage.setHeader (_http_outgoing.js:335:11)
+2016-01-28T02:52:05.079567+00:00 app[web.1]: at ServerResponse.header
+(/app/node_modules/express/lib/response.js:718:10)
+2016-01-28T02:52:05.079568+00:00 app[web.1]: at ServerResponse.send
+(/app/node_modules/express/lib/response.js:163:12)
+2016-01-28T02:52:05.079569+00:00 app[web.1]: at /app/index.js:37:11
+2016-01-28T02:52:05.079571+00:00 app[web.1]: at next
+(/app/node_modules/express/lib/router/route.js:131:13)
+2016-01-28T02:52:05.079570+00:00 app[web.1]: at Layer.handle [as
+handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+2016-01-28T02:52:05.079571+00:00 app[web.1]: at Route.dispatch
+(/app/node_modules/express/lib/router/route.js:112:3)
+2016-01-28T02:52:05.079572+00:00 app[web.1]: at Layer.handle [as
+handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+2016-01-28T02:52:05.079572+00:00 app[web.1]: at
+/app/node_modules/express/lib/router/index.js:277:22
+2016-01-28T02:52:05.079573+00:00 app[web.1]: at param
+(/app/node_modules/express/lib/router/index.js:349:14)
+2016-01-28T02:52:05.191142+00:00 heroku[router]: at=info method=GET
+path="/" host=doorindustries-resistance-s.herokuapp.com
+request_id=6680e6ed-bcec-4db5-bdb3-783ae8db6e9d fwd="23.233.111.67"
+dyno=web.1 connect=2ms service=2ms status=304 bytes=237
+2016-01-28T02:52:05.355051+00:00 heroku[router]: at=info method=GET
+path="/stylesheets/index.css"
+host=doorindustries-resistance-s.herokuapp.com
+request_id=1a7c2b74-304a-4fae-98ff-7770c4d7b2ef fwd="23.233.111.67"
+dyno=web.1 connect=3ms service=2ms status=404 bytes=232
+2016-01-28T02:52:06.314341+00:00 heroku[router]: at=info method=POST
+path="/newgame" host=doorindustries-resistance-s.herokuapp.com
+request_id=07b3527a-63bf-4e46-bfe6-352e8a45c4f7 fwd="23.233.111.67"
+dyno=web.1 connect=0ms service=2ms status=302 bytes=246
+2016-01-28T02:52:06.424867+00:00 heroku[router]: at=info method=GET
+path="/6214" host=doorindustries-resistance-s.herokuapp.com
+request_id=8f2de6ba-5e2c-42dc-a166-ed145f16a733 fwd="23.233.111.67"
+dyno=web.1 connect=0ms service=2ms status=302 bytes=234
+2016-01-28T02:52:06.535647+00:00 heroku[router]: at=info method=GET
+path="/" host=doorindustries-resistance-s.herokuapp.com
+request_id=a4b661f3-8330-4fda-96cb-db279517afba fwd="23.233.111.67"
+dyno=web.1 connect=0ms service=1ms status=304 bytes=237
+2016-01-28T02:52:06.427316+00:00 app[web.1]: Error: Can't set headers
+after they are sent.  2016-01-28T02:52:06.427320+00:00 app[web.1]: at
+ServerResponse.OutgoingMessage.setHeader (_http_outgoing.js:335:11)
+2016-01-28T02:52:06.427322+00:00 app[web.1]: at ServerResponse.header
+(/app/node_modules/express/lib/response.js:718:10)
+2016-01-28T02:52:06.427322+00:00 app[web.1]: at ServerResponse.send
+(/app/node_modules/express/lib/response.js:163:12)
+2016-01-28T02:52:06.427324+00:00 app[web.1]: at /app/index.js:37:11
+2016-01-28T02:52:06.427324+00:00 app[web.1]: at Layer.handle [as
+handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+2016-01-28T02:52:06.427325+00:00 app[web.1]: at next
+(/app/node_modules/express/lib/router/route.js:131:13)
+2016-01-28T02:52:06.427326+00:00 app[web.1]: at Route.dispatch
+(/app/node_modules/express/lib/router/route.js:112:3)
+2016-01-28T02:52:06.427327+00:00 app[web.1]: at Layer.handle [as
+handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+2016-01-28T02:52:06.427327+00:00 app[web.1]: at
+/app/node_modules/express/lib/router/index.js:277:22
+2016-01-28T02:52:06.427328+00:00 app[web.1]: at param
+(/app/node_modules/express/lib/router/index.js:349:14)
+2016-01-28T02:52:06.694557+00:00 heroku[router]: at=info method=GET
+path="/stylesheets/index.css"
+host=doorindustries-resistance-s.herokuapp.com
+request_id=1f805631-bfc4-4d47-9688-dbfb71afa9ac fwd="23.233.111.67"
+dyno=web.1 connect=0ms service=1ms status=404 bytes=232
+2016-01-28T02:52:07.611659+00:00 heroku[router]: at=info method=POST
+path="/newgame" host=doorindustries-resistance-s.herokuapp.com
+request_id=7be57059-9f29-4163-9f74-aae7427216d1 fwd="23.233.111.67"
+dyno=web.1 connect=0ms service=2ms status=302 bytes=246
+2016-01-28T02:52:07.714356+00:00 heroku[router]: at=info method=GET
+path="/1661" host=doorindustries-resistance-s.herokuapp.com
+request_id=649da380-15c0-4956-ba6b-3b69bfd6b579 fwd="23.233.111.67"
+dyno=web.1 connect=0ms service=2ms status=302 bytes=234
+2016-01-28T02:52:07.716606+00:00 app[web.1]: Error: Can't set headers
+after they are sent.  2016-01-28T02:52:07.716609+00:00 app[web.1]: at
+ServerResponse.OutgoingMessage.setHeader (_http_outgoing.js:335:11)
+2016-01-28T02:52:07.716610+00:00 app[web.1]: at ServerResponse.header
+(/app/node_modules/express/lib/response.js:718:10)
+2016-01-28T02:52:07.716611+00:00 app[web.1]: at /app/index.js:37:11
+2016-01-28T02:52:07.716610+00:00 app[web.1]: at ServerResponse.send
+(/app/node_modules/express/lib/response.js:163:12)
+2016-01-28T02:52:07.716612+00:00 app[web.1]: at Layer.handle [as
+handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+2016-01-28T02:52:07.716613+00:00 app[web.1]: at Route.dispatch
+(/app/node_modules/express/lib/router/route.js:112:3)
+2016-01-28T02:52:07.716613+00:00 app[web.1]: at next
+(/app/node_modules/express/lib/router/route.js:131:13)
+2016-01-28T02:52:07.716614+00:00 app[web.1]: at Layer.handle [as
+handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+2016-01-28T02:52:07.716615+00:00 app[web.1]: at
+/app/node_modules/express/lib/router/index.js:277:22
+2016-01-28T02:52:07.716615+00:00 app[web.1]: at param
+(/app/node_modules/express/lib/router/index.js:349:14)
+2016-01-28T02:52:07.813209+00:00 heroku[router]: at=info method=GET
+path="/" host=doorindustries-resistance-s.herokuapp.com
+request_id=a80b93de-b65f-4848-8267-1d2927fbb7cc fwd="23.233.111.67"
+dyno=web.1 connect=1ms service=1ms status=304 bytes=237
+2016-01-28T02:52:08.049560+00:00 heroku[router]: at=info method=GET
+path="/stylesheets/index.css"
+host=doorindustries-resistance-s.herokuapp.com
+request_id=08a90c6f-611e-45d2-904e-174a9319c639 fwd="23.233.111.67"
+dyno=web.1 connect=0ms service=3ms status=404 bytes=232
