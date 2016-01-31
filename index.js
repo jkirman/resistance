@@ -7,7 +7,7 @@ app.set('port', (process.env.PORT || 5000))
 
 app.configure(function(){
     app.use(express.static(path.join(__dirname, 'public')));
-})
+});
 
 app.get('/', function(request, response) {
 	if(request.url.query == null || request.url.query == ""){
@@ -18,7 +18,7 @@ app.get('/', function(request, response) {
 
 		response.send("error?");
 	}
-}
+});
 
 app.param('gameid', function(request, response, next, gameid) {
           
@@ -62,4 +62,4 @@ app.post('/newgame', function(request, response){
 
 app.listen(app.get('port'), function() {
   console.log("Node app is running at localhost:" + app.get('port'))
-})
+});
