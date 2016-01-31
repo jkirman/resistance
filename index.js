@@ -9,9 +9,6 @@ app.set('port', (process.env.PORT || 5000))
 
 app.get('/', function(request, response) {
 	
-    console.log("Request: " + request.Url);
-    console.log("Response: " + response);
-    
     if(request.url.query == null || request.url.query == ""){
  		response.sendFile( __dirname + "/" + "index.html");
 	} else {
@@ -41,7 +38,7 @@ app.get('/:gameid', function(request, response) {
 
 	//TODO: Figure out if this function is necessary or what it does
 
-	response.send("welcome to game room?");
+	//response.send("welcome to game room?");
 });
 
 app.post('/newgame', function(request, response){
