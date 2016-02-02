@@ -4,14 +4,14 @@ var app = express();
 
 var gamelist = [];
 
+console.log(__dirname + '/public');
 app.use('/static', express.static(__dirname + '/public'));
-
 app.set('port', (process.env.PORT || 5000))
 
 app.get('/', function(request, response) {
-	
+    
     if(request.url.query == null || request.url.query == ""){
- 		response.sendFile( __dirname + "/" + "index.html");
+ 		response.sendFile( __dirname + "/public/" + "index.html");
 	} else {
 
 		//TODO: Handle this error
@@ -24,7 +24,7 @@ app.param('gameid', function(request, response, next, gameid) {
           
     //Check if the gameID is valid, if not, redirect back to empty request
     var room = roommaster.findRoom(parseInt(gameid));
-    console.log(room);
+
     if(room === null){
 	    response.redirect('/');
     } else {    
