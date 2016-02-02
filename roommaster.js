@@ -43,7 +43,7 @@ var closeRoom = function(room) {
 	} else {
 		console.log("Attempted to close non-exixstant room: \n" + room);
 	}
-}
+};
 
 /***********************************************************/
 
@@ -89,7 +89,7 @@ exports.findRoom = function(rID) {
 function Player(pName) {
 
 	// Object variables
-	var _genericName = pName
+	var _genericName = pName;
 	var _name = pName;
 
 	this.getName = function() { return _name; };
@@ -116,21 +116,6 @@ function Room(ID) {
 		} else {
 			_players.push(new Player(_genericPlayerNames.pop()));
 		}
-	}
-	
-	// Adds an existing player to the room giving them a generic name
-	// (May no longer be useful)
-	this.addPlayer = function(player) {
-		if (findPlayerByName(_players,player.getName()) !== null) { 
-			console.log("A player with that name is already in this room.");
-			return;
-		} else if (_players.length >= _type.maxPlayers) {
-			console.log("The room is full!");
-			return;
-		} else { 
-			_players.push(player);
-		}
-		
 	};
 	
 	// Given a player object and a name string, this function changes
