@@ -26,9 +26,28 @@ var RoomType = {
 
 };
 
-/***** Main room master variables and functions that are exported **********/
+/***** Main room master variables and functions **********/
 
 var AllRooms = [];
+
+var genericNames = [
+			"Blue Whale", "Clown Fish", "Electric Eel",
+			"Hammerhead Shark", "King Mackerel", "Manatee", 
+			"Platypus",	"Queen Conch", "Sea Otter", "Velvet Crab"
+		];
+
+var closeRoom = function(room) {
+	var index = AllRooms.indexOf(room);
+	if (index > -1) {
+		AllRooms.splice(index, 1);
+	} else {
+		console.log("Attempted to close non-exixstant room: \n" + room);
+	}
+};
+
+/***********************************************************/
+
+/******************* Exported functions ********************/
 
 exports.addRoom = function(room) { AllRooms.push(room); };
 
@@ -50,6 +69,7 @@ exports.createRoom = function() {
 
 };
 
+// Creates a new room and 
 exports.startNewRoom = function(playerName) {
 	var newRoom = exports.createRoom();
 	var newPlayer = new Player(playerName);
@@ -69,9 +89,12 @@ exports.findRoom = function(rID) {
 function Player(pName) {
 
 	// Object variables
+	var _genericName = pName;
 	var _name = pName;
 
 	this.getName = function() { return _name; };
+	this.getGenericName = function() { return _genericName; };
+	this.changeName = function(name) { _name = name; };
 
 }
 
@@ -83,24 +106,54 @@ function Room(ID) {
 	var _players = [];
 	var _type = RoomType.NONE;
 	var _roomURL = ""; // Generate URL here
-
-	this.addPlayer = function(player) {
-		if (findPlayerByName(_players,player.getName()) !== null) { 
-			console.log("A player with that name is already in this room.");
-			return;
-		} else if (_players.length >= _type.maxPlayers) {
+	var _genericPlayerNames = genericNames.slice();
+	
+	// Add a new player with a generic name
+	this.addNewPlayer = function() {
+		if (_players.length >- _type.maxPlayers) {
 			console.log("The room is full!");
-			return;
-		} else { 
-			_players.push(player); 
+			return;			
+		} else {
+			_players.push(new Player(_genericPlayerNames.pop()));
 		}
-		
+	};
+	
+	// Given a player object and a name string, this function changes
+	// the name of the player if it is not used by another player in the 
+	// current room
+	this.changePlayerName = function(player, newName) {
+		if (genericNames.indexOf(newName) > -1) {
+			console.log(newName + " is a restricted name!");
+		} else if (findPlayerByName(_players, newName) === null) {
+			player.changeName(newName);
+		} else {
+			console.log("A player with the name " + newName + " already exists in this room!");
+		}
+	};
+	
+	// Given a Player object, this function removes them from the current room
+	this.removePlayer = function(player) {
+		var index = _players.indexOf(player);
+		if (index > -1) {
+			_genericPlayerNames.push(player.getGenericName());
+			_players.splice(index, 1);
+		} else {
+			console.log("Attempted to remove non-existant player: \n" + player);
+		}
 	};
 
 	this.changeRoomType = function(rType) {
 		_type = rType;
 	};
 
+	// This function removes the current Room object from the list of rooms
+	// if there are no players in it
+	this.validateRoom = function() {
+		if (_players.length === 0) {
+			closeRoom(this);
+		}
+	};
+	
 	this.getID = function() { return _ID; };
 
 }
