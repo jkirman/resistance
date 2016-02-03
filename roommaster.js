@@ -54,11 +54,17 @@ exports.startNewRoom = function(playerName) {
 	var newRoom = exports.createRoom();
 	var newPlayer = new Player(playerName);
 	newRoom.addPlayer(newPlayer);
+	return newRoom;
 };
 
 exports.findRoom = function(rID) {
     return findRoomById(AllRooms, rID);
 };
+
+exports.createPlayer = function(playerName) {
+	var newPlayer = new Player(playerName)
+	return newPlayer;
+}
 
 /**************************************************************************/
 
@@ -102,6 +108,13 @@ function Room(ID) {
 	};
 
 	this.getID = function() { return _ID; };
+	
+	// TODO: Figure out a clean way to send room info as JSON and parse it on the client
+	this.toString = function() {
+		var plList = []
+		_players.forEach(function(player) {plList = plList.concat(player.getName())})
+		return {ID: _ID, players: plList, type: _type, roomURL: _roomURL}
+	}
 
 }
 

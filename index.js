@@ -1,7 +1,7 @@
 var roommaster = require("./roommaster.js");
+var http = require('http');
 var express = require('express')
 var app = express();
-
 var gamelist = [];
 
 console.log(__dirname + '/public');
@@ -28,10 +28,8 @@ app.param('gameid', function(request, response, next, gameid) {
     if(room === null){
 	    response.redirect('/');
     } else {    
-	    response.send("Share this link with other players: https://doorindustries-resistance-s.herokuapp.com/" + room.getID());
+	    response.sendFile( __dirname + "/public/" + "room.html");
     }
-	//TODO: Make a new Player and add them to the game, also send them all the info for the game they're in
-
 	// Handle game room stuff
 
 	next();
@@ -66,6 +64,36 @@ app.post('/newgame', function(request, response){
 
 });
 
-app.listen(app.get('port'), function() {
-  console.log("Node app is running at localhost:" + app.get('port'))
+// The httpserver listens to the nested express app server on the same port, so that io can listen to the http server
+var server = http.createServer(app).listen(app.get('port'), function(){
+  console.log('Express server listening on port ' + app.get('port'));
+});
+
+var io = require('socket.io').listen(server);
+
+io.on('connection', function (socket) {
+    
+    socket.on('join', function (gameid) {
+        var room = roommaster.findRoom(parseInt(gameid));
+        if(room != null) {
+            socket.join(gameid) // Add this socket to the room with this gameid
+            // TODO: More logic around adding the player to the room
+            var pl = roommaster.createPlayer(Math.random().toString())
+            room.addPlayer(pl)
+            io.to(gameid).emit('roomInfo', room.toString())
+        }
+        else {
+            io.to(gameid).emit('roomDeleted')
+        }
+    });
+
+    // Handle an example event with example data
+    socket.on('exampleClientEvent', function(exampleData) {
+        for(var room in socket.rooms) { // Loop through every room this connection belongs to. TODO maybe there's a better way to do this
+            if(roommaster.findRoom(parseInt(room)) != null) {
+                console.log(exampleData + " from room " + room) // The data is passed by the client, and the socket.rooms is the name of the room that was passed into socket.join earlier
+                io.to(room).emit('exampleServerEvent', 'hi room ' + room) // socket.to(roomid) will make the emit call go to every socket in that room
+            }
+        }
+    });
 });
