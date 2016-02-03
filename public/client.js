@@ -18,3 +18,9 @@ socket.on('roomDeleted', function() {
     console.log("Room deleted")
     // TODO: Handle deleted rooms
 })
+
+socket.on('roomFull', function() {
+    var link = window.location.host
+    alert("Room is full, please create a new room: " + link);
+    window.location = link;
+})
