@@ -116,7 +116,7 @@ function Room(ID) {
 	
 	// Add a new player with a generic name
 	this.addNewPlayer = function() {
-		if (_players.length >- _type.maxPlayers) {
+		if (_players.length >= _type.maxPlayers) {
 			console.log("The room is full!");
 			return;			
 		} else {

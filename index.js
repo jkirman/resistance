@@ -78,8 +78,7 @@ io.on('connection', function (socket) {
         if(room != null) {
             socket.join(gameid) // Add this socket to the room with this gameid
             // TODO: More logic around adding the player to the room
-            var pl = roommaster.createPlayer(Math.random().toString())
-            room.addPlayer(pl)
+            room.addNewPlayer()
             io.to(gameid).emit('roomInfo', room.toString())
         }
         else {
