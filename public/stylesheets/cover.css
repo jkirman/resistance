@@ -162,4 +162,10 @@ body {
   .cover-container {
     width: 700px;
   }
+  
+  .center-table
+{
+  margin: 0 auto !important;
+  float: none !important;
+}
 }
