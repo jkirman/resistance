@@ -124,6 +124,11 @@ function Room(ID) {
 		}
 	};
 	
+	//Get the number of players
+	this.isRoomFull = function() {
+		return _players.length >= _type.maxPlayers;
+	};
+	
 	// Given a player object and a name string, this function changes
 	// the name of the player if it is not used by another player in the 
 	// current room

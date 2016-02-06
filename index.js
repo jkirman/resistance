@@ -76,12 +76,16 @@ io.on('connection', function (socket) {
     socket.on('join', function (gameid) {
         var room = roommaster.findRoom(parseInt(gameid));
         if(room != null) {
-            socket.join(gameid) // Add this socket to the room with this gameid
-            // TODO: More logic around adding the player to the room
-            room.addNewPlayer()
-            io.to(gameid).emit('roomInfo', room.toString())
-        }
-        else {
+            if(!room.isRoomFull()){
+                console.log(room.isRoomFull())
+                socket.join(gameid) // Add this socket to the room with this gameid
+                // TODO: More logic around adding the player to the room
+                room.addNewPlayer()
+                io.to(gameid).emit('roomInfo', room.toString())
+            } else {
+                socket.emit('roomFull')
+            }
+        } else {
             io.to(gameid).emit('roomDeleted')
         }
     });
@@ -95,4 +99,5 @@ io.on('connection', function (socket) {
             }
         }
     });
+    
 });
