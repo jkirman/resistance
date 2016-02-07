@@ -1,3 +1,5 @@
+/* global io */
+
 var socket = io.connect();
 
 socket.on('connect', function() {
@@ -23,4 +25,9 @@ socket.on('roomFull', function() {
     var link = window.location.host
     alert("Room is full, please create a new room: " + link);
     window.location = link;
+})
+
+socket.on('roomId', function(roomId) {
+    console.log(roomId);
+    document.getElementById("link").innerHTML = window.location.href;
 })

@@ -5,12 +5,7 @@ var app = express();
 var gamelist = [];
 
 console.log(__dirname + '/public');
-
 app.use('/static', express.static(__dirname + '/public'));
-
-// set the view engine to ejs
-app.set('view engine', 'ejs');
-
 app.set('port', (process.env.PORT || 5000))
 
 app.get('/', function(request, response) {
@@ -29,15 +24,11 @@ app.param('gameid', function(request, response, next, gameid) {
           
     //Check if the gameID is valid, if not, redirect back to empty request
     var room = roommaster.findRoom(parseInt(gameid));
-    var players = room.getPlayers();
+
     if(room === null){
-        
 	    response.redirect('/');
     } else {    
- 		response.render("createroom", {
-        link: gameid
-        //playerList: players
-    });
+	    response.sendFile( __dirname + "/public/" + "room.html");
     }
 	// Handle game room stuff
 
@@ -56,9 +47,9 @@ app.post('/newgame', function(request, response){
 	
     // Should check all existing games and determine a new game id to send back
     // Should make a new game object with that id
+	
 	var newRoom = roommaster.createRoom();
-	var roomId = newRoom.getID();
-    response.redirect('/' + roomId);
+	response.redirect('/' + newRoom.getID());
 	
 	/*
     var x;
@@ -70,12 +61,6 @@ app.post('/newgame', function(request, response){
     
     gamelist.push(x);
     response.redirect('/' + x); */
-
-});
-
-app.post('/startgame', function(request, response){
-
-	response.redirect('/' + request.gameid);
 
 });
 
@@ -93,11 +78,10 @@ io.on('connection', function (socket) {
         if(room != null) {
             if(!room.isRoomFull()){
                 console.log(room.isRoomFull())
-                socket.join(gameid)
-                
-                // Add this socket to the room with this gameid
+                socket.join(gameid) // Add this socket to the room with this gameid
                 // TODO: More logic around adding the player to the room
                 room.addNewPlayer()
+                io.to(gameid).emit('roomId', gameid);
                 //io.to(gameid).emit('roomInfo', room.toString())
             } else {
                 socket.emit('roomFull')
