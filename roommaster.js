@@ -166,6 +166,7 @@ function Room(ID) {
 	};
 	
 	this.getID = function() { return _ID; };
+	this.getPlayers = function() { return _players; };
 	
 	// TODO: Figure out a clean way to send room info as JSON and parse it on the client
 	this.toString = function() {
@@ -173,6 +174,7 @@ function Room(ID) {
 		_players.forEach(function(player) {plList = plList.concat(player.getName())})
 		return {ID: _ID, players: plList, type: _type, roomURL: _roomURL}
 	}
+
 
 }
 
