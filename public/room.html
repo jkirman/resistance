@@ -33,8 +33,19 @@
     
     <div class="site-wrapper">
       
+      <div class="modal hide" id="pleaseWaitDialog" data-backdrop="static" data-keyboard="false">
+            <div class="modal-header">
+                <h1>Please wait for the game to start...</h1>
+            </div>
+            <div class="modal-body">
+                <div class="progress progress-striped active">
+                    <div class="bar" style="width: 100%;"></div>
+                </div>
+            </div>
+        </div>
+      
           <form action="/startgame" method="post">
-             <input type="submit" value="Start Game ->" class="btn btn-default btn-lg start-but">
+             <input type="submit" value="Start Game" class="btn btn-default btn-lg start-but">
 				  </form>
 				  
       <div class="site-wrapper-inner">
@@ -46,7 +57,7 @@
             
              <h1 class="header">New Game Successfully Created!</h1>
                 <div class= "lead">Share this link with other players : 
-                <p>http://doorindustries-resistance.herokuapp.com/<%= link %> </p></div>
+                <p id="link"></p></div>
                 <div class= "middle-text"> These players have joined so far : </div>
                 
           
