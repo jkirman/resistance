@@ -58,7 +58,7 @@ exports.createRoom = function() {
 
     // Ensures that the created game id is not already in use by another room
     do{ rID = Math.floor(Math.random() * 10000); }
-    while(findRoomById(AllRooms, rID) !== null);
+    while(findById(AllRooms, rID) !== null);
 
     var newRoom = new Room(rID);
     newRoom.changeRoomType(RoomType.RESISTANCE);
@@ -78,7 +78,7 @@ exports.startNewRoom = function(playerName) {
 };
 
 exports.findRoom = function(rID) {
-    return findRoomById(AllRooms, rID);
+    return findById(AllRooms, rID);
 };
 
 exports.createPlayer = function(playerName) {
@@ -92,16 +92,17 @@ exports.createPlayer = function(playerName) {
 
 
 // Player object constructor
-function Player(pName) {
+function Player(pName, pID) {
 
 	// Object variables
 	var _genericName = pName;
 	var _name = pName;
+	var _pID = pID;
 
 	this.getName = function() { return _name; };
 	this.getGenericName = function() { return _genericName; };
 	this.changeName = function(name) { _name = name; };
-
+	this.getPID = function(){ return _pID};
 }
 
 // Room object constructor
@@ -115,12 +116,12 @@ function Room(ID) {
 	var _genericPlayerNames = genericNames.slice();
 	
 	// Add a new player with a generic name
-	this.addNewPlayer = function() {
+	this.addNewPlayer = function(id) {
 		if (_players.length >= _type.maxPlayers) {
 			console.log("The room is full!");
 			return;			
 		} else {
-			_players.push(new Player(_genericPlayerNames.pop()));
+			_players.push(new Player(_genericPlayerNames.pop(),id));
 		}
 	};
 	
@@ -183,9 +184,9 @@ function Room(ID) {
 ///////////////////////////
 
 
-// Finds in a list objects by ID
+// Finds in a list objects by ID. Can be used for Room and Player
 // source : http://stackoverflow.com/questions/7364150/find-object-by-id-in-an-array-of-javascript-objects
-function findRoomById(source, id) {
+function findById(source, id) {
   for (var i = 0; i < source.length; i++) {
     if (source[i].getID() === id) {
       return source[i];
