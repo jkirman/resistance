@@ -81,7 +81,10 @@ io.on('connection', function (socket) {
                 socket.join(gameid) // Add this socket to the room with this gameid
                 // TODO: More logic around adding the player to the room
                 room.addNewPlayer()
+                //TODO: get new player Id
+                var player = "myId";
                 io.to(gameid).emit('roomId', gameid);
+                io.to(gameid).emit('newPlayer', player);
                 //io.to(gameid).emit('roomInfo', room.toString())
             } else {
                 socket.emit('roomFull')

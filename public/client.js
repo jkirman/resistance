@@ -28,6 +28,13 @@ socket.on('roomFull', function() {
 })
 
 socket.on('roomId', function(roomId) {
-    console.log(roomId);
     document.getElementById("link").innerHTML = window.location.href;
+})
+
+socket.on('newPlayer', function(player) {
+    var node = document.createElement("LI");                 // Create a <li> node
+    node.className = "list-group-item list-item-dark";
+    var textnode = document.createTextNode(player);         // Create a text node
+    node.appendChild(textnode);                              // Append the text to <li>
+    document.getElementById("playerList").appendChild(node);
 })
