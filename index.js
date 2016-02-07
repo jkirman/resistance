@@ -29,13 +29,15 @@ app.param('gameid', function(request, response, next, gameid) {
           
     //Check if the gameID is valid, if not, redirect back to empty request
     var room = roommaster.findRoom(parseInt(gameid));
-
+    var players = room.getPlayers();
     if(room === null){
         
 	    response.redirect('/');
     } else {    
- 		response.render("room", {
-        });
+ 		response.render("createroom", {
+        link: gameid
+        //playerList: players
+    });
     }
 	// Handle game room stuff
 
@@ -56,13 +58,7 @@ app.post('/newgame', function(request, response){
     // Should make a new game object with that id
 	var newRoom = roommaster.createRoom();
 	var roomId = newRoom.getID();
-	var players = newRoom.getPlayers();
-	console.log(players);
-	response.render("createroom", {
-            link: roomId
-            //playerList: players
-        });
-    //response.redirect('/' + newRoom.getID());
+    response.redirect('/' + roomId);
 	
 	/*
     var x;
@@ -102,7 +98,7 @@ io.on('connection', function (socket) {
                 // Add this socket to the room with this gameid
                 // TODO: More logic around adding the player to the room
                 room.addNewPlayer()
-                io.to(gameid).emit('roomInfo', room.toString())
+                //io.to(gameid).emit('roomInfo', room.toString())
             } else {
                 socket.emit('roomFull')
             }

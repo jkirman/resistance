@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Resistance</title>
+
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+		<!-- jQuery library -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+		
+		<!-- Bootstrap JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+		
+		<!-- Socket.io -->
+		<script src="/socket.io/socket.io.js"></script>
+        
+    <!-- Custom styles for this template -->
+		<link rel="stylesheet" type="text/css" href="static/stylesheets/index.css">
+		<link rel="stylesheet" type="text/css" href="static/stylesheets/room.css">
+
+  </head>
+
+  <body>
+    
+    <div class="site-wrapper">
+      
+          <form action="/startgame" method="post">
+             <input type="submit" value="Start Game ->" class="btn btn-default btn-lg start-but">
+				  </form>
+				  
+      <div class="site-wrapper-inner">
+
+        <div class="cover-container">
+
+          <div class="masthead clearfix">
+            <div class="inner">
+            
+             <h1 class="header">New Game Successfully Created!</h1>
+                <div class= "lead">Share this link with other players : 
+                <p>http://doorindustries-resistance.herokuapp.com/<%= link %> </p></div>
+                <div class= "middle-text"> These players have joined so far : </div>
+                
+          
+          <div class="mastfoot">
+
+              	  <!-- Client javascript files -->
+                  <script src="static/client.js"></script>
+            </div>
+
+        </div>
+        
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+  </body>
+</html>
