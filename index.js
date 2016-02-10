@@ -78,7 +78,15 @@ io.on('connection', function (socket) {
         if(room !== null) {
             socket.join(rID); // Add this socket to the room with this gameid
             // TODO: More logic around adding the player to the room
-            var name = room.addNewPlayer();
+           //try{
+               
+            var pID = socket.id//}
+            //var pID = 123
+            //catch(ex){
+            //   console.log(ex)
+           //}
+            console.log(pID)
+            var name = room.addNewPlayer(pID);
             io.to(rID).emit('playerName', name);
             io.to(rID).emit('roomInfo', room.toString());
         }
