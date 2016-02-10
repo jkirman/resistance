@@ -73,20 +73,17 @@ var io = require('socket.io').listen(server);
 
 io.on('connection', function (socket) {
     
-    socket.on('join', function (gameid) {
-        var room = roommaster.findRoom(parseInt(gameid));
-        if(room != null) {
-            if(!room.isRoomFull()){
-                console.log(room.isRoomFull())
-                socket.join(gameid) // Add this socket to the room with this gameid
-                // TODO: More logic around adding the player to the room
-                room.addNewPlayer()
-                io.to(gameid).emit('roomInfo', room.toString())
-            } else {
-                socket.emit('roomFull')
-            }
-        } else {
-            io.to(gameid).emit('roomDeleted')
+    socket.on('join', function (rID) {
+        var room = roommaster.findRoom(parseInt(rID));
+        if(room !== null) {
+            socket.join(rID); // Add this socket to the room with this gameid
+            // TODO: More logic around adding the player to the room
+            var name = room.addNewPlayer();
+            io.to(rID).emit('playerName', name);
+            io.to(rID).emit('roomInfo', room.toString());
+        }
+        else {
+            io.to(rID).emit('roomDeleted')
         }
     });
 
@@ -99,5 +96,4 @@ io.on('connection', function (socket) {
             }
         }
     });
-    
 });

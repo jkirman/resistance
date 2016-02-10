@@ -70,11 +70,10 @@ exports.createRoom = function() {
 };
 
 // Creates a new room and 
-exports.startNewRoom = function(playerName) {
+exports.startNewRoom = function() {
 	var newRoom = exports.createRoom();
-	var newPlayer = new Player(playerName);
-	newRoom.addPlayer(newPlayer);
-	return newRoom;
+	var player = newRoom.addNewPlayer();
+	return [newRoom, player];
 };
 
 exports.findRoom = function(rID) {
@@ -84,6 +83,10 @@ exports.findRoom = function(rID) {
 exports.createPlayer = function(playerName) {
 	var newPlayer = new Player(playerName)
 	return newPlayer;
+}
+
+exports.getRoomList = function() {
+	return AllRooms;
 }
 
 /**************************************************************************/
@@ -120,13 +123,10 @@ function Room(ID) {
 			console.log("The room is full!");
 			return;			
 		} else {
-			_players.push(new Player(_genericPlayerNames.pop()));
+			var newName = _genericPlayerNames.pop();
+			_players.push(new Player(newName));
+			return newName;
 		}
-	};
-	
-	//Get the number of players
-	this.isRoomFull = function() {
-		return _players.length >= _type.maxPlayers;
 	};
 	
 	// Given a player object and a name string, this function changes
@@ -134,12 +134,12 @@ function Room(ID) {
 	// current room
 	this.changePlayerName = function(player, newName) {
 		if (genericNames.indexOf(newName) > -1) {
-			console.log(newName + " is a restricted name!");
 		} else if (findPlayerByName(_players, newName) === null) {
 			player.changeName(newName);
 		} else {
 			console.log("A player with the name " + newName + " already exists in this room!");
 		}
+		return player.getName();
 	};
 	
 	// Given a Player object, this function removes them from the current room
@@ -166,6 +166,10 @@ function Room(ID) {
 	};
 	
 	this.getID = function() { return _ID; };
+	
+	this.getPlayer = function(name) {
+		return findPlayerByName(_players, name);
+	}
 	
 	// TODO: Figure out a clean way to send room info as JSON and parse it on the client
 	this.toString = function() {
