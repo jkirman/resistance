@@ -49,7 +49,7 @@ app.post('/newgame', function(request, response){
     // Should make a new game object with that id
 	
 	var newRoom = roommaster.createRoom();
-	response.redirect('/' + newRoom.getID());
+	response.redirect('/' + newRoom.getId());
 	
 	/*
     var x;
@@ -87,7 +87,6 @@ io.on('connection', function (socket) {
            //}
             console.log(pID)
             var name = room.addNewPlayer(pID);
-            io.to(rID).emit('playerName', name);
             io.to(rID).emit('roomInfo', room.toString());
         }
         else {
@@ -101,6 +100,16 @@ io.on('connection', function (socket) {
             if(roommaster.findRoom(parseInt(room)) != null) {
                 console.log(exampleData + " from room " + room) // The data is passed by the client, and the socket.rooms is the name of the room that was passed into socket.join earlier
                 io.to(room).emit('exampleServerEvent', 'hi room ' + room) // socket.to(roomid) will make the emit call go to every socket in that room
+            }
+        }
+    });
+    
+    socket.on("changePlayerName", function(newName) {
+        for(var roomId in socket.rooms) {
+            var room = roommaster.findRoom(parseInt(roomId));
+            if(room != null) {
+                room.changePlayerName(room.getPlayerById(socket.id), newName);
+                io.to(room.getId()).emit('roomInfo', room.toString());
             }
         }
     });
