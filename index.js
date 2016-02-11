@@ -86,9 +86,17 @@ io.on('connection', function (socket) {
             //   console.log(ex)
            //}
             console.log(pID)
-            var name = room.addNewPlayer(pID);
+            if(!room.isFull()){
+                var name = room.addNewPlayer(pID);    
+            }
+            else{
+                io.to(rID).emit('roomFull');
+            }
             io.to(rID).emit('roomInfo', room.toString());
         }
+         else if(room.isFull()){
+             
+         }
         else {
             io.to(rID).emit('roomDeleted')
         }
@@ -113,4 +121,21 @@ io.on('connection', function (socket) {
             }
         }
     });
+    
+    // socket.on('disconnect', function () {
+    //     console.log("DISCONNECT FROM " + socket.id)
+       
+    //     for(var roomId in socket.rooms) {
+    //         console.log("Room ID: " + roomId)
+    //         var room = roommaster.findRoom(parseInt(roomId));
+    //         if(room != null) {
+    //             room.removePlayer(room.getPlayerById(socket.id))
+    //             io.to(room.getId()).emit('roomInfo', room.toString());
+    //             console.log("DISCONNECTED " + socket.id)
+    //         }
+    //   }
+       
+    
+    // });
+    
 });

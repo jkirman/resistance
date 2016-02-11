@@ -121,7 +121,7 @@ function Room(ID) {
 	
 	// Add a new player with a generic name
 	this.addNewPlayer = function(pID) {
-		if (_players.length >= _type.maxPlayers) {
+		if (this.isFull()) {
 			console.log("The room is full!");
 			return;			
 		} else {
@@ -154,7 +154,7 @@ function Room(ID) {
 			console.log("Attempted to remove non-existant player: \n" + player);
 		}
 	};
-
+	
 	this.changeRoomType = function(rType) {
 		_type = rType;
 	};
@@ -168,6 +168,10 @@ function Room(ID) {
 	};
 	
 	this.getId = function() { return _ID; };
+	
+	this.isFull = function() {
+		return (_players.length >= _type.maxPlayers)
+	}
 	
 	this.getPlayerByName = function(name) {
 		return findPlayerByName(_players, name);
