@@ -58,7 +58,7 @@ exports.createRoom = function() {
 
     // Ensures that the created game id is not already in use by another room
     do{ rID = Math.floor(Math.random() * 10000); }
-    while(findRoomById(AllRooms, rID) !== null);
+    while(findById(AllRooms, rID) !== null);
 
     var newRoom = new Room(rID);
     newRoom.changeRoomType(RoomType.RESISTANCE);
@@ -77,7 +77,7 @@ exports.startNewRoom = function() {
 };
 
 exports.findRoom = function(rID) {
-    return findRoomById(AllRooms, rID);
+    return findById(AllRooms, rID);
 };
 
 exports.createPlayer = function(playerName) {
@@ -95,14 +95,16 @@ exports.getRoomList = function() {
 
 
 // Player object constructor
-function Player(pName) {
+function Player(pName, pID) {
 
 	// Object variables
 	var _genericName = pName;
 	var _name = pName;
+	var _pID = pID
 
 	this.getName = function() { return _name; };
 	this.getGenericName = function() { return _genericName; };
+	this.getpID = function() { return _pID}
 	this.changeName = function(name) { _name = name; };
 
 }
@@ -118,13 +120,13 @@ function Room(ID) {
 	var _genericPlayerNames = genericNames.slice();
 	
 	// Add a new player with a generic name
-	this.addNewPlayer = function() {
+	this.addNewPlayer = function(pID) {
 		if (_players.length >= _type.maxPlayers) {
 			console.log("The room is full!");
 			return;			
 		} else {
 			var newName = _genericPlayerNames.pop();
-			_players.push(new Player(newName));
+			_players.push(new Player(newName, pID));
 			return newName;
 		}
 	};
@@ -174,7 +176,7 @@ function Room(ID) {
 	// TODO: Figure out a clean way to send room info as JSON and parse it on the client
 	this.toString = function() {
 		var plList = []
-		_players.forEach(function(player) {plList = plList.concat(player.getName())})
+		_players.forEach(function(player) {plList = plList.concat(player.getName() )})
 		return {ID: _ID, players: plList, type: _type, roomURL: _roomURL}
 	}
 
@@ -187,7 +189,7 @@ function Room(ID) {
 
 // Finds in a list objects by ID
 // source : http://stackoverflow.com/questions/7364150/find-object-by-id-in-an-array-of-javascript-objects
-function findRoomById(source, id) {
+function findById(source, id) {
   for (var i = 0; i < source.length; i++) {
     if (source[i].getID() === id) {
       return source[i];
