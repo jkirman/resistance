@@ -104,7 +104,7 @@ function Player(pName, pID) {
 
 	this.getName = function() { return _name; };
 	this.getGenericName = function() { return _genericName; };
-	this.getpID = function() { return _pID}
+	this.getId = function() { return _pID}
 	this.changeName = function(name) { _name = name; };
 
 }
@@ -167,10 +167,14 @@ function Room(ID) {
 		}
 	};
 	
-	this.getID = function() { return _ID; };
+	this.getId = function() { return _ID; };
 	
-	this.getPlayer = function(name) {
+	this.getPlayerByName = function(name) {
 		return findPlayerByName(_players, name);
+	}
+	
+	this.getPlayerById = function(id) {
+		return findById(_players, id);
 	}
 	
 	// TODO: Figure out a clean way to send room info as JSON and parse it on the client
@@ -191,7 +195,7 @@ function Room(ID) {
 // source : http://stackoverflow.com/questions/7364150/find-object-by-id-in-an-array-of-javascript-objects
 function findById(source, id) {
   for (var i = 0; i < source.length; i++) {
-    if (source[i].getID() === id) {
+    if (source[i].getId() === id) {
       return source[i];
     }
   }
