@@ -50,17 +50,6 @@ app.post('/newgame', function(request, response){
 	
 	var newRoom = roommaster.createRoom();
 	response.redirect('/' + newRoom.getId());
-	
-	/*
-    var x;
-    //Ensure that the created game id does not yet exist
-    do{
-	x = Math.floor(Math.random() * 10000);
-    }
-    while(gamelist.indexOf(x) != -1);
-    
-    gamelist.push(x);
-    response.redirect('/' + x); */
 
 });
 
@@ -78,15 +67,15 @@ io.on('connection', function (socket) {
         if(room !== null) {
             socket.join(rID); // Add this socket to the room with this gameid
             // TODO: More logic around adding the player to the room
-           //try{
-               
             var pID = socket.id//}
-            //var pID = 123
-            //catch(ex){
-            //   console.log(ex)
-           //}
+           
             console.log(pID)
-            var name = room.addNewPlayer(pID);
+            if(!room.isFull()){
+                var name = room.addNewPlayer(pID);    
+            }
+            else{
+                io.to(rID).emit('roomFull');
+            }
             io.to(rID).emit('roomInfo', room.toString());
         }
         else {
@@ -113,4 +102,19 @@ io.on('connection', function (socket) {
             }
         }
     });
+    
+    // socket.on('disconnect', function () {
+    //     console.log("DISCONNECT FROM " + socket.id)
+       
+    //     for(var roomId in socket.rooms) { //THIS NEVER GETS ENTERED
+    //         console.log("Room ID: " + roomId)
+    //         var room = roommaster.findRoom(parseInt(roomId));
+    //         if(room != null) {
+    //             room.removePlayer(room.getPlayerById(socket.id))
+    //             io.to(room.getId()).emit('roomInfo', room.toString());
+    //             console.log("DISCONNECTED " + socket.id)
+    //         }
+    //   }
+    // });
+    
 });
