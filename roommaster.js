@@ -58,7 +58,7 @@ exports.createRoom = function() {
 
     // Ensures that the created game id is not already in use by another room
     do{ rID = Math.floor(Math.random() * 10000); }
-    while(findRoomById(AllRooms, rID) !== null);
+    while(findById(AllRooms, rID) !== null);
 
     var newRoom = new Room(rID);
     newRoom.changeRoomType(RoomType.RESISTANCE);
@@ -70,20 +70,23 @@ exports.createRoom = function() {
 };
 
 // Creates a new room and 
-exports.startNewRoom = function(playerName) {
+exports.startNewRoom = function() {
 	var newRoom = exports.createRoom();
-	var newPlayer = new Player(playerName);
-	newRoom.addPlayer(newPlayer);
-	return newRoom;
+	var player = newRoom.addNewPlayer();
+	return [newRoom, player];
 };
 
 exports.findRoom = function(rID) {
-    return findRoomById(AllRooms, rID);
+    return findById(AllRooms, rID);
 };
 
 exports.createPlayer = function(playerName) {
 	var newPlayer = new Player(playerName)
 	return newPlayer;
+}
+
+exports.getRoomList = function() {
+	return AllRooms;
 }
 
 /**************************************************************************/
@@ -92,14 +95,16 @@ exports.createPlayer = function(playerName) {
 
 
 // Player object constructor
-function Player(pName) {
+function Player(pName, pID) {
 
 	// Object variables
 	var _genericName = pName;
 	var _name = pName;
+	var _pID = pID
 
 	this.getName = function() { return _name; };
 	this.getGenericName = function() { return _genericName; };
+	this.getId = function() { return _pID}
 	this.changeName = function(name) { _name = name; };
 
 }
@@ -115,18 +120,15 @@ function Room(ID) {
 	var _genericPlayerNames = genericNames.slice();
 	
 	// Add a new player with a generic name
-	this.addNewPlayer = function() {
+	this.addNewPlayer = function(pID) {
 		if (_players.length >= _type.maxPlayers) {
 			console.log("The room is full!");
 			return;			
 		} else {
-			_players.push(new Player(_genericPlayerNames.pop()));
+			var newName = _genericPlayerNames.pop();
+			_players.push(new Player(newName, pID));
+			return newName;
 		}
-	};
-	
-	//Get the number of players
-	this.isRoomFull = function() {
-		return _players.length >= _type.maxPlayers;
 	};
 	
 	// Given a player object and a name string, this function changes
@@ -134,12 +136,12 @@ function Room(ID) {
 	// current room
 	this.changePlayerName = function(player, newName) {
 		if (genericNames.indexOf(newName) > -1) {
-			console.log(newName + " is a restricted name!");
 		} else if (findPlayerByName(_players, newName) === null) {
 			player.changeName(newName);
 		} else {
 			console.log("A player with the name " + newName + " already exists in this room!");
 		}
+		return player.getName();
 	};
 	
 	// Given a Player object, this function removes them from the current room
@@ -165,12 +167,20 @@ function Room(ID) {
 		}
 	};
 	
-	this.getID = function() { return _ID; };
+	this.getId = function() { return _ID; };
+	
+	this.getPlayerByName = function(name) {
+		return findPlayerByName(_players, name);
+	}
+	
+	this.getPlayerById = function(id) {
+		return findById(_players, id);
+	}
 	
 	// TODO: Figure out a clean way to send room info as JSON and parse it on the client
 	this.toString = function() {
 		var plList = []
-		_players.forEach(function(player) {plList = plList.concat(player.getName())})
+		_players.forEach(function(player) {plList = plList.concat(player.getName() )})
 		return {ID: _ID, players: plList, type: _type, roomURL: _roomURL}
 	}
 
@@ -183,9 +193,9 @@ function Room(ID) {
 
 // Finds in a list objects by ID
 // source : http://stackoverflow.com/questions/7364150/find-object-by-id-in-an-array-of-javascript-objects
-function findRoomById(source, id) {
+function findById(source, id) {
   for (var i = 0; i < source.length; i++) {
-    if (source[i].getID() === id) {
+    if (source[i].getId() === id) {
       return source[i];
     }
   }

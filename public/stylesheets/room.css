@@ -1,0 +1,22 @@
+html,
+body {
+  height: 100%;
+  background-color: #333;
+}
+
+.start-but{
+  position:absolute; bottom:0;  margin-bottom:300px; margin-right:130px; right: 0;
+}
+
+.middle-text{
+  margin-top:50px;
+  margin-bottom:30px;
+}
+
+.list-item-dark{
+  background-color: #333;
+}
+
+.text-box{
+  color: #111;
+}

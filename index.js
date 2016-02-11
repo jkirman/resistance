@@ -49,7 +49,7 @@ app.post('/newgame', function(request, response){
     // Should make a new game object with that id
 	
 	var newRoom = roommaster.createRoom();
-	response.redirect('/' + newRoom.getID());
+	response.redirect('/' + newRoom.getId());
 	
 	/*
     var x;
@@ -73,20 +73,24 @@ var io = require('socket.io').listen(server);
 
 io.on('connection', function (socket) {
     
-    socket.on('join', function (gameid) {
-        var room = roommaster.findRoom(parseInt(gameid));
-        if(room != null) {
-            if(!room.isRoomFull()){
-                console.log(room.isRoomFull())
-                socket.join(gameid) // Add this socket to the room with this gameid
-                // TODO: More logic around adding the player to the room
-                room.addNewPlayer()
-                io.to(gameid).emit('roomInfo', room.toString())
-            } else {
-                socket.emit('roomFull')
-            }
-        } else {
-            io.to(gameid).emit('roomDeleted')
+    socket.on('join', function (rID) {
+        var room = roommaster.findRoom(parseInt(rID));
+        if(room !== null) {
+            socket.join(rID); // Add this socket to the room with this gameid
+            // TODO: More logic around adding the player to the room
+           //try{
+               
+            var pID = socket.id//}
+            //var pID = 123
+            //catch(ex){
+            //   console.log(ex)
+           //}
+            console.log(pID)
+            var name = room.addNewPlayer(pID);
+            io.to(rID).emit('roomInfo', room.toString());
+        }
+        else {
+            io.to(rID).emit('roomDeleted')
         }
     });
 
@@ -100,4 +104,13 @@ io.on('connection', function (socket) {
         }
     });
     
+    socket.on("changePlayerName", function(newName) {
+        for(var roomId in socket.rooms) {
+            var room = roommaster.findRoom(parseInt(roomId));
+            if(room != null) {
+                room.changePlayerName(room.getPlayerById(socket.id), newName);
+                io.to(room.getId()).emit('roomInfo', room.toString());
+            }
+        }
+    });
 });
