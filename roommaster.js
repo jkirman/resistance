@@ -187,6 +187,25 @@ function Room(ID) {
 		_players.forEach(function(player) {plList = plList.concat(player.getName() )})
 		return {ID: _ID, players: plList, type: _type, roomURL: _roomURL}
 	}
+	
+		// ADDED FOR UNIT TESTS //
+	
+	this.getPlayerList = function() { return _players; };
+	
+	// Add a new player with a generic name (for testing)
+	this.addNewPlayerTest = function() {
+		
+		if (_players.length >= _type.maxPlayers) {
+			console.log("The room is full!");
+			return;			
+		} else {
+			var newName = _genericPlayerNames.pop();
+			var p = new Player(newName);
+			_players.push(p);
+			return p;
+		}
+	};
+	 //////////////////////////////
 
 }
 
@@ -214,3 +233,45 @@ function findPlayerByName(source, name) {
   }
   return null;
 }
+
+// Unit tests for stories 1, 2 and 3
+
+var test = require("unit.js");
+
+// Test setup
+var assert = test.assert;
+
+var troom = null;
+var tplayer = null;
+
+// Test that a room is created (createRoom() function)
+assert.strictEqual(AllRooms.length, 0, 'Room list not initially empty.');
+exports.startNewRoom();
+assert.strictEqual(AllRooms.length, 1, 'Room was not created.');
+
+troom = AllRooms[0];
+
+assert.equal(findById(AllRooms, troom.getId()), troom, 'Room finding does not work.');
+
+// Test if new player has been added to the room
+assert.notEqual(troom.getPlayerList().length, 0, 'No players in room.');
+
+tplayer = troom.getPlayerList()[0];
+
+// Test if you can change the player's name
+var newTestName = "Test";
+troom.changePlayerName(tplayer, newTestName);
+assert.equal(tplayer.getName(), newTestName);
+
+// Test if you can't change to a restricted name
+for(var i = 0; i < genericNames.length; i++){
+	troom.changePlayerName(tplayer, newTestName);
+}
+assert.equal(tplayer.getName(), newTestName);
+
+// Test if you can't change to a name already in use
+var newTestName2 = "Test2";
+var tplayer2 = troom.addNewPlayerTest();
+troom.changePlayerName(tplayer2, newTestName2);
+troom.changePlayerName(tplayer, newTestName2);
+assert.notEqual(tplayer.getName(), newTestName2);
