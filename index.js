@@ -74,7 +74,7 @@ io.on('connection', function (socket) {
                 var name = room.addNewPlayer(pID);    
             }
             else{
-                io.to(rID).emit('roomFull');
+                socket.emit('roomFull');
             }
             io.to(rID).emit('roomInfo', room.toString());
         }
