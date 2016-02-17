@@ -8,7 +8,7 @@ socket.on('connect', function() {
 });
 
 socket.on('roomInfo', function(room) {
-    document.write(JSON.stringify(room))
+    //document.write(JSON.stringify(room))
     socket.emit("exampleClientEvent", "hello")
 })
 
