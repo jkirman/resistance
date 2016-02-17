@@ -9,6 +9,7 @@ socket.on('connect', function() {
 });
 
 socket.on('roomInfo', function(room) {
+<<<<<<< HEAD
     var plList = document.getElementById("playerList");
     while (plList.hasChildNodes()) {   
         plList.removeChild(plList.firstChild);
@@ -22,6 +23,9 @@ socket.on('roomInfo', function(room) {
         plList.appendChild(node);
     })
     
+=======
+    //document.write(JSON.stringify(room))
+>>>>>>> d076f8f1984eb12e02c4d074029dba7bdefe42be
     socket.emit("exampleClientEvent", "hello")
 })
 
