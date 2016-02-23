@@ -29,19 +29,20 @@ socket.on("exampleServerEvent", function(data) {
 })
 
 socket.on('roomDeleted', function() {
-    console.log("Room deleted")
+    console.log("Room deleted");
     // TODO: Handle deleted rooms
-})
+});
 
 socket.on('roomFull', function() {
-    var link = window.location.host
+    var link = window.location.host;
     alert("Room is full, please create a new room: " + link);
     window.location = link;
-})
+});
 
-document.getElementById("changeName-button").onclick = function() {
-    var newName = document.getElementById("changeName-text").value;
-    if(newName != "") {
+$("changeName-button").click(function() {
+    var newName = $("changeName-text").val();
+    if(newName != "")
         socket.emit("changePlayerName", newName);
-    }
-}
+});
+    
+
