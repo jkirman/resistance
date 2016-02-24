@@ -101,12 +101,14 @@ function Player(pName, pID) {
 	var _genericName = pName;
 	var _name = pName;
 	var _pID = pID
+	var _ready = false;
 
 	this.getName = function() { return _name; };
 	this.getGenericName = function() { return _genericName; };
-	this.getId = function() { return _pID}
+	this.getId = function() { return _pID};
+	this.isReady = function() { return _ready };
+	this.setReady = function(ready) { _ready = ready };
 	this.changeName = function(name) { _name = name; };
-
 }
 
 // Room object constructor
@@ -144,6 +146,23 @@ function Room(ID) {
 		return player.getName();
 	};
 	
+	this.setPlayerReady = function(player, readyStatus) {
+		// @jeff we need to check if room is in a state where players are allowed to change their readyStatus before calling this
+		player.setReady(readyStatus);
+	}
+	
+	this.gameCanStart = function() {
+		for(var pID in _players) {
+			if (_players[pID].isReady() == false) {
+				return false
+			}
+		}
+		if(_players.length >= 5) {
+			return true
+		}
+		return false
+	}
+	
 	// Given a Player object, this function removes them from the current room
 	this.removePlayer = function(player) {
 		var index = _players.indexOf(player);
@@ -162,7 +181,7 @@ function Room(ID) {
 	// This function removes the current Room object from the list of rooms
 	// if there are no players in it
 	this.validateRoom = function() {
-		if (_players.length === 0) {
+		if (_players.length == 0) {
 			closeRoom(this);
 		}
 	};
@@ -183,9 +202,9 @@ function Room(ID) {
 	
 	// TODO: Figure out a clean way to send room info as JSON and parse it on the client
 	this.toString = function() {
-		var plList = []
-		_players.forEach(function(player) {plList = plList.concat(player.getName() )})
-		return {ID: _ID, players: plList, type: _type, roomURL: _roomURL}
+		var plList = {}
+		_players.forEach(function(player) {plList[player.getId()] =  {name: player.getName(), ready: player.isReady()} })
+		return {ID: _ID, players: plList, type: _type, roomURL: _roomURL, gameStart: this.gameCanStart(), playerId: null}
 	}
 	
 		// ADDED FOR UNIT TESTS //
