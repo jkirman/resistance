@@ -17,13 +17,12 @@ body {
   background-color: #333;
 }
 
-.player-list{
+.player-list-gameplay{
   display:inline-block;
   margin-left: 1120px;
   margin-top: 300px;
   border: solid;
   width: 200px;
-  visibility:hidden;
 }
 
 .player-table{
@@ -31,12 +30,10 @@ body {
   margin: 0 auto; 
   display:inline-block;
   white-space: nowrap;
-  visibility:hidden;
 }
 
 .table {
     border: none;
-    visibility:hidden;
 }
 
 #score-display{
@@ -45,7 +42,6 @@ body {
   margin-top:10px; 
   margin-right:10px; 
   right: 20px;
-  visibility:hidden;
 }
 
 #score-box{
@@ -55,21 +51,18 @@ body {
   position:relative;
   left:280px;
   top: -45px;
-  visibility:hidden;
 }
 
 #resistance-name{
   display:inline-block;
   position: relative;
   right: 100px;
-  visibility:hidden;
 }
 
 #spy-name{
   display:inline-block;
   position: relative;
   left: 100px;
-  visibility:hidden;
 }
 
 #resistance-score{
@@ -78,7 +71,6 @@ body {
   position:relative;
   top:-10px;
   right:20px;
-  visibility:hidden;
 }
 
 #dash{
@@ -86,7 +78,6 @@ body {
   font-size: 40px;
   position:relative;
   top:-10px;
-  visibility:hidden;
 }
 
 #spy-score{
@@ -95,7 +86,6 @@ body {
   position:relative;
   top:-10px;
   left:20px;
-  visibility:hidden;
 }
 
 #missions-box{
@@ -104,7 +94,6 @@ body {
   margin-top: 50px;
   margin-left:5px;
   left: -500px;
-  visibility:hidden;
 }
 
 #mission-one-head{
@@ -112,7 +101,6 @@ body {
   position:relative;
   left: -20px;
   top:-10px;
-  visibility:hidden;
 }
 
 #mission-one-circle{
@@ -123,7 +111,6 @@ body {
 	-webkit-border-radius: 50px;
 	border-radius: 50px;
 	display:inline-block;
-	visibility:hidden;
 
 }
 
@@ -132,7 +119,6 @@ body {
   position:relative;
   left: -20px;
   top:-10px;
-  visibility:hidden;
 }
 
 #mission-two-circle{
@@ -143,7 +129,6 @@ body {
 	-webkit-border-radius: 50px;
 	border-radius: 50px;
 	display:inline-block;
-	visibility:hidden;
 }
 
 #mission-three-head{
@@ -151,7 +136,6 @@ body {
   position:relative;
   left: -20px;
   top:-10px;
-  visibility:hidden;
 }
 
 #mission-three-circle{
@@ -162,7 +146,6 @@ body {
 	-webkit-border-radius: 50px;
 	border-radius: 50px;
 	display:inline-block;
-	visibility:hidden;
 }
 
 #mission-four-head{
@@ -170,7 +153,6 @@ body {
   position:relative;
   left: -20px;
   top:-10px;
-  visibility:hidden;
 }
 
 #mission-four-circle{
@@ -181,7 +163,6 @@ body {
 	-webkit-border-radius: 50px;
 	border-radius: 50px;
 	display:inline-block;
-	visibility:hidden;
 }
 
 #mission-five-head{
@@ -189,7 +170,6 @@ body {
   position:relative;
   left: -20px;
   top:-10px;
-  visibility:hidden;
 }
 
 #mission-five-circle{
@@ -200,7 +180,6 @@ body {
 	-webkit-border-radius: 50px;
 	border-radius: 50px;
 	display:inline-block;
-	visibility:hidden;
 }
 
 #card{
@@ -216,7 +195,10 @@ body {
   right: 0;
   box-shadow: 5px 5px 3px black;
   border-radius: 5px;
-  visibility:hidden;
+}
+
+#playerList{
+
 }
 
 .card-text{
@@ -225,5 +207,12 @@ body {
   margin-top:260px; 
   margin-right:120px; 
   right: 0;
-  visibility:hidden;
+}
+
+.waiting-room{
+  display:auto;
+}
+
+.room{
+  display:none;
 }
