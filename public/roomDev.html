@@ -36,11 +36,11 @@
       
       <div class="site-wrapper-inner">
 
-                
+          <div class="card-wrapper">   
             <div id ="card"></div>
-            
             <p class = "card-text">Click to Reveal</p>
-            
+          </div>   
+          
           <div class = "player-list">
             <div class = "player-table">
               <table class = "table">
@@ -107,6 +107,29 @@
               
             </div>
             
+            <!--only display this to mission leader-->
+            <div id="Select-Mission">
+              <h4>Select 3 players for this mission</h4>
+              <ul id= "players-for-mission" class="list-group">
+                <!--list of players will need to be appended as labeled checkboxes-->
+                <!--instructions will be found here: -->
+                <!--http://stackoverflow.com/questions/866239/creating-the-checkbox-dynamically-using-javascript-->
+                
+                <!--<input type= "checkbox" /> Player 1 <br />-->
+                <!--<input type= "checkbox" /> Player 2 <br />-->
+                <!--<input type= "checkbox" /> Player 3 <br />-->
+                <!--<input type= "checkbox" /> Player 4 <br />-->
+                <!--<input type= "checkbox" /> Player 5 <br />-->
+              </ul>
+              <input type="button" class="btn btn-dfault" value="Submit" id="Submit-Team-Button">
+            </div>
+            
+            <!--only display this to players on the mission-->
+            <div id ="pass-fail">
+              <h4>Do you want the mission to succeed or fail?</h4>
+              <input type="button" class="btn btn-default" value="Success" id="success">
+              <input type="button" class="btn btn-default" value="Fail" id="fail">
+            </div>
             
                 
 
