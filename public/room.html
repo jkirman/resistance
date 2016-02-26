@@ -43,10 +43,6 @@
                 </div>
             </div>
         </div>
-      
-          <form action="/startgame" method="post">
-             <input type="submit" value="Start Game" class="btn btn-default btn-lg start-but waiting-room">
-				  </form>
 				  
       <div class="site-wrapper-inner">
         
@@ -79,12 +75,13 @@
               <h1 class="header waiting-room">New Game Successfully Created!</h1>
                 <div class= "lead waiting-room">Share this link with other players : 
                 <p id="link"></p></div>
-                 <div class="options">
+                <div class="options">
                     <input type="text" class="text-box" id="changeName-text">
                     <input type="button" class="btn btn-dfault" value="Change Name" id="changeName-button">
+                     <input type="button" value="Ready" class="btn btn-default btn-lg start-but" id="ready-button">
                 </div>
-                <div class= "middle-text waiting-room"> These players have joined so far : </div>
-                <ul id = "playerList" class="list-group waiting-room">
+                <div class= "middle-text"> These players have joined so far : </div>
+                <ul id = "playerList" class="list-group">
                 </ul>
 
               

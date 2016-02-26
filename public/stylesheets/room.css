@@ -17,6 +17,10 @@ body {
   background-color: #333;
 }
 
+.text-box{
+  color: #111;
+}
+
 .player-list-gameplay{
   display:inline-block;
   margin-left: 1120px;

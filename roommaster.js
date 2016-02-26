@@ -101,12 +101,14 @@ function Player(pName, pID) {
 	var _genericName = pName;
 	var _name = pName;
 	var _pID = pID
+	var _ready = false;
 
 	this.getName = function() { return _name; };
 	this.getGenericName = function() { return _genericName; };
-	this.getpID = function() { return _pID}
+	this.getId = function() { return _pID};
+	this.isReady = function() { return _ready };
+	this.setReady = function(ready) { _ready = ready };
 	this.changeName = function(name) { _name = name; };
-
 }
 
 // Room object constructor
@@ -121,7 +123,7 @@ function Room(ID) {
 	
 	// Add a new player with a generic name
 	this.addNewPlayer = function(pID) {
-		if (_players.length >= _type.maxPlayers) {
+		if (this.isFull()) {
 			console.log("The room is full!");
 			return;			
 		} else {
@@ -144,6 +146,23 @@ function Room(ID) {
 		return player.getName();
 	};
 	
+	this.setPlayerReady = function(player, readyStatus) {
+		// @jeff we need to check if room is in a state where players are allowed to change their readyStatus before calling this
+		player.setReady(readyStatus);
+	}
+	
+	this.gameCanStart = function() {
+		for(var pID in _players) {
+			if (_players[pID].isReady() == false) {
+				return false
+			}
+		}
+		if(_players.length >= 5) {
+			return true
+		}
+		return false
+	}
+	
 	// Given a Player object, this function removes them from the current room
 	this.removePlayer = function(player) {
 		var index = _players.indexOf(player);
@@ -154,7 +173,7 @@ function Room(ID) {
 			console.log("Attempted to remove non-existant player: \n" + player);
 		}
 	};
-
+	
 	this.changeRoomType = function(rType) {
 		_type = rType;
 	};
@@ -162,23 +181,50 @@ function Room(ID) {
 	// This function removes the current Room object from the list of rooms
 	// if there are no players in it
 	this.validateRoom = function() {
-		if (_players.length === 0) {
+		if (_players.length == 0) {
 			closeRoom(this);
 		}
 	};
 	
-	this.getID = function() { return _ID; };
+	this.getId = function() { return _ID; };
 	
-	this.getPlayer = function(name) {
+	this.isFull = function() {
+		return (_players.length >= _type.maxPlayers)
+	}
+	
+	this.getPlayerByName = function(name) {
 		return findPlayerByName(_players, name);
+	}
+	
+	this.getPlayerById = function(id) {
+		return findById(_players, id);
 	}
 	
 	// TODO: Figure out a clean way to send room info as JSON and parse it on the client
 	this.toString = function() {
-		var plList = []
-		_players.forEach(function(player) {plList = plList.concat(player.getName() )})
-		return {ID: _ID, players: plList, type: _type, roomURL: _roomURL}
+		var plList = {}
+		_players.forEach(function(player) {plList[player.getId()] =  {name: player.getName(), ready: player.isReady()} })
+		return {ID: _ID, players: plList, type: _type, roomURL: _roomURL, gameStart: this.gameCanStart(), playerId: null}
 	}
+	
+		// ADDED FOR UNIT TESTS //
+	
+	this.getPlayerList = function() { return _players; };
+	
+	// Add a new player with a generic name (for testing)
+	this.addNewPlayerTest = function() {
+		
+		if (_players.length >= _type.maxPlayers) {
+			console.log("The room is full!");
+			return;			
+		} else {
+			var newName = _genericPlayerNames.pop();
+			var p = new Player(newName);
+			_players.push(p);
+			return p;
+		}
+	};
+	 //////////////////////////////
 
 }
 
@@ -191,7 +237,7 @@ function Room(ID) {
 // source : http://stackoverflow.com/questions/7364150/find-object-by-id-in-an-array-of-javascript-objects
 function findById(source, id) {
   for (var i = 0; i < source.length; i++) {
-    if (source[i].getID() === id) {
+    if (source[i].getId() === id) {
       return source[i];
     }
   }
@@ -206,3 +252,45 @@ function findPlayerByName(source, name) {
   }
   return null;
 }
+
+// Unit tests for stories 1, 2 and 3
+
+var test = require("unit.js");
+
+// Test setup
+var assert = test.assert;
+
+var troom = null;
+var tplayer = null;
+
+// Test that a room is created (createRoom() function)
+assert.strictEqual(AllRooms.length, 0, 'Room list not initially empty.');
+exports.startNewRoom();
+assert.strictEqual(AllRooms.length, 1, 'Room was not created.');
+
+troom = AllRooms[0];
+
+assert.equal(findById(AllRooms, troom.getId()), troom, 'Room finding does not work.');
+
+// Test if new player has been added to the room
+assert.notEqual(troom.getPlayerList().length, 0, 'No players in room.');
+
+tplayer = troom.getPlayerList()[0];
+
+// Test if you can change the player's name
+var newTestName = "Test";
+troom.changePlayerName(tplayer, newTestName);
+assert.equal(tplayer.getName(), newTestName);
+
+// Test if you can't change to a restricted name
+for(var i = 0; i < genericNames.length; i++){
+	troom.changePlayerName(tplayer, newTestName);
+}
+assert.equal(tplayer.getName(), newTestName);
+
+// Test if you can't change to a name already in use
+var newTestName2 = "Test2";
+var tplayer2 = troom.addNewPlayerTest();
+troom.changePlayerName(tplayer2, newTestName2);
+troom.changePlayerName(tplayer, newTestName2);
+assert.notEqual(tplayer.getName(), newTestName2);
