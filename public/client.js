@@ -76,7 +76,8 @@ socket.on('roomFull', function() {
 
 // @cecile, put these document element hooks in clientController, then call the appropriate IO_* functions from them
 document.getElementById("changeName-button").onclick = function() {
-    var newName = document.getElementById("changeName-text").value;
+    var newName = document.getElementById("changeName-text").value; // @cecile put this in a function in clientController
+    // var newName = $("changeName-text").val(); // @jasfour this doesn't work, it just says null
     IO_changePlayerName(newName)
 }
 
