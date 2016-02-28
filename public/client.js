@@ -36,18 +36,17 @@ socket.on('gameInfo', function(gameInfo) {
     // When this function is called with a gameInfo object where gameInfo.gameStarted == false, then call the right UI functions to show the waiting room and update the player list, etc
     // If it's called where gameInfo.gameStarted == true, then look at the missions table and update info properly, etc etc..
     // We can slowly add functionality as we go
-    currentGameInfo = gameInfo
     
     var plList = document.getElementById("playerList");
     while (plList.hasChildNodes()) {   
         plList.removeChild(plList.firstChild);
     }
 
-    for(var pID in currentGameInfo.players) {
+    for(var pID in gameInfo.players) {
         var node = document.createElement("LI");                 // Create a <li> node
         node.className = "list-group-item list-item-dark";
-        var playerString = currentGameInfo.players[pID].name + ": "
-        if(currentGameInfo.players[pID].ready) {
+        var playerString = gameInfo.players[pID].name + ": "
+        if(gameInfo.players[pID].ready) {
             playerString += "Ready"
         } else {
             playerString += "Not Ready"
@@ -57,9 +56,12 @@ socket.on('gameInfo', function(gameInfo) {
         plList.appendChild(node);
     }
     
-    if(currentGameInfo.gameStart == true) {
+    if(gameInfo.gameStart == true && currentGameInfo.gameStart == false) {
         // @cecile call whatever function sets the waiting room invisible and the game visible
     }
+    
+        currentGameInfo = gameInfo
+
 })
 
 socket.on('roomDeleted', function() {

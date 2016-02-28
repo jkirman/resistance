@@ -4,10 +4,6 @@ body {
   background-color: #333;
 }
 
-.start-but{
-  position:absolute; bottom:0;  margin-bottom:300px; margin-right:130px; right: 0;
-}
-
 .middle-text{
   margin-top:50px;
   margin-bottom:30px;
@@ -19,6 +15,7 @@ body {
 
 .text-box{
   color: #111;
+  margin-bottom: 20px;
 }
 
 .player-list-gameplay{
@@ -202,7 +199,7 @@ body {
 }
 
 #playerList{
-
+  height: 800px;
 }
 
 .card-text{

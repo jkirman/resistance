@@ -33,8 +33,9 @@
     
     <div class="site-wrapper">
       
+
       <div class="modal hide" id="pleaseWaitDialog" data-backdrop="static" data-keyboard="false">
-            <div class="modal-header" "waiting-room">
+            <div class="modal-header waiting-room">
                 <h1>Please wait for the game to start...</h1>
             </div>
             <div class="modal-body">
@@ -45,6 +46,7 @@
         </div>
 				  
       <div class="site-wrapper-inner">
+                            
         
         <div class="room" id ="card"></div>
             
@@ -78,11 +80,13 @@
                 <div class="options">
                     <input type="text" class="text-box" id="changeName-text">
                     <input type="button" class="btn btn-dfault" value="Change Name" id="changeName-button">
-                     <input type="button" value="Ready" class="btn btn-default btn-lg start-but" id="ready-button">
+                    <input type="button" value="Ready" class="btn btn-default waiting-room" id="ready-button">
                 </div>
                 <div class= "middle-text"> These players have joined so far : </div>
+
                 <ul id = "playerList" class="list-group">
                 </ul>
+                
 
               
               <div id="score-display" class="room">
@@ -141,7 +145,7 @@
         </div>
 
       </div>
-
+      
     </div>
 
     <!-- Bootstrap core JavaScript
