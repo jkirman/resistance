@@ -4,10 +4,6 @@ body {
   background-color: #333;
 }
 
-.start-but{
-  position:absolute; bottom:0;  margin-bottom:300px; margin-right:130px; right: 0;
-}
-
 .middle-text{
   margin-top:50px;
   margin-bottom:30px;
@@ -17,16 +13,24 @@ body {
   background-color: #333;
 }
 
-.text-box{
-  color: #111;
+.popups{
+  margin-top:200px;
 }
 
-.player-list{
+.mission-vote{
+  visibility:hidden;
+}
+
+.text-box{
+  color: #111;
+  margin-bottom: 20px;
+}
+
+.player-list-gameplay{
   display:inline-block;
   display:none;
   margin-left: 1120px;
   margin-top: 300px;
-  border: solid;
   width: 200px;
 }
 
@@ -35,12 +39,10 @@ body {
   margin: 0 auto; 
   display:inline-block;
   white-space: nowrap;
-  /*visibility:hidden;*/
 }
 
 .table {
     border: none;
-    /*visibility:hidden;*/
 }
 
 .card-wrapper {
@@ -53,7 +55,6 @@ body {
   margin-top:10px; 
   margin-right:10px; 
   right: 20px;
-  display:none;
 }
 
 #score-box{
@@ -102,11 +103,10 @@ body {
 
 #missions-box{
   position:relative;
-  top: -80px;
+  top:-400px;
   margin-top: 50px;
   margin-left:5px;
   left: -500px;
-  display:none;
 }
 
 #mission-one-head{
@@ -242,7 +242,15 @@ body {
   right: 0;
   box-shadow: 5px 5px 3px black;
   border-radius: 5px;
-  /*visibility:hidden;*/
+}
+
+#playerList{
+  height: 800px;
+}
+
+#vote-text{
+  margin-bottom:30px;
+
 }
 
 .card-text{
@@ -251,5 +259,12 @@ body {
   margin-top:260px; 
   margin-right:120px; 
   right: 0;
-  /*visibility:hidden;*/
+}
+
+.waiting-room{
+  display:none;
+}
+
+.room{
+  display:auto;
 }
