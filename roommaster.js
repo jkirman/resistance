@@ -1,7 +1,7 @@
 /***************************/
 /* Room Controlling Script */
 /***************************/
-
+var gamemaster = require("./gamemaster.js");
 // Module stuff
 var exports = module.exports = {};
 
@@ -100,13 +100,18 @@ function Player(pName, pID) {
 	// Object variables
 	var _genericName = pName;
 	var _name = pName;
-	var _pID = pID
+	var _pID = pID;
+	var _isLeader = false;
+	var _type = PlayerType.RESISTANCE;
 
 	this.getName = function() { return _name; };
 	this.getGenericName = function() { return _genericName; };
-	this.getId = function() { return _pID}
+	this.getId = function() { return _pID; };
 	this.changeName = function(name) { _name = name; };
-
+	this.setLeader = function(isLeader) { _isLeader = isLeader; };
+	this.getIsLeader = function() {return _isLeader; };
+	this.setType = function(type) { _type = type; };
+	this.getType = function() { return _type; };
 }
 
 // Room object constructor
@@ -115,9 +120,12 @@ function Room(ID) {
 	// Room parameters
 	var _ID = ID;
 	var _players = [];
+	var _playerIDs = [];
 	var _type = RoomType.NONE;
 	var _roomURL = ""; // Generate URL here
 	var _genericPlayerNames = genericNames.slice();
+	var _spies = [];
+	var _gameMaster;
 	
 	// Add a new player with a generic name
 	this.addNewPlayer = function(pID) {
@@ -127,7 +135,20 @@ function Room(ID) {
 		} else {
 			var newName = _genericPlayerNames.pop();
 			_players.push(new Player(newName, pID));
+			_playerIDs.push(pID); //TODO: remove when deleting a player
 			return newName;
+		}
+	};
+	
+	this.updateGameInfo = function(){
+		_gameMaster = gamemaster.initializeGame(_ID, _playerIDs);
+	};
+	
+	this.updateSpies = function(){
+		for(player in _spies){
+			if (player.getType == PlayerType.SPY){
+				_spies.push(player);
+			}
 		}
 	};
 	
@@ -188,6 +209,8 @@ function Room(ID) {
 		return {ID: _ID, players: plList, type: _type, roomURL: _roomURL}
 	}
 	
+	this.getSpyList = function() { return _spyList; };
+	
 		// ADDED FOR UNIT TESTS //
 	
 	this.getPlayerList = function() { return _players; };
@@ -207,6 +230,29 @@ function Room(ID) {
 	};
 	 //////////////////////////////
 
+}
+
+//Game Info Object
+function RoomInfo(Room,Player){
+	
+	//parameters
+	var _playerList = Room.getPlayerList;
+	var _spyList;
+	
+	Room.updateSpies;
+	if (Player.getType == PlayerType.SPY){
+		_spyList = 	Room.getSpyList();				
+	} else {
+		_spyList = [];
+	}
+	
+	var _gameInfo = Room.updateGameInfo;
+	
+	return {
+		PlayerList: _playerList,
+		SpyList: _spyList,
+		GameInfo: _gameInfo
+	}
 }
 
 ///////////////////////////
