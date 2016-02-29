@@ -28,6 +28,7 @@ body {
 
 .player-list-gameplay{
   display:inline-block;
+  display:none;
   margin-left: 1120px;
   margin-top: 300px;
   width: 200px;
@@ -42,6 +43,10 @@ body {
 
 .table {
     border: none;
+}
+
+.card-wrapper {
+  display: none;
 }
 
 #score-display{
@@ -190,6 +195,40 @@ body {
 	display:inline-block;
 }
 
+#Select-Mission {
+  position: relative;
+  top: -350px;
+  display:none;
+}
+
+#pass-fail {
+  display:none;
+  position:relative;
+  top: -350px;
+}
+
+#success {
+  background-color: blue;
+  width: 100px;
+  height: 60px;
+  position: relative;
+  right:50px;
+  font-weight: bold;
+  color: white;
+  display:inline-block;
+}
+
+#fail {
+  background-color: red;
+  width: 100px;
+  height: 60px;
+  position: relative;
+  left:50px;
+  font-weight: bold;
+  color: white;
+  display:inline-block;
+}
+
 #card{
   background-color: #ccc;
   background-image: url("images/playcard-background.jpg");
@@ -211,6 +250,7 @@ body {
 
 #vote-text{
   margin-bottom:30px;
+
 }
 
 .card-text{
@@ -226,5 +266,7 @@ body {
 }
 
 .room{
-  display:none;
+
+  display:auto;
 }
+
