@@ -4,6 +4,11 @@ var express = require('express')
 var app = express();
 var gamelist = [];
 
+
+// *********************************
+// EXPRESS
+// *********************************
+
 console.log(__dirname + '/public');
 app.use('/static', express.static(__dirname + '/public'));
 app.set('port', (process.env.PORT || 5000))
@@ -60,6 +65,10 @@ var server = http.createServer(app).listen(app.get('port'), function(){
 
 var io = require('socket.io').listen(server);
 
+// *********************************
+// IO CALLS
+// *********************************
+
 var IO_getRoomFromSocket = function(socket) {
     for(var roomId in socket.rooms) {
         var room = roommaster.findRoom(parseInt(roomId));
@@ -98,6 +107,10 @@ var IO_sendGameInfoToRoom = function(room) {
 var IO_sendRoomDeletedToSocket = function(socketId) {
     io.sockets.sockets[socketId].emit('roomDeleted')
 }
+
+// *********************************
+// IO HOOKS
+// *********************************
 
 io.on('connection', function (socket) {
     
