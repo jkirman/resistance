@@ -120,7 +120,6 @@ function Room(ID) {
 	// Room parameters
 	var _ID = ID;
 	var _players = [];
-	var _playerIDs = [];
 	var _type = RoomType.NONE;
 	var _roomURL = ""; // Generate URL here
 	var _genericPlayerNames = genericNames.slice();
@@ -135,21 +134,30 @@ function Room(ID) {
 		} else {
 			var newName = _genericPlayerNames.pop();
 			_players.push(new Player(newName, pID));
-			_playerIDs.push(pID); //TODO: remove when deleting a player
 			return newName;
 		}
 	};
 	
-	this.updateGameInfo = function(){
-		_gameMaster = gamemaster.initializeGame(_ID, _playerIDs);
+	this.startGame = function(){
+		_gameMaster = new gamemaster.Game(_players);
+		_gameMaster.nextMission();
+		this.updateSpies();
+		this.sendGameInfo();
 	};
 	
 	this.updateSpies = function(){
-		for(player in _spies){
+		_players.forEach(function(player) {
 			if (player.getType == PlayerType.SPY){
 				_spies.push(player);
 			}
-		}
+		});
+	};
+	
+	this.sendGameInfo = function() {
+		_players.forEach(function(p) {
+			var gameInfo = new RoomInfo(_ID, p);
+			// Send to player here
+		});
 	};
 	
 	// Given a player object and a name string, this function changes
@@ -206,10 +214,10 @@ function Room(ID) {
 	this.toString = function() {
 		var plList = []
 		_players.forEach(function(player) {plList = plList.concat(player.getName() )})
-		return {ID: _ID, players: plList, type: _type, roomURL: _roomURL}
-	}
+		return {ID: _ID, players: plList, type: _type, roomURL: _roomURL};
+	};
 	
-	this.getSpyList = function() { return _spyList; };
+	this.getSpyList = function() { return _spies; };
 	
 		// ADDED FOR UNIT TESTS //
 	
@@ -252,7 +260,7 @@ function RoomInfo(Room,Player){
 		PlayerList: _playerList,
 		SpyList: _spyList,
 		GameInfo: _gameInfo
-	}
+	};
 }
 
 ///////////////////////////
@@ -321,3 +329,7 @@ var tplayer2 = troom.addNewPlayerTest();
 troom.changePlayerName(tplayer2, newTestName2);
 troom.changePlayerName(tplayer, newTestName2);
 assert.notEqual(tplayer.getName(), newTestName2);
+
+var gameMaster1 = gamemaster.initializeGame(1, [1,2]);
+var gameMaster2 = gamemaster.initializeGame(2, [3,4,5]);
+assert.notEqual(gameMaster1, gameMaster2);
