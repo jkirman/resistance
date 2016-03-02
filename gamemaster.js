@@ -41,6 +41,7 @@ var Game = function(players) {
 	// Main array that contains all game attempts history (to be sent to client for info)
 	// It contains several attempt objects (AttemptsInfo)
 	this._gameWinner = PlayerType.NONE;
+	this._score = [0,0]; // Resistance, spies
 	
 	this.setPlayerTypes();
 };
@@ -166,7 +167,7 @@ Game.prototype.voteOnMissionAttempt = function(playerID, vote) {
 	var currentVotes = this._gameInfo.peek().attemptVote;
 	currentVotes.push([playerID, vote]);
 	
-	if (currentVotes.length == this.numberOfPlayers) {
+	if (currentVotes.length === this._numberOfPlayers) {
 		this.missionAttempt();
 	}
 	
@@ -181,7 +182,7 @@ Game.prototype.missionAttempt = function() {
 	var yesVotes = 0;
 	var noVotes = 0;
 	votes.forEach(function(vote) {
-		if (vote == true) {
+		if (vote[1]) {
 			yesVotes++;
 		} else {
 			noVotes++;
@@ -218,11 +219,13 @@ Game.prototype.voteOnMissionSuccess = function(playerID, vote) {
 
 // Updates the mission success
 Game.prototype.missionSuccess = function() {
-	var currentMission = this._gameInfo.peek().missionNumber;
+	var currentMission = this._gameInfo.peek();
 	if (currentMission.missionVote[0] >= exports.toWinMission(this._numberOfPlayers, currentMission.missionNumber)) {
 		currentMission.missionPassed = true;
+		this._score[0]++;
 	} else {
 		currentMission.missionPassed = false;
+		this._score[1]++;
 	}
 	this.checkGameWinner();
 };
@@ -230,19 +233,9 @@ Game.prototype.missionSuccess = function() {
 // Checks to see if a team won the game
 // if not it will trigger the next mission
 Game.prototype.checkGameWinner = function() {
-	var resistancePoints = 0;
-	var spyPoints = 0;
-	this._gameInfo.forEach(function(attempt) {
-		if (attempt.missionPassed) {
-			resistancePoints++;
-		} else if (!attempt.missionPassed) {
-			spyPoints++;
-		}
-	});
-	
-	if (resistancePoints == 3) {
+	if (this._score[0] == 3) {
 		this._gameWinner = PlayerType.RESISTANCE;
-	} else if (spyPoints == 3) {
+	} else if (this._score[1] == 3) {
 		this._gameWinner = PlayerType.SPY;
 	} else {
 		this.nextMission();
@@ -255,6 +248,10 @@ Game.prototype.getGameInfo = function() {
 
 Game.prototype.getGameWinner = function() {
 	return this._gameWinner;
+};
+
+Game.prototype.getScore = function() {
+	return this._score.slice();
 };
 
 var newAttempt = function(mno, ano, leaderID) {
@@ -289,5 +286,5 @@ exports.toWinMission = function(numberOfPlayers, missionNumber) {
 		[3,4,4,4,5],
 		[3,4,4,4,5],
 		[3,4,4,4,5]];
-		return playerLookUp[this.numberOfPlayers - 5][missionNumber - 1];
+		return playerLookUp[numberOfPlayers - 5][missionNumber - 1];
 };

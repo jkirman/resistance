@@ -107,6 +107,7 @@ function Player(pName, pID) {
 	var _pID = pID;
 	var _isLeader = false;
 	var _type = PlayerType.RESISTANCE;
+	var _isReady = false;
 
 	this.getName = function() { return _name; };
 	this.getGenericName = function() { return _genericName; };
@@ -116,6 +117,8 @@ function Player(pName, pID) {
 	this.getIsLeader = function() {return _isLeader; };
 	this.setType = function(type) { _type = type; };
 	this.getType = function() { return _type; };
+	this.isReady = function() { return _isReady; };
+	this.toggleReady = function() { _isReady =! _isReady };
 }
 
 // Room object constructor
@@ -140,6 +143,20 @@ function Room(ID) {
 			_players.push(new Player(newName, pID));
 			return newName;
 		}
+	};
+	
+	// Toggles a player's ready status and if there are at least 5 players in
+	// the room and all of them say they are ready, the game is started
+	this.toggleReady = function(player) {
+		player.toggleReady();
+		if (_players.length > 4) {
+			_players.forEach(function(p){
+				if (!p.isReady()) {
+					return;
+				} 
+			});
+		}
+		this.startGame();
 	};
 	
 	this.startGame = function(){
@@ -420,6 +437,138 @@ gm.togglePlayerForMission(pList[3].getId());
 gm.startVoting();
 assert.equal(gm.getGameInfo().pop().playersChosen, true);
 
-// 9
+// no > yes
+var attemptno = gm.getGameInfo().peek().attemptNumber;
+for (var i = 0; i < pList.length; i++) {
+	gm.voteOnMissionAttempt(pList[i].getId(), false);
+}
+
+assert.notEqual(gm.getGameInfo().peek().attemptNumber, attemptno);
+
+// yes = no
+gm.togglePlayerForMission(pList[0].getId());
+gm.togglePlayerForMission(pList[1].getId());
+gm.togglePlayerForMission(pList[2].getId());
+
+var attemptno = gm.getGameInfo().peek().attemptNumber;
+var missionno = gm.getGameInfo().peek().missionNumber;
+for (var i = 0; i < pList.length/2; i++) {
+	gm.voteOnMissionAttempt(pList[i].getId(), false);
+}
+for (var i = pList.length/2; i < pList.length; i++) {
+	gm.voteOnMissionAttempt(pList[i].getId(), true);
+}
+
+assert.equal(gm.getGameInfo().peek().attemptNumber, attemptno);
+assert.equal(gm.getGameInfo().peek().missionNumber, missionno);
+
+// yes > no
+testRoom = exports.createRoom();
+for (var j = 0; j < 10; j++) {
+	testRoom.addNewPlayer(j);
+}
+
+testRoom.startGame();
+pList = testRoom.getPlayerList();
+gm = testRoom.getGameMaster();
+
+gm.togglePlayerForMission(pList[0].getId());
+gm.togglePlayerForMission(pList[1].getId());
+gm.togglePlayerForMission(pList[2].getId());
+
+attemptno = gm.getGameInfo().peek().attemptNumber;
+missionno = gm.getGameInfo().peek().missionNumber;
+for (var i = 0; i < pList.length; i++) {
+	gm.voteOnMissionAttempt(pList[i].getId(), true);
+}
+
+assert.equal(gm.getGameInfo().peek().attemptNumber, attemptno);
+assert.equal(gm.getGameInfo().peek().missionNumber, missionno);
 
 // End user story 8 and 9 test
+
+// User story 10 test
+
+// Mission success all players
+for (var i = 0; i < 3; i++) {
+	gm.voteOnMissionSuccess(pList[i].getId(),true);
+}
+
+assert.equal(gm.getScore()[0], 1);
+
+// Mission failure with one no vote
+testRoom = exports.createRoom();
+for (var j = 0; j < 10; j++) {
+	testRoom.addNewPlayer(j);
+}
+
+testRoom.startGame();
+pList = testRoom.getPlayerList();
+gm = testRoom.getGameMaster();
+
+gm.togglePlayerForMission(pList[0].getId());
+gm.togglePlayerForMission(pList[1].getId());
+gm.togglePlayerForMission(pList[2].getId());
+
+for (var i = 0; i < pList.length; i++) {
+	gm.voteOnMissionAttempt(pList[i].getId(), true);
+}
+
+for (var i = 0; i < 2; i++) {
+	gm.voteOnMissionSuccess(pList[i].getId(), true);
+}
+gm.voteOnMissionSuccess(pList[2].getId(), false);
+
+assert.equal(gm.getScore()[1], 1);
+
+// Pass with one no
+testRoom = exports.createRoom();
+for (var j = 0; j < 10; j++) {
+	testRoom.addNewPlayer(j);
+}
+
+testRoom.startGame();
+pList = testRoom.getPlayerList();
+gm = testRoom.getGameMaster();
+gm._gameInfo[0].missionNumber = 4;
+
+gm.togglePlayerForMission(pList[0].getId());
+gm.togglePlayerForMission(pList[1].getId());
+gm.togglePlayerForMission(pList[2].getId());
+gm.togglePlayerForMission(pList[3].getId());
+gm.togglePlayerForMission(pList[4].getId());
+
+for (var i = 0; i < 4; i++) {
+	gm.voteOnMissionSuccess(pList[i].getId(), true);
+}
+gm.voteOnMissionSuccess(pList[4].getId(), false);
+
+assert.equal(gm.getScore()[0], 1);
+
+// Fail with 2 mission that requires 1 less to win
+testRoom = exports.createRoom();
+for (var j = 0; j < 10; j++) {
+	testRoom.addNewPlayer(j);
+}
+
+testRoom.startGame();
+pList = testRoom.getPlayerList();
+gm = testRoom.getGameMaster();
+gm._gameInfo[0].missionNumber = 4;
+
+gm.togglePlayerForMission(pList[0].getId());
+gm.togglePlayerForMission(pList[1].getId());
+gm.togglePlayerForMission(pList[2].getId());
+gm.togglePlayerForMission(pList[3].getId());
+gm.togglePlayerForMission(pList[4].getId());
+
+for (var i = 0; i < 3; i++) {
+	gm.voteOnMissionSuccess(pList[i].getId(), true);
+}
+gm.voteOnMissionSuccess(pList[3].getId(), false);
+gm.voteOnMissionSuccess(pList[4].getId(), false);
+
+assert.equal(gm.getScore()[1], 1);
+
+
+// end 10 test
