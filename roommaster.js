@@ -1,7 +1,7 @@
 /***************************/
 /* Room Controlling Script */
 /***************************/
-var gamemaster = require("./gamemaster.js");
+
 // Module stuff
 var exports = module.exports = {};
 
@@ -10,6 +10,10 @@ var PlayerType = {
 	RESISTANCE : "RESISTANCE",
 	SPY : "SPY"
 };
+
+exports.getPlayerTypes = function() { return PlayerType; };
+
+var gamemaster = require("./gamemaster.js");
 
 // The RoomType object contains different game types, each with relevant parameters
 var RoomType = {
@@ -81,13 +85,13 @@ exports.findRoom = function(rID) {
 };
 
 exports.createPlayer = function(playerName) {
-	var newPlayer = new Player(playerName)
+	var newPlayer = new Player(playerName);
 	return newPlayer;
-}
+};
 
 exports.getRoomList = function() {
 	return AllRooms;
-}
+};
 
 /**************************************************************************/
 
@@ -139,25 +143,22 @@ function Room(ID) {
 	};
 	
 	this.startGame = function(){
-		_gameMaster = new gamemaster.Game(_players);
+		_gameMaster = gamemaster.createGame(_players);
 		_gameMaster.nextMission();
 		this.updateSpies();
 		this.sendGameInfo();
 	};
 	
 	this.updateSpies = function(){
-		_players.forEach(function(player) {
-			if (player.getType == PlayerType.SPY){
-				_spies.push(player);
+		_players.forEach(function(p){
+			if (p.getType() == PlayerType.SPY){
+				_spies.push(p);
 			}
 		});
 	};
 	
 	this.sendGameInfo = function() {
-		_players.forEach(function(p) {
-			var gameInfo = new RoomInfo(_ID, p);
-			// Send to player here
-		});
+
 	};
 	
 	// Given a player object and a name string, this function changes
@@ -199,25 +200,50 @@ function Room(ID) {
 	this.getId = function() { return _ID; };
 	
 	this.isFull = function() {
-		return (_players.length >= _type.maxPlayers)
-	}
+		return (_players.length >= _type.maxPlayers);
+	};
 	
 	this.getPlayerByName = function(name) {
 		return findPlayerByName(_players, name);
-	}
+	};
 	
 	this.getPlayerById = function(id) {
 		return findById(_players, id);
-	}
+	};
 	
 	// TODO: Figure out a clean way to send room info as JSON and parse it on the client
 	this.toString = function() {
-		var plList = []
-		_players.forEach(function(player) {plList = plList.concat(player.getName() )})
+		var plList = [];
+		_players.forEach(function(player) {plList = plList.concat(player.getName() )});
 		return {ID: _ID, players: plList, type: _type, roomURL: _roomURL};
 	};
 	
 	this.getSpyList = function() { return _spies; };
+	
+	this.getRoomInfo = function(player) {
+		//parameters
+		var _playerList = this.getPlayerList();
+		var _spyList;
+		var _gameInfo;
+		var _gameWinner;
+		
+		this.updateSpies;
+		if (player.getType() == PlayerType.SPY){
+			_spyList = 	this.getSpyList();				
+		} else {
+			_spyList = [];
+		}
+		
+		_gameInfo = _gameMaster.getGameInfo();
+		_gameWinner = _gameMaster.getGameWinner();
+		
+		return {
+			PlayerList : _playerList,
+			SpyList : _spyList,
+			GameInfo : _gameInfo,
+			GameWinner : _gameWinner
+		};
+	};
 	
 		// ADDED FOR UNIT TESTS //
 	
@@ -236,31 +262,12 @@ function Room(ID) {
 			return p;
 		}
 	};
+	
+	this.getGameMaster = function() {
+		return _gameMaster;	
+	};
 	 //////////////////////////////
 
-}
-
-//Game Info Object
-function RoomInfo(Room,Player){
-	
-	//parameters
-	var _playerList = Room.getPlayerList;
-	var _spyList;
-	
-	Room.updateSpies;
-	if (Player.getType == PlayerType.SPY){
-		_spyList = 	Room.getSpyList();				
-	} else {
-		_spyList = [];
-	}
-	
-	var _gameInfo = Room.updateGameInfo;
-	
-	return {
-		PlayerList: _playerList,
-		SpyList: _spyList,
-		GameInfo: _gameInfo
-	};
 }
 
 ///////////////////////////
@@ -330,6 +337,89 @@ troom.changePlayerName(tplayer2, newTestName2);
 troom.changePlayerName(tplayer, newTestName2);
 assert.notEqual(tplayer.getName(), newTestName2);
 
-var gameMaster1 = gamemaster.initializeGame(1, [1,2]);
-var gameMaster2 = gamemaster.initializeGame(2, [3,4,5]);
-assert.notEqual(gameMaster1, gameMaster2);
+// User story 4, assigning teams
+for (var i = 5; i <= 10; i++) {
+	var testRoom = exports.createRoom();
+	for (var j = 0; j < i; j++) {
+		testRoom.addNewPlayer(j);
+	}
+	testRoom.startGame();
+	assert.equal(testRoom.getSpyList().length, gamemaster.spiesInGame(i));
+}
+// End test user story 4
+
+// User stories 5 and 6, revealing spies to spies
+var testRoom = exports.createRoom();
+for (var j = 0; j < 10; j++) {
+	testRoom.addNewPlayer(j);
+}
+testRoom.startGame();
+testRoom.getPlayerList().forEach(function(p) {
+	var gi = testRoom.getRoomInfo(p);
+	assert.equal(p.getType() == PlayerType.SPY, gi.SpyList.length != 0);
+});
+// End test user story 5 and 6
+
+// User story 7, only the leader is notified to be the leader
+testRoom = exports.createRoom();
+var lastLeaderID;
+for (var j = 0; j < 10; j++) {
+	testRoom.addNewPlayer(j);
+}
+testRoom.startGame();
+testRoom.getPlayerList().forEach(function(p) {
+	var gi = testRoom.getRoomInfo(p).GameInfo.slice().pop();
+	lastLeaderID = gi.leaderID;
+	assert.equal(lastLeaderID == p.getId(), p.getIsLeader());
+});
+
+// Next mission
+testRoom.getGameMaster().nextMission();
+testRoom.getPlayerList().forEach(function(p) {
+	var gi = testRoom.getRoomInfo(p).GameInfo.slice().pop();
+	assert.notEqual(lastLeaderID, gi.leaderID);
+	assert.equal(gi.leaderID == p.getId(), p.getIsLeader());
+});
+
+lastLeaderID = testRoom.getGameMaster().getGameInfo().leaderID;
+
+// Next attempt
+testRoom.getGameMaster().nextAttempt();
+testRoom.getPlayerList().forEach(function(p) {
+	var gi = testRoom.getRoomInfo(p).GameInfo.slice().pop();
+	assert.notEqual(lastLeaderID, gi.leaderID);
+	assert.equal(gi.leaderID == p.getId(), p.getIsLeader());
+});
+// End test user story 7
+
+// User story 8 and 9 test
+testRoom = exports.createRoom();
+for (var j = 0; j < 10; j++) {
+	testRoom.addNewPlayer(j);
+}
+
+testRoom.startGame();
+var pList = testRoom.getPlayerList();
+var gm = testRoom.getGameMaster();
+
+// 8 Alternate scenario too few
+gm.togglePlayerForMission(pList[0].getId());
+gm.togglePlayerForMission(pList[1].getId());
+
+assert.throws(function() {gm.startVoting()});
+
+// 8 too many
+gm.togglePlayerForMission(pList[2].getId());
+gm.togglePlayerForMission(pList[3].getId());
+
+assert.throws(function() {gm.startVoting()});
+
+// 8 just right
+gm.togglePlayerForMission(pList[3].getId());
+
+gm.startVoting();
+assert.equal(gm.getGameInfo().pop().playersChosen, true);
+
+// 9
+
+// End user story 8 and 9 test

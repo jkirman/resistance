@@ -7,7 +7,7 @@
  * 
 **/
 
-var roommaster = require("./roommaster.js");
+var PlayerType = require("./roommaster.js").getPlayerTypes();
 
 //////////////////////
 // Helper functions //
@@ -40,7 +40,9 @@ var Game = function(players) {
 	this._gameInfo = [];
 	// Main array that contains all game attempts history (to be sent to client for info)
 	// It contains several attempt objects (AttemptsInfo)
-	this._gameWinner = roommaster.PlayerType.NONE;
+	this._gameWinner = PlayerType.NONE;
+	
+	this.setPlayerTypes();
 };
 
 // The attempt object
@@ -57,7 +59,9 @@ var AttemptInfo = function() {
 };
 
 // Export Constructor
-exports.Game = Game;
+exports.createGame = function(players) {
+	return new Game(players);
+};
 
 // This function sets the player types for the players in the game randomly
 Game.prototype.setPlayerTypes = function() {
@@ -68,10 +72,10 @@ Game.prototype.setPlayerTypes = function() {
 		if (playersIndeces.indexOf(newIndex) == -1) {
 			playersIndeces.push(newIndex);
 		}
-	} while (playersIndeces < spysInGame(this._playerList.length));
+	} while (playersIndeces.length < exports.spiesInGame(this._playerList.length));
 	
 	for (var i = 0; i < playersIndeces.length; i++) {
-		this._playerList[playersIndeces[i]].setType(roommaster.PlayerType.SPY);
+		this._playerList[playersIndeces[i]].setType(PlayerType.SPY);
 	}
 	
 };
@@ -81,7 +85,6 @@ Game.prototype.setPlayerTypes = function() {
 // If it is the first mission, it sets the spies to spies
 Game.prototype.nextMission = function() {
 	if (this._gameInfo.length == 0) {
-		this.setPlayerTypes();
 		this._gameInfo.push(newAttempt(1, 1, this.nextLeader()));
 	} else {
 		var lastMission = this._gameInfo.peek();
@@ -111,8 +114,9 @@ Game.prototype.nextAttempt = function() {
 Game.prototype.nextLeader = function() {
 	var currentAttempt = this._gameInfo.peek();
 	if (currentAttempt == undefined) {
-		this._playerList[0].setLeader(true);
-		return this._playerList[0].getId();
+		var leaderIndex = Math.floor(Math.random() * this._playerList.length);
+		this._playerList[leaderIndex].setLeader(true);
+		return this._playerList[leaderIndex].getId();
 	} else {
 		var currentIndex = indexById(this._playerList, currentAttempt.leaderID);
 		this._playerList[currentIndex].setLeader(false);
@@ -142,8 +146,8 @@ Game.prototype.togglePlayerForMission = function(playerID) {
 // Checks to see if voting is even required (ie 3rd attempt)
 Game.prototype.startVoting = function() {
 	var currentAttempt = this._gameInfo.peek();
-	if (currentAttempt.selectedPlayers.length != amountOnMission(this._numberOfPlayers, currentAttempt.missionNumber)) {
-		return null; // NEED TO IMPLEMENT ERROR HERE
+	if (currentAttempt.selectedPlayers.length != exports.amountOnMission(this._numberOfPlayers, currentAttempt.missionNumber)) {
+		throw new Error("Wrong amount of players. Need:" + exports.amountOnMission(this._numberOfPlayers, currentAttempt.missionNumber));
 	} else {
 		currentAttempt.playersChosen = true;
 		
@@ -206,7 +210,7 @@ Game.prototype.voteOnMissionSuccess = function(playerID, vote) {
 			currentAttempt.missionVote[1]++;
 		}
 		
-		if (currentAttempt.missionVote[0] + currentAttempt.missionVote[1] == amountOnMission(this._numberOfPlayers, currentAttempt.missionNumber)) {
+		if (currentAttempt.missionVote[0] + currentAttempt.missionVote[1] == exports.amountOnMission(this._numberOfPlayers, currentAttempt.missionNumber)) {
 			this.missionSuccess();			
 		}
 	}
@@ -215,7 +219,7 @@ Game.prototype.voteOnMissionSuccess = function(playerID, vote) {
 // Updates the mission success
 Game.prototype.missionSuccess = function() {
 	var currentMission = this._gameInfo.peek().missionNumber;
-	if (currentMission.missionVote[0] >= toWinMission(this._numberOfPlayers, currentMission.missionNumber)) {
+	if (currentMission.missionVote[0] >= exports.toWinMission(this._numberOfPlayers, currentMission.missionNumber)) {
 		currentMission.missionPassed = true;
 	} else {
 		currentMission.missionPassed = false;
@@ -237,16 +241,20 @@ Game.prototype.checkGameWinner = function() {
 	});
 	
 	if (resistancePoints == 3) {
-		this._gameWinner = roommaster.PlayerType.RESISTANCE;
+		this._gameWinner = PlayerType.RESISTANCE;
 	} else if (spyPoints == 3) {
-		this._gameWinner = roommaster.PlayerType.SPY;
+		this._gameWinner = PlayerType.SPY;
 	} else {
 		this.nextMission();
 	}
 };
 
 Game.prototype.getGameInfo = function() {
-	return this._gameInfo.splice(-1);
+	return this._gameInfo.slice();
+};
+
+Game.prototype.getGameWinner = function() {
+	return this._gameWinner;
 };
 
 var newAttempt = function(mno, ano, leaderID) {
@@ -255,14 +263,14 @@ var newAttempt = function(mno, ano, leaderID) {
 	newInfo.attemptNumber = ano;
 	newInfo.leaderID = leaderID;
 	return newInfo;
-}
+};
 
-var spysInGame = function(numberOfPlayers) {
+exports.spiesInGame = function(numberOfPlayers) {
 	var spyCount = [2,2,3,3,3,4];
 	return spyCount[numberOfPlayers - 5];
 };
 
-var amountOnMission = function(numberOfPlayers, missionNumber) {
+exports.amountOnMission = function(numberOfPlayers, missionNumber) {
 	var playerLookUp = [
 		[2,3,2,3,3],
 		[2,3,3,3,4],
@@ -273,7 +281,7 @@ var amountOnMission = function(numberOfPlayers, missionNumber) {
 		return playerLookUp[numberOfPlayers - 5][missionNumber - 1];
 };
 
-var toWinMission = function(numberOfPlayers, missionNumber) {
+exports.toWinMission = function(numberOfPlayers, missionNumber) {
 	var playerLookUp = [
 		[2,3,2,3,3],
 		[2,3,3,3,4],
