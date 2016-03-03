@@ -4,10 +4,6 @@ body {
   background-color: #333;
 }
 
-.start-but{
-  position:absolute; bottom:0;  margin-bottom:300px; margin-right:130px; right: 0;
-}
-
 .middle-text{
   margin-top:50px;
   margin-bottom:30px;
@@ -17,17 +13,25 @@ body {
   background-color: #333;
 }
 
-.text-box{
-  color: #111;
+.popups{
+  margin-top:200px;
 }
 
-.player-list{
+.mission-vote{
+  visibility:hidden;
+}
+
+.text-box{
+  color: #111;
+  margin-bottom: 20px;
+}
+
+.player-list-gameplay{
   display:inline-block;
+  display:none;
   margin-left: 1120px;
   margin-top: 300px;
-  border: solid;
   width: 200px;
-  visibility:hidden;
 }
 
 .player-table{
@@ -35,12 +39,14 @@ body {
   margin: 0 auto; 
   display:inline-block;
   white-space: nowrap;
-  visibility:hidden;
 }
 
 .table {
     border: none;
-    visibility:hidden;
+}
+
+.card-wrapper {
+  display: none;
 }
 
 #score-display{
@@ -49,7 +55,6 @@ body {
   margin-top:10px; 
   margin-right:10px; 
   right: 20px;
-  visibility:hidden;
 }
 
 #score-box{
@@ -59,21 +64,18 @@ body {
   position:relative;
   left:280px;
   top: -45px;
-  visibility:hidden;
 }
 
 #resistance-name{
   display:inline-block;
   position: relative;
   right: 100px;
-  visibility:hidden;
 }
 
 #spy-name{
   display:inline-block;
   position: relative;
   left: 100px;
-  visibility:hidden;
 }
 
 #resistance-score{
@@ -82,7 +84,6 @@ body {
   position:relative;
   top:-10px;
   right:20px;
-  visibility:hidden;
 }
 
 #dash{
@@ -90,7 +91,6 @@ body {
   font-size: 40px;
   position:relative;
   top:-10px;
-  visibility:hidden;
 }
 
 #spy-score{
@@ -99,16 +99,14 @@ body {
   position:relative;
   top:-10px;
   left:20px;
-  visibility:hidden;
 }
 
 #missions-box{
   position:relative;
-  top: -80px;
+  top:-400px;
   margin-top: 50px;
   margin-left:5px;
   left: -500px;
-  visibility:hidden;
 }
 
 #mission-one-head{
@@ -116,7 +114,6 @@ body {
   position:relative;
   left: -20px;
   top:-10px;
-  visibility:hidden;
 }
 
 #mission-one-circle{
@@ -127,7 +124,6 @@ body {
 	-webkit-border-radius: 50px;
 	border-radius: 50px;
 	display:inline-block;
-	visibility:hidden;
 
 }
 
@@ -136,7 +132,6 @@ body {
   position:relative;
   left: -20px;
   top:-10px;
-  visibility:hidden;
 }
 
 #mission-two-circle{
@@ -147,7 +142,6 @@ body {
 	-webkit-border-radius: 50px;
 	border-radius: 50px;
 	display:inline-block;
-	visibility:hidden;
 }
 
 #mission-three-head{
@@ -155,7 +149,6 @@ body {
   position:relative;
   left: -20px;
   top:-10px;
-  visibility:hidden;
 }
 
 #mission-three-circle{
@@ -166,7 +159,6 @@ body {
 	-webkit-border-radius: 50px;
 	border-radius: 50px;
 	display:inline-block;
-	visibility:hidden;
 }
 
 #mission-four-head{
@@ -174,7 +166,6 @@ body {
   position:relative;
   left: -20px;
   top:-10px;
-  visibility:hidden;
 }
 
 #mission-four-circle{
@@ -185,7 +176,6 @@ body {
 	-webkit-border-radius: 50px;
 	border-radius: 50px;
 	display:inline-block;
-	visibility:hidden;
 }
 
 #mission-five-head{
@@ -193,7 +183,6 @@ body {
   position:relative;
   left: -20px;
   top:-10px;
-  visibility:hidden;
 }
 
 #mission-five-circle{
@@ -204,7 +193,40 @@ body {
 	-webkit-border-radius: 50px;
 	border-radius: 50px;
 	display:inline-block;
-	visibility:hidden;
+}
+
+#Select-Mission {
+  position: relative;
+  top: -350px;
+  display:none;
+}
+
+#pass-fail {
+  display:none;
+  position:relative;
+  top: -350px;
+}
+
+#success {
+  background-color: blue;
+  width: 100px;
+  height: 60px;
+  position: relative;
+  right:50px;
+  font-weight: bold;
+  color: white;
+  display:inline-block;
+}
+
+#fail {
+  background-color: red;
+  width: 100px;
+  height: 60px;
+  position: relative;
+  left:50px;
+  font-weight: bold;
+  color: white;
+  display:inline-block;
 }
 
 #card{
@@ -220,7 +242,15 @@ body {
   right: 0;
   box-shadow: 5px 5px 3px black;
   border-radius: 5px;
-  visibility:hidden;
+}
+
+#playerList{
+  height: 800px;
+}
+
+#vote-text{
+  margin-bottom:30px;
+
 }
 
 .card-text{
@@ -229,5 +259,14 @@ body {
   margin-top:260px; 
   margin-right:120px; 
   right: 0;
-  visibility:hidden;
 }
+
+.waiting-room{
+  display:auto;
+}
+
+.room{
+
+  display:auto;
+}
+

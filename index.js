@@ -4,6 +4,11 @@ var express = require('express')
 var app = express();
 var gamelist = [];
 
+
+// *********************************
+// EXPRESS
+// *********************************
+
 console.log(__dirname + '/public');
 app.use('/static', express.static(__dirname + '/public'));
 app.set('port', (process.env.PORT || 5000))
@@ -60,6 +65,53 @@ var server = http.createServer(app).listen(app.get('port'), function(){
 
 var io = require('socket.io').listen(server);
 
+// *********************************
+// IO CALLS
+// *********************************
+
+var IO_getRoomFromSocket = function(socket) {
+    for(var roomId in socket.rooms) {
+        var room = roommaster.findRoom(parseInt(roomId));
+        return room
+    }
+    return null
+}
+
+var IO_sendRoomFullToSocket = function(socketId) {
+    io.sockets.sockets[socketId].emit('roomFull')
+}
+
+var IO_sendGameInfoToPlayer = function(pID, gameInfo) {
+    // For now we only call this with a string that's ready to be sent, but later will be called with object that has a JSON method
+    gameInfo.playerId = pID
+    io.sockets.sockets[pID].emit('gameInfo', gameInfo)
+    // @jeff: replace with 
+    //    io.sockets.socket(pID).emit('gameInfo', gameInfo.toJSON())
+    // which should be defined so we have control over the structure of the JSON
+}
+
+var IO_sendGameInfoToRoom = function(room) {
+    if(room == null) {
+        return
+    }
+    for(var socket in io.sockets.sockets) { 
+        if(room.getPlayerById(socket) != null) {
+            // @jeff
+           // gameinfo.PopulateBasedOnThisPlayerANdRoomNShit
+            // Then replace the below call with gameinfo instead of room.toString()
+           IO_sendGameInfoToPlayer(socket, room.toString())
+        }
+    }
+}
+
+var IO_sendRoomDeletedToSocket = function(socketId) {
+    io.sockets.sockets[socketId].emit('roomDeleted')
+}
+
+// *********************************
+// IO HOOKS
+// *********************************
+
 io.on('connection', function (socket) {
     
     socket.on('join', function (rID) {
@@ -68,40 +120,42 @@ io.on('connection', function (socket) {
             socket.join(rID); // Add this socket to the room with this gameid
             // TODO: More logic around adding the player to the room
             var pID = socket.id//}
-           
-            console.log(pID)
+            
+            // @jeff: Add your call here
+            // gamemaster/roommaster check if full, add player, whatever
+            // Then FROM the gamemaster, call room full or update room or whatever IO_* functions (defined above)
+            // Then please remove this code
             if(!room.isFull()){
-                var name = room.addNewPlayer(pID);    
+                var name = room.addNewPlayer(pID);   
             }
             else{
-                socket.emit('roomFull');
+                IO_sendRoomFullToSocket(socket.id)
             }
-            io.to(rID).emit('roomInfo', room.toString());
+            IO_sendGameInfoToRoom(room)
         }
         else {
-            io.to(rID).emit('roomDeleted')
-        }
-    });
-
-    // Handle an example event with example data
-    socket.on('exampleClientEvent', function(exampleData) {
-        for(var room in socket.rooms) { // Loop through every room this connection belongs to. TODO maybe there's a better way to do this
-            if(roommaster.findRoom(parseInt(room)) != null) {
-                console.log(exampleData + " from room " + room) // The data is passed by the client, and the socket.rooms is the name of the room that was passed into socket.join earlier
-                io.to(room).emit('exampleServerEvent', 'hi room ' + room) // socket.to(roomid) will make the emit call go to every socket in that room
-            }
+            IO_sendRoomDeletedToSocket(socket.id)
         }
     });
     
     socket.on("changePlayerName", function(newName) {
-        for(var roomId in socket.rooms) {
-            var room = roommaster.findRoom(parseInt(roomId));
-            if(room != null) {
-                room.changePlayerName(room.getPlayerById(socket.id), newName);
-                io.to(room.getId()).emit('roomInfo', room.toString());
-            }
+        var room = IO_getRoomFromSocket(socket)
+        if(room != null) {
+            // @jeff change to whatever gamemaster call changes a player name, then FROM gamemaster (as long as something changes) call IO_sendGameInfoToRoom and delete call from here
+            room.changePlayerName(room.getPlayerById(socket.id), newName);
+            IO_sendGameInfoToRoom(room)
         }
     });
+    
+    socket.on("setPlayerReady", function(newStatus) {
+        var room = IO_getRoomFromSocket(socket)
+        if ( room != null) {
+            // @jeff change to a gamemaster call or something?
+            room.setPlayerReady(room.getPlayerById(socket.id), newStatus)
+            
+            IO_sendGameInfoToRoom(room)
+        }
+    })
     
     // socket.on('disconnect', function () {
     //     console.log("DISCONNECT FROM " + socket.id)
