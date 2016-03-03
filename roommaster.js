@@ -150,14 +150,9 @@ function Room(ID) {
 	// the room and all of them say they are ready, the game is started
 	this.toggleReady = function(player) {
 		player.toggleReady();
-		if (_players.length > 4) {
-			_players.forEach(function(p){
-				if (!p.isReady()) {
-					return;
-				} 
-			});
+		if (this.gameCanStart()) {
+			this.startGame();			
 		}
-		this.startGame();
 	};
 	
 	this.startGame = function(){
@@ -195,19 +190,19 @@ function Room(ID) {
 	this.setPlayerReady = function(player, readyStatus) {
 		// @jeff we need to check if room is in a state where players are allowed to change their readyStatus before calling this
 		player.setReady(readyStatus);
-	}
+	};
 	
 	this.gameCanStart = function() {
 		for(var pID in _players) {
 			if (_players[pID].isReady() == false) {
-				return false
+				return false;
 			}
 		}
 		if(_players.length >= 5) {
-			return true
+			return true;
 		}
-		return false
-	}
+		return false;
+	};
 	
 	// Given a Player object, this function removes them from the current room
 	this.removePlayer = function(player) {
@@ -248,9 +243,9 @@ function Room(ID) {
 	
 	// TODO: Figure out a clean way to send room info as JSON and parse it on the client
 	this.toString = function() {
-		var plList = {}
-		_players.forEach(function(player) {plList[player.getId()] =  {name: player.getName(), ready: player.isReady()} })
-		return {ID: _ID, players: plList, type: _type, roomURL: _roomURL, gameStart: this.gameCanStart(), playerId: null}
+		var plList = {};
+		_players.forEach(function(player) {plList[player.getId()] =  {name: player.getName(), ready: player.isReady()} });
+		return {ID: _ID, players: plList, type: _type, roomURL: _roomURL, gameStart: this.gameCanStart(), playerId: null};
 	};
 	
 	this.getSpyList = function() { return _spies; };
@@ -260,6 +255,7 @@ function Room(ID) {
 		var _playerList = this.getPlayerList();
 		var _spyList;
 		var _gameInfo;
+		var _score;
 		var _gameWinner;
 		
 		this.updateSpies;
@@ -270,12 +266,15 @@ function Room(ID) {
 		}
 		
 		_gameInfo = _gameMaster.getGameInfo();
+		_score = _gameMaster.getScore();
 		_gameWinner = _gameMaster.getGameWinner();
 		
 		return {
 			PlayerList : _playerList,
 			SpyList : _spyList,
 			GameInfo : _gameInfo,
+			ResistancePoints : _score[0],
+			SpyPoints : _score[1],
 			GameWinner : _gameWinner
 		};
 	};
