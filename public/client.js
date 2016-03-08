@@ -9,6 +9,12 @@ var socket = io.connect();
 
 $("#card").click(function() {
     UI_showCard()
+    $("#card-text").text("Click to Hide");
+});
+
+$("#card-flip").click(function() {
+    UI_showCard()
+    $("#card-text").text("Click to Reveal");
 });
 
 // @cecile, rework these to use JQuery
@@ -118,7 +124,6 @@ socket.on('gameInfo', function(gameInfo) {
     console.log(gameInfo)
     
     UI_updatePlayerList(gameInfo.PlayerList)
-    
     if(gameInfo.GameInfo.length > 0 && currentGameInfo.GameInfo.length == 0) {
         UI_startGame();
     }
