@@ -2,6 +2,8 @@
 /* Room Controlling Script */
 /***************************/
 
+var index = require("./index.js")
+
 // Module stuff
 var exports = module.exports = {};
 
@@ -132,7 +134,7 @@ function Room(ID) {
 	var _roomURL = ""; // Generate URL here
 	var _genericPlayerNames = genericNames.slice();
 	var _spies = [];
-	var _gameMaster;
+	var _gameMaster = gamemaster.createGame();
 	
 	// Add a new player with a generic name
 	this.addNewPlayer = function(pID) {
@@ -156,10 +158,9 @@ function Room(ID) {
 	};
 	
 	this.startGame = function(){
-		_gameMaster = gamemaster.createGame(_players);
+		_gameMaster.startGame(_players);
 		_gameMaster.nextMission();
 		this.updateSpies();
-		this.sendGameInfo();
 	};
 	
 	this.updateSpies = function(){
@@ -170,9 +171,9 @@ function Room(ID) {
 		});
 	};
 	
-	this.sendGameInfo = function() {
-
-	};
+/*	this.sendGameInfo = function() {
+		IO_sendGameInfoToRoom(this)
+	};*/
 	
 	// Given a player object and a name string, this function changes
 	// the name of the player if it is not used by another player in the 
@@ -193,15 +194,16 @@ function Room(ID) {
 	};
 	
 	this.gameCanStart = function() {
-		for(var pID in _players) {
-			if (_players[pID].isReady() == false) {
-				return false;
+		var gameCanStart = true;
+		_players.forEach(function(p){
+			if (!p.isReady()) {
+				gameCanStart = false;
 			}
+		});
+		if(_players.length < 5) {
+			gameCanStart = false;
 		}
-		if(_players.length >= 5) {
-			return true;
-		}
-		return false;
+		return gameCanStart;
 	};
 	
 	// Given a Player object, this function removes them from the current room
@@ -241,14 +243,45 @@ function Room(ID) {
 		return findById(_players, id);
 	};
 	
-	// TODO: Figure out a clean way to send room info as JSON and parse it on the client
+/*	// TODO: Figure out a clean way to send room info as JSON and parse it on the client
 	this.toString = function() {
 		var plList = {};
 		_players.forEach(function(player) {plList[player.getId()] =  {name: player.getName(), ready: player.isReady()} });
 		return {ID: _ID, players: plList, type: _type, roomURL: _roomURL, gameStart: this.gameCanStart(), playerId: null};
-	};
+	};*/
 	
 	this.getSpyList = function() { return _spies; };
+	
+	this.getSerialRoomInfo = function(player) {
+		//parameters
+		var _playerList = this.getSerialPlayerList();
+		var _spyList;
+		var _gameInfo;
+		var _score;
+		var _gameWinner;
+		
+		this.updateSpies;
+		if (player.getType() == PlayerType.SPY){
+			_spyList = 	this.getSpyList();				
+		} else {
+			_spyList = [];
+		}
+		
+		_gameInfo = _gameMaster.getGameInfo();
+		_score = _gameMaster.getScore();
+		_gameWinner = _gameMaster.getGameWinner();
+		
+		return {
+			PlayerList : _playerList,
+			SpyList : _spyList,
+			GameInfo : _gameInfo,
+			ResistancePoints : _score[0],
+			SpyPoints : _score[1],
+			GameWinner : _gameWinner
+		};
+		
+	}
+	
 	
 	this.getRoomInfo = function(player) {
 		//parameters
@@ -282,6 +315,13 @@ function Room(ID) {
 		// ADDED FOR UNIT TESTS //
 	
 	this.getPlayerList = function() { return _players; };
+	
+	this.getSerialPlayerList = function() {
+		var playerList = this.getPlayerList();
+		var serialList = {}
+		playerList.forEach(function(player) {serialList[player.getId()] =  {Name: player.getName(), Ready: player.isReady()} });
+		return serialList;
+	}
 	
 	// Add a new player with a generic name (for testing)
 	this.addNewPlayerTest = function() {

@@ -82,24 +82,17 @@ var IO_sendRoomFullToSocket = function(socketId) {
 }
 
 var IO_sendGameInfoToPlayer = function(pID, gameInfo) {
-    // For now we only call this with a string that's ready to be sent, but later will be called with object that has a JSON method
-    gameInfo.playerId = pID
+    // gameInfo is a JSON object ready to be sent
     io.sockets.sockets[pID].emit('gameInfo', gameInfo)
-    // @jeff: replace with 
-    //    io.sockets.socket(pID).emit('gameInfo', gameInfo.toJSON())
-    // which should be defined so we have control over the structure of the JSON
 }
 
-var IO_sendGameInfoToRoom = function(room) {
+function IO_sendGameInfoToRoom(room) {
     if(room == null) {
         return
     }
     for(var socket in io.sockets.sockets) { 
         if(room.getPlayerById(socket) != null) {
-            // @jeff
-           // gameinfo.PopulateBasedOnThisPlayerANdRoomNShit
-            // Then replace the below call with gameinfo instead of room.toString()
-           IO_sendGameInfoToPlayer(socket, room.toString())
+           IO_sendGameInfoToPlayer(socket, room.getSerialRoomInfo(room.getPlayerById(socket)));
         }
     }
 }
@@ -147,12 +140,10 @@ io.on('connection', function (socket) {
         }
     });
     
-    socket.on("setPlayerReady", function(newStatus) {
+    socket.on("toggleReady", function() {
         var room = IO_getRoomFromSocket(socket)
         if ( room != null) {
-            // @jeff change to a gamemaster call or something?
-            room.setPlayerReady(room.getPlayerById(socket.id), newStatus)
-            
+            room.toggleReady(room.getPlayerById(socket.id))
             IO_sendGameInfoToRoom(room)
         }
     })

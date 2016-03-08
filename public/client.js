@@ -17,11 +17,7 @@ document.getElementById("changeName-button").onclick = function() {
 }
 
 document.getElementById("ready-button").onclick = function() {
-    if (currentGameInfo != null && currentGameInfo.playerId != null) {
-        var newState = !currentGameInfo.players[currentGameInfo.playerId].ready;
-        IO_setPlayerReady(newState)
-        UI_setPlayerReady(newState)
-    }
+    IO_toggleReady()
 }
 
 // *********************************
@@ -61,8 +57,8 @@ function UI_updatePlayerList(players) { //@cecile change this function to use JQ
     for(var pID in players) {
         var node = document.createElement("LI");                 // Create a <li> node
         node.className = "list-group-item list-item-dark";
-        var playerString = players[pID].name + ": "
-        if(players[pID].ready) {
+        var playerString = players[pID].Name + ": "
+        if(players[pID].Ready) {
             playerString += "Ready"
         } else {
             playerString += "Not Ready"
@@ -98,8 +94,8 @@ var IO_changePlayerName = function(newName) {
     }
 }
 
-var IO_setPlayerReady = function(readyStatus) {
-    socket.emit("setPlayerReady", readyStatus)
+var IO_toggleReady = function() {
+    socket.emit("toggleReady")
 }
 
 // *********************************
@@ -113,17 +109,11 @@ socket.on('connect', function() {
 });
 
 socket.on('gameInfo', function(gameInfo) {
-    // @cecile Change this to a function call to clientController for updating gameInfo based on a received object, then remove all this code
-    // The gameInfo will be based on Jeff's object, here's a generic example using made up fields that we need to discuss later:
-    // gameInfo = {playerList = {player1Id: player1name, player2Id: player2Name....}, gameStarted: false, missions = [], etc etc...}
-    // When this function is called with a gameInfo object where gameInfo.gameStarted == false, then call the right UI functions to show the waiting room and update the player list, etc
-    // If it's called where gameInfo.gameStarted == true, then look at the missions table and update info properly, etc etc..
-    // We can slowly add functionality as we go
+    console.log(gameInfo)
     
-    UI_updatePlayerList(gameInfo.players)
+    UI_updatePlayerList(gameInfo.PlayerList)
     
-    if(gameInfo.gameStart == true && currentGameInfo.gameStart == false) {
-        // @cecile call whatever function sets the waiting room invisible and the game visible
+    if(gameInfo.GameInfo.length > 0 && currentGameInfo.GameInfo.length == 0) {
         UI_startGame();
     }
     
