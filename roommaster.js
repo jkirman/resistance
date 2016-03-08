@@ -252,17 +252,33 @@ function Room(ID) {
 	
 	this.getSpyList = function() { return _spies; };
 	
+	this.getPlayerList = function() { return _players; };
+	
+	this.getSerialPlayerList = function() {
+		var playerList = this.getPlayerList();
+		var serialList = {};
+		playerList.forEach(function(player) {serialList[player.getId()] =  {Name: player.getName(), Ready: player.isReady()} });
+		return serialList;
+	};
+	
+	this.getSerialSpyList = function() {
+		var spyList = this.getSpyList();
+		var serialList = [];
+		spyList.forEach(function(player) { serialList.push(player.getId())});
+		return serialList;
+	};
+	
 	this.getSerialRoomInfo = function(player) {
 		//parameters
 		var _playerList = this.getSerialPlayerList();
-		var _spyList;
+		var _spyList = this.getSerialSpyList();
 		var _gameInfo;
 		var _score;
 		var _gameWinner;
 		
 		this.updateSpies;
 		if (player.getType() == PlayerType.SPY){
-			_spyList = 	this.getSpyList();				
+			_spyList = 	this.getSerialSpyList();				
 		} else {
 			_spyList = [];
 		}
@@ -313,15 +329,6 @@ function Room(ID) {
 	};
 	
 		// ADDED FOR UNIT TESTS //
-	
-	this.getPlayerList = function() { return _players; };
-	
-	this.getSerialPlayerList = function() {
-		var playerList = this.getPlayerList();
-		var serialList = {}
-		playerList.forEach(function(player) {serialList[player.getId()] =  {Name: player.getName(), Ready: player.isReady()} });
-		return serialList;
-	}
 	
 	// Add a new player with a generic name (for testing)
 	this.addNewPlayerTest = function() {
