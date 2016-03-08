@@ -101,6 +101,11 @@ var IO_sendRoomDeletedToSocket = function(socketId) {
     io.sockets.sockets[socketId].emit('roomDeleted')
 }
 
+// JOOOOOOOONNNNNNNNNAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHH
+// Send error to a client
+var IO_sendError = function(name, message) {
+}
+
 // *********************************
 // IO HOOKS
 // *********************************
@@ -141,12 +146,40 @@ io.on('connection', function (socket) {
     });
     
     socket.on("toggleReady", function() {
-        var room = IO_getRoomFromSocket(socket)
+        var room = IO_getRoomFromSocket(socket);
         if ( room != null) {
-            room.toggleReady(room.getPlayerById(socket.id))
-            IO_sendGameInfoToRoom(room)
+            room.toggleReady(room.getPlayerById(socket.id));
+            IO_sendGameInfoToRoom(room);
         }
-    })
+    });
+    
+    socket.on("togglePlayerForMission", function(playerId) {
+        var room = IO_getRoomFromSocket(socket);
+        if ( room != null) {
+            room.togglePlayerForMission(playerId);
+            IO_sendGameInfoToRoom(room);
+        }
+    });
+    
+    socket.on("voteOnMissionAttempt", function(playerId, vote) {
+        var room = IO_getRoomFromSocket(socket);
+        if ( room != null) {
+            room.voteOnMissionAttempt(playerId, vote);
+            IO_sendGameInfoToRoom(room);
+        }
+    });
+    
+    socket.on("submitPlayersForMission", function() {
+        var room = IO_getRoomFromSocket(socket);
+        if ( room != null) {
+            try {
+                room.submitPlayersForMission();
+                IO_sendGameInfoToRoom(room);
+            } catch (e) {
+                IO_sendError(e.name, e.message);
+            }
+        }
+    });
     
     // socket.on('disconnect', function () {
     //     console.log("DISCONNECT FROM " + socket.id)
