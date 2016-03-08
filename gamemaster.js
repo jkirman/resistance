@@ -28,6 +28,12 @@ function indexById(source, id) {
   return null;
 }
 
+function PlayerSubmissionError(amount, expected) {
+   this.amount = amount;
+   this.expected = expected;
+   this.message = "Submitted " + amount + " players but only " + expected + " should have been submitted.";
+}
+
 //*******************************//
 
 // Module stuff
@@ -153,7 +159,7 @@ Game.prototype.togglePlayerForMission = function(playerID) {
 Game.prototype.startVoting = function() {
 	var currentAttempt = this._gameInfo.peek();
 	if (currentAttempt.selectedPlayers.length != exports.amountOnMission(this._numberOfPlayers, currentAttempt.missionNumber)) {
-		throw new Error("Wrong amount of players. Need:" + exports.amountOnMission(this._numberOfPlayers, currentAttempt.missionNumber));
+		throw new PlayerSubmissionError(currentAttempt.selectedPlayers.length, exports.amountOnMission(this._numberOfPlayers, currentAttempt.missionNumber));
 	} else {
 		currentAttempt.playersChosen = true;
 		

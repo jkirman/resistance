@@ -136,3 +136,7 @@ socket.on('roomFull', function() {
     alert("Room is full. Redirecting to homepage.");
     IO_redirectToHome()
 })
+
+socket.on('error', function(message) {
+    window.alert(message);
+})
