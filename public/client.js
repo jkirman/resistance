@@ -45,6 +45,19 @@ function UI_changeScore(team, score) {
     r.change(r.text(score + 1));
 }
 
+function UI_setCardText(players,spies) {
+    for (var pID in players) {
+           if(pID == "/#" + socket.id){
+               var type = players[pID].Type;
+           }
+       }
+       $("#card-text-flip").text(type);
+        for (var sID in spies) {
+            var spyName = spies[sID].Name;
+            $("#card-spyList").append(spyName);
+           }
+}
+
 function UI_setPlayerReady(newState) {
     if(newState) {
         $("#ready-button").attr("value", "Ready")
@@ -126,6 +139,7 @@ socket.on('gameInfo', function(gameInfo) {
     UI_updatePlayerList(gameInfo.PlayerList)
     if(gameInfo.GameInfo.length > 0 && currentGameInfo.GameInfo.length == 0) {
         UI_startGame();
+        UI_setCardText(gameInfo.PlayerList, gameInfo.SpyList);
     }
     
     currentGameInfo = gameInfo

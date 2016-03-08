@@ -279,6 +279,11 @@ body {
   right: 0;
 }
 
+#card-text-flip{
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
 .waiting-room{
   display:auto;
 }
