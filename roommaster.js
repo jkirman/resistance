@@ -203,9 +203,11 @@ function Room(ID) {
 	};
 	
 	// GAMEMASTER FUNCTIONS //
+	
 	this.togglePlayerForMission = function(playerID) { _gameMaster.togglePlayerForMission(playerID); };
 	this.voteOnMissionAttempt = function(playerID, vote) { _gameMaster.voteOnMissionAttempt(playerID, vote); };
 	this.submitPlayersForMission = function() { _gameMaster.startVoting(); };
+	this.voteOnMissionSuccess = function(playerID, vote) { _gameMaster.voteOnMissionSuccess(playerID, vote); };
 	
 	//////////////////////////
 	
