@@ -257,7 +257,7 @@ function Room(ID) {
 	this.getSerialPlayerList = function() {
 		var playerList = this.getPlayerList();
 		var serialList = {};
-		playerList.forEach(function(player) {serialList[player.getId()] =  {Name: player.getName(), Ready: player.isReady()} });
+		playerList.forEach(function(player) {serialList[player.getId()] =  {Name: player.getName(), Ready: player.isReady(), Type: player.getType()} });
 		return serialList;
 	};
 	
