@@ -39,43 +39,56 @@ function UI_changeScore(team, score) {
     r.change(r.text(score + 1));
 }
 
-function UI_updatePlayerList(players) { //@cecile change this function to use JQuery and also to update the correct list of players
-    var plList = $("#playerList".li);
+// function UI_updatePlayerList(players) { //@cecile change this function to use JQuery and also to update the correct list of players
+//     var plList = $("#playerList".li);
     
-    for (var pID in players) {
-        plList.each(function(i) {
-            if (pID == this.value) {
-                if (players[pID].Ready) {
-                    console.log("ready");   
-                } else {
-                    console.log("not ready");
+//     for (var pID in players) {
+//         plList.each(function(i) {
+//             if (pID == this.value) {
+//                 if (players[pID].Ready) {
+//                     console.log("ready");   
+//                 } else {
+//                     console.log("not ready");
                     
-                }
-            }
-        });
-    }
-}
+//                 }
+//             }
+//         });
+//     }
+// }
 
-function UI_createPlayerList(players) {
+function UI_createAndUpdatePlayerList(players) {
     var plList = $("#playerList");
+    
+    while (plList.children().length > 0) {   
+        plList.find(":first-child").remove();
+    }
+    
     for(var pID in players) {
         var li_player = $("<li>");
         var ul = $("<ul>");
-        var li_name = $("<li>").text(players[pID].Name);;
-        var li_ready = $("<li>").text("Not Ready");
+        var li_name = $("<li>").text(players[pID].Name);
+        var li_notReady = $("<li>").text("Not Ready");
+        var li_Ready = $("<li>").text("Ready");
         ul.addClass("list-inline");
 
-        // if(pID == "/#" + socket.id)
-        // {
-        li_player.addClass("list-group-item list-item-light");
-        li_player.attr("value", pID);
-        // }
-        // else {
-        //     li_player.addClass("list-group-item list-item-dark");
-        // }
+        if(pID == "/#" + socket.id)
+        {
+            li_player.addClass("list-group-item list-item-light");
+            li_player.attr("value", pID);
+        }
+        else {
+            li_player.addClass("list-group-item list-item-dark");
+            li_player.attr("value", pID);
+        }
         
         ul.append(li_name);
-        ul.append(li_ready);
+        
+        if (players[pID].Ready) {
+            ul.append(li_Ready);
+        } else {
+            ul.append(li_notReady);
+        }
+        
         li_player.append(ul);
         plList.append(li_player);
     }
@@ -122,8 +135,8 @@ socket.on('connect', function() {
 socket.on('gameInfo', function(gameInfo) {
     console.log(gameInfo);
     
-    UI_updatePlayerList(gameInfo.PlayerList); // need to find a way to separate these two functions
-    UI_createPlayerList(gameInfo.PlayerList); //Jonah this needs to happen when the waiting room gets created for that player
+    //UI_updatePlayerList(gameInfo.PlayerList); // need to find a way to separate these two functions
+    UI_createAndUpdatePlayerList(gameInfo.PlayerList); //Jonah this needs to happen when the waiting room gets created for that player
     
     if(gameInfo.GameInfo.length > 0 && currentGameInfo.GameInfo.length == 0) {
         UI_startGame();
