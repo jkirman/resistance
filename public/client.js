@@ -41,10 +41,10 @@ function UI_changeScore(team, score) {
 
 function UI_setPlayerReady(newState) {
     if(newState) {
-        $("ready-button").attr("value", "Ready")
+        $("#ready-button").attr("value", "Ready")
     }
     else {
-        $("ready-button").attr("value", "Not Ready")
+        $("#ready-button").attr("value", "Not Ready")
     }
 }
 
