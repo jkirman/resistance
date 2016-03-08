@@ -51,11 +51,17 @@ function UI_setCardText(players,spies) {
                var type = players[pID].Type;
            }
        }
+       if (type == "SPY") {
+           $("#other-spies").text("Spy List:")
+       }
        $("#card-text-flip").text(type);
         for (var sID in spies) {
-            var spyName = spies[sID].Name;
-            $("#card-spyList").append(spyName);
-           }
+                    var spyName = players[spies[sID]].Name;
+                    console.log(spyName);
+                    $("#card-spylist").append("<li>" + spyName + "</li>");
+                
+            
+        }
 }
 
 function UI_setPlayerReady(newState) {
