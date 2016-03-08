@@ -171,10 +171,6 @@ function Room(ID) {
 		});
 	};
 	
-/*	this.sendGameInfo = function() {
-		IO_sendGameInfoToRoom(this)
-	};*/
-	
 	// Given a player object and a name string, this function changes
 	// the name of the player if it is not used by another player in the 
 	// current room
@@ -205,6 +201,15 @@ function Room(ID) {
 		}
 		return gameCanStart;
 	};
+	
+	// GAMEMASTER FUNCTIONS //
+	
+	this.togglePlayerForMission = function(playerID) { _gameMaster.togglePlayerForMission(playerID); };
+	this.voteOnMissionAttempt = function(playerID, vote) { _gameMaster.voteOnMissionAttempt(playerID, vote); };
+	this.submitPlayersForMission = function() { _gameMaster.startVoting(); };
+	this.voteOnMissionSuccess = function(playerID, vote) { _gameMaster.voteOnMissionSuccess(playerID, vote); };
+	
+	//////////////////////////
 	
 	// Given a Player object, this function removes them from the current room
 	this.removePlayer = function(player) {

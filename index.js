@@ -101,6 +101,12 @@ var IO_sendRoomDeletedToSocket = function(socketId) {
     io.sockets.sockets[socketId].emit('roomDeleted')
 }
 
+// JOOOOOOOONNNNNNNNNAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHH
+// Send error to a client
+var IO_sendError = function(socketID, message) {
+    io.sockets.sockets[socketID].emit('error', message)
+}
+
 // *********************************
 // IO HOOKS
 // *********************************
@@ -141,12 +147,48 @@ io.on('connection', function (socket) {
     });
     
     socket.on("toggleReady", function() {
-        var room = IO_getRoomFromSocket(socket)
+        var room = IO_getRoomFromSocket(socket);
         if ( room != null) {
-            room.toggleReady(room.getPlayerById(socket.id))
-            IO_sendGameInfoToRoom(room)
+            room.toggleReady(room.getPlayerById(socket.id));
+            IO_sendGameInfoToRoom(room);
         }
-    })
+    });
+    
+    socket.on("togglePlayerForMission", function(playerId) {
+        var room = IO_getRoomFromSocket(socket);
+        if ( room != null) {
+            room.togglePlayerForMission(playerId);
+            IO_sendGameInfoToRoom(room);
+        }
+    });
+    
+    socket.on("submitPlayersForMission", function() {
+        var room = IO_getRoomFromSocket(socket);
+        if ( room != null) {
+            try {
+                room.submitPlayersForMission();
+                IO_sendGameInfoToRoom(room);
+            } catch (e) {
+                IO_sendError(e.message);
+            }
+        }
+    });
+    
+    socket.on("voteOnMissionAttempt", function(vote) {
+        var room = IO_getRoomFromSocket(socket);
+        if ( room != null) {
+            room.voteOnMissionAttempt(socket.id, vote);
+            IO_sendGameInfoToRoom(room);
+        }
+    });
+    
+    socket.on("voteOnMissionSuccess", function(vote) {
+        var room = IO_getRoomFromSocket(socket);
+        if ( room != null) {
+            room.voteOnMissionSuccess(socket.id, vote);
+            IO_sendGameInfoToRoom(room);
+        }
+    });
     
     // socket.on('disconnect', function () {
     //     console.log("DISCONNECT FROM " + socket.id)
