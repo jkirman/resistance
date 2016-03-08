@@ -34,16 +34,14 @@ function indexById(source, id) {
 var exports = module.exports = {};
 
 // Game object
-var Game = function(players) {
-	this._playerList = players;
-	this._numberOfPlayers = players.length;
+var Game = function() {
+	this._playerList = [];
+	this._numberOfPlayers = 0;
 	this._gameInfo = [];
 	// Main array that contains all game attempts history (to be sent to client for info)
 	// It contains several attempt objects (AttemptsInfo)
 	this._gameWinner = PlayerType.NONE;
 	this._score = [0,0]; // Resistance, spies
-	
-	this.setPlayerTypes();
 };
 
 // The attempt object
@@ -60,9 +58,16 @@ var AttemptInfo = function() {
 };
 
 // Export Constructor
-exports.createGame = function(players) {
-	return new Game(players);
+exports.createGame = function() {
+	return new Game();
 };
+
+// Export start game
+Game.prototype.startGame = function(players) {
+	this._playerList = players;
+	this._numberOfPlayers = players.length;
+	this.setPlayerTypes();
+}
 
 // This function sets the player types for the players in the game randomly
 Game.prototype.setPlayerTypes = function() {
