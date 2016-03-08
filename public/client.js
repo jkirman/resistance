@@ -55,8 +55,16 @@ function UI_updatePlayerList(players) { //@cecile change this function to use JQ
     }
 
     for(var pID in players) {
-        var node = document.createElement("LI");                 // Create a <li> node
-        node.className = "list-group-item list-item-dark";
+        var node = document.createElement("LI"); // Create a <li> node
+        console.log(pID)
+        console.log(socket.id)
+        if(pID == "/#" + socket.id)
+        {
+            node.className = "list-group-item list-item-light";
+        }
+        else {
+            node.className = "list-group-item list-item-dark";
+        }
         var playerString = players[pID].Name + ": "
         if(players[pID].Ready) {
             playerString += "Ready"
