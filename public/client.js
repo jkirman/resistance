@@ -8,6 +8,7 @@ var socket = io.connect();
 // *********************************
 
 $("#card").click(function() {
+<<<<<<< HEAD
     UI_showCard()
     $("#card-text").text("Click to Hide");
 });
@@ -15,16 +16,19 @@ $("#card").click(function() {
 $("#card-flip").click(function() {
     UI_showCard()
     $("#card-text").text("Click to Reveal");
+=======
+    UI_showCard();
+>>>>>>> a64537d501f94bde48a75c05baa3300366bfbb3d
 });
 
-// @cecile, rework these to use JQuery
-document.getElementById("changeName-button").onclick = function() {
-    UI_changePlayerName()
-}
 
-document.getElementById("ready-button").onclick = function() {
-    IO_toggleReady()
-}
+$("#changeName-button").click(function() {
+    UI_changePlayerName();
+});
+
+$("#ready-button").click(function() {
+    IO_toggleReady();
+});
 
 // *********************************
 // UI CALLS
@@ -41,10 +45,11 @@ function UI_showCard() {
 }
 
 function UI_changeScore(team, score) {
-    var r = $(team + "-score");
+    var r = $("#" + team + "-score");
     r.change(r.text(score + 1));
 }
 
+<<<<<<< HEAD
 function UI_setCardText(players,spies) {
     for (var pID in players) {
            if(pID == "/#" + socket.id){
@@ -77,32 +82,65 @@ function UI_updatePlayerList(players) { //@cecile change this function to use JQ
     var plList = document.getElementById("playerList");
     while (plList.hasChildNodes()) {   
         plList.removeChild(plList.firstChild);
-    }
+=======
+// function UI_updatePlayerList(players) { //@cecile change this function to use JQuery and also to update the correct list of players
+//     var plList = $("#playerList".li);
+    
+//     for (var pID in players) {
+//         plList.each(function(i) {
+//             if (pID == this.value) {
+//                 if (players[pID].Ready) {
+//                     console.log("ready");   
+//                 } else {
+//                     console.log("not ready");
+                    
+//                 }
+//             }
+//         });
+//     }
+// }
 
+function UI_createAndUpdatePlayerList(players) {
+    var plList = $("#playerList");
+    
+    while (plList.children().length > 0) {   
+        plList.find(":first-child").remove();
+>>>>>>> a64537d501f94bde48a75c05baa3300366bfbb3d
+    }
+    
     for(var pID in players) {
-        var node = document.createElement("LI"); // Create a <li> node
+        var li_player = $("<li>");
+        var ul = $("<ul>");
+        var li_name = $("<li>").text(players[pID].Name);
+        var li_notReady = $("<li>").text("Not Ready");
+        var li_Ready = $("<li>").text("Ready");
+        ul.addClass("list-inline");
+
         if(pID == "/#" + socket.id)
         {
-            node.className = "list-group-item list-item-light";
+            li_player.addClass("list-group-item list-item-light");
+            li_player.attr("value", pID);
         }
         else {
-            node.className = "list-group-item list-item-dark";
+            li_player.addClass("list-group-item list-item-dark");
+            li_player.attr("value", pID);
         }
-        var playerString = players[pID].Name + ": "
-        if(players[pID].Ready) {
-            playerString += "Ready"
+        
+        ul.append(li_name);
+        
+        if (players[pID].Ready) {
+            ul.append(li_Ready);
         } else {
-            playerString += "Not Ready"
+            ul.append(li_notReady);
         }
-        var textnode = document.createTextNode(playerString);         // Create a text node
-        node.appendChild(textnode);                              // Append the text to <li>
-        plList.appendChild(node);
+        
+        li_player.append(ul);
+        plList.append(li_player);
     }
 }
 
 function UI_changePlayerName() {
-    var newName = document.getElementById("changeName-text").value; // @cecile call a UI function instead of doing the work inside this hook
-    // var newName = $("changeName-text").val(); // @jasfour this doesn't work, it just says null
+    var newName = $("#changeName-text").val();
     IO_changePlayerName(newName)
 }
 
@@ -111,23 +149,23 @@ function UI_changePlayerName() {
 // *********************************
 
 var IO_redirectToHome = function() {
-    var link = window.location.host
+    var link = window.location.host;
     window.location = link;
-}
+};
 
 var IO_joinGame = function(gameId) {
-    socket.emit('join', gameId)
-}
+    socket.emit('join', gameId);
+};
 
 var IO_changePlayerName = function(newName) {
      if(newName != "") {
         socket.emit("changePlayerName", newName);
     }
-}
+};
 
 var IO_toggleReady = function() {
-    socket.emit("toggleReady")
-}
+    socket.emit("toggleReady");
+};
 
 // *********************************
 // IO HOOKS
@@ -136,31 +174,37 @@ var IO_toggleReady = function() {
 socket.on('connect', function() {
     var gameId = window.location.pathname.replace('/', '')
     document.getElementById("link").innerHTML = window.location.href;    // @cecile Change this to a function call to clientController that updates the "link" value on the client (we dont want to do it here)
-    IO_joinGame(gameId)
+    IO_joinGame(gameId);
 });
 
 socket.on('gameInfo', function(gameInfo) {
-    console.log(gameInfo)
+    console.log(gameInfo);
     
+<<<<<<< HEAD
     UI_updatePlayerList(gameInfo.PlayerList)
+=======
+    //UI_updatePlayerList(gameInfo.PlayerList); // need to find a way to separate these two functions
+    UI_createAndUpdatePlayerList(gameInfo.PlayerList); //Jonah this needs to happen when the waiting room gets created for that player
+    
+>>>>>>> a64537d501f94bde48a75c05baa3300366bfbb3d
     if(gameInfo.GameInfo.length > 0 && currentGameInfo.GameInfo.length == 0) {
         UI_startGame();
         UI_setCardText(gameInfo.PlayerList, gameInfo.SpyList);
     }
     
-    currentGameInfo = gameInfo
+    currentGameInfo = gameInfo;
 
-})
+});
 
 socket.on('roomDeleted', function() {
     alert("Room does not exist. Redirecting to homepage.");
-    IO_redirectToHome()
-})
+    IO_redirectToHome();
+});
 
 socket.on('roomFull', function() {
     alert("Room is full. Redirecting to homepage.");
-    IO_redirectToHome()
-})
+    IO_redirectToHome();
+});
 
 socket.on('error', function(message) {
     window.alert(message);
