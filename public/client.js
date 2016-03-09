@@ -46,21 +46,20 @@ function UI_changeScore(team, score) {
 
 function UI_setCardText(players,spies) {
     for (var pID in players) {
-           if(pID == "/#" + socket.id){
-               var type = players[pID].Type;
-           }
-       }
-       if (type == "SPY") {
-           $("#other-spies").text("Spy List:");
-       }
-       $("#card-text-flip").text(type);
-        for (var sID in spies) {
-                    var spyName = players[spies[sID]].Name;
-                    console.log(spyName);
-                    $("#card-spylist").append("<li>" + spyName + "</li>");
-                
-            
+        if(pID == "/#" + socket.id){
+            var type = players[pID].Type;
         }
+    }
+    if (type == "SPY") {
+        $("#other-spies").text("Spy List:");
+    }
+    
+    $("#card-text-flip").text(type);
+    
+    for (var sID in spies) {
+        var spyName = players[spies[sID]].Name;
+        $("#card-spylist").append("<li>" + spyName + "</li>");
+    }
 }
 
 function UI_createAndUpdatePlayerList(players) {
@@ -108,6 +107,11 @@ function UI_createInGamePlayerList(players) {
         var player = $("<tr>");
         var td = $("<td>");
         
+        if(pID == "/#" + socket.id)
+        {
+            player.addClass("list-item-light");
+        }
+        
         td.text(players[pID].Name);
         player.append(td);
         plList.append(player);
@@ -117,6 +121,31 @@ function UI_createInGamePlayerList(players) {
 function UI_changePlayerName() {
     var newName = $("#changeName-text").val();
     IO_changePlayerName(newName);
+}
+
+function UI_showLeaderVotingScreen(players) {
+    var missionSelection = $("#players-for-mission");
+    
+    for (var pID in players) {
+        var input = $("<input>");
+        var label = $("<ul>");
+        input.attr("type", "checkbox");
+        label.text(players[pID].Name + "\t");
+        label.append(input);
+        missionSelection.append(label);
+    }
+    
+    for (var pID in players) {
+        if (pID == players[pID].getIsLeader) {
+            console.log("leader")
+            $("Select-Mission").show();
+            missionSelection.show();
+        } else {
+            console.log("not leader")
+            $("Select-Mission").show();
+            missionSelection.hide();
+        }
+    }
 }
 
 // *********************************
@@ -160,6 +189,7 @@ socket.on('gameInfo', function(gameInfo) {
         UI_startGame();
         UI_setCardText(gameInfo.PlayerList, gameInfo.SpyList);
         UI_createInGamePlayerList(gameInfo.PlayerList);
+        UI_showLeaderVotingScreen(gameInfo.PlayerList);
     }
     
     currentGameInfo = gameInfo;
