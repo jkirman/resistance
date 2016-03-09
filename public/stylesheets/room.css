@@ -32,8 +32,11 @@ body {
 
 .player-list-gameplay{
   display:inline-block;
-  margin-left: 1120px;
-  margin-top: 300px;
+  position: absolute;
+  top:0;  
+  margin-top:400px; 
+  margin-right:85px;
+  right: 0;
   width: 200px;
 }
 
