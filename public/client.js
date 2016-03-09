@@ -101,6 +101,21 @@ function UI_createAndUpdatePlayerList(players) {
     }
 }
 
+function UI_createInGamePlayerList(players) {
+    var plList = $("#inGamePlayerList");
+    var trbody = $("<trbody>");
+    
+    for (var pID in players) {
+        var player = $("<tr>");
+        var td = $("<td>");
+        
+        td.text(players[pID].Name);
+        player.append(td);
+        trbody.append(player);
+    }
+    plList.append(trbody);
+}
+
 function UI_changePlayerName() {
     var newName = $("#changeName-text").val();
     IO_changePlayerName(newName);
@@ -146,6 +161,7 @@ socket.on('gameInfo', function(gameInfo) {
     if(gameInfo.GameInfo.length > 0 && currentGameInfo.GameInfo.length == 0) {
         UI_startGame();
         UI_setCardText(gameInfo.PlayerList, gameInfo.SpyList);
+        UI_createInGamePlayerList(gameInfo.PlayerList);
     }
     
     currentGameInfo = gameInfo;
