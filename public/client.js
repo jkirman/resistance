@@ -138,20 +138,22 @@ function UI_createInGamePlayerList(players, gameInfo) {
     for (var pID in players) {
         var player = $("<tr>");
         var td = $("<td>");
+        var td2 = $("<td2>");
         
         if(pID == "/#" + socket.id)
         {
-            player.addClass("list-item-light");
+            td.addClass("list-item-light");
+        }
+        if(pID == gameInfo[gameInfo.length-1].leaderID){
+            td2.text("[LEADER]");
         }
         
         td.text(players[pID].Name);
         player.append(td);
+        player.append(td2);
         plList.append(player);
-        if(pID == gameInfo[gameInfo.length-1].leaderID){
-            var td2 = $("<td2>");
-            td2.text("[LEADER]");
-            player.append(td2);
-        }
+        
+
     }
             
 }
