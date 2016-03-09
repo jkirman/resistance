@@ -25,6 +25,10 @@ $("#ready-button").click( function() {
     IO_toggleReady();
 });
 
+$("#Submit-Team-Button").click( function() {
+    IO_submitPlayersForMission(UI_getSelectedPlayersByLeader());
+});
+
 // *********************************
 // UI CALLS
 // *********************************
@@ -182,6 +186,7 @@ function UI_showLeaderVotingScreen(players, gameinfo) {
         var input = $("<input>");
         var label = $("<ul>");
         input.attr("type", "checkbox");
+        input.attr("id", pID);
         label.text(players[pID].Name + "\t");
         label.append(input);
         missionSelection.append(label);
@@ -199,6 +204,17 @@ function UI_showLeaderVotingScreen(players, gameinfo) {
             missionSelection.hide();
     }
     
+}
+
+function UI_getSelectedPlayersByLeader() {
+    var missionSelection = $("#players-for-mission ul input")
+    var selectedPlayers = [];
+    missionSelection.each(function(index, element) {
+        if(element.checked) {
+            selectedPlayers.push(element.id)
+        }
+    });
+    return selectedPlayers;
 }
 
 // *********************************
@@ -222,6 +238,11 @@ var IO_changePlayerName = function(newName) {
 
 var IO_toggleReady = function() {
     socket.emit("toggleReady");
+};
+
+var IO_submitPlayersForMission = function(players) {
+    socket.emit("selectPlayersForMission", players);
+    socket.emit("submitPlayersForMission");
 };
 
 // *********************************
@@ -266,6 +287,6 @@ socket.on('roomFull', function() {
     IO_redirectToHome();
 });
 
-socket.on('error', function(message) {
+socket.on('sendError', function(message) {
     window.alert(message);
 })

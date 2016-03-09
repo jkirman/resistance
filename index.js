@@ -104,7 +104,7 @@ var IO_sendRoomDeletedToSocket = function(socketId) {
 // JOOOOOOOONNNNNNNNNAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHH
 // Send error to a client
 var IO_sendError = function(socketID, message) {
-    io.sockets.sockets[socketID].emit('error', message)
+   io.sockets.sockets[socketID].emit('sendError', message);
 }
 
 // *********************************
@@ -162,6 +162,16 @@ io.on('connection', function (socket) {
         }
     });
     
+    socket.on("selectPlayersForMission", function(players) {
+        var room = IO_getRoomFromSocket(socket);
+        if ( room != null) {
+            players.forEach(function(playerId) {
+                room.togglePlayerForMission(playerId);
+            });
+            IO_sendGameInfoToRoom(room);
+        }
+    });
+    
     socket.on("submitPlayersForMission", function() {
         var room = IO_getRoomFromSocket(socket);
         if ( room != null) {
@@ -169,7 +179,7 @@ io.on('connection', function (socket) {
                 room.submitPlayersForMission();
                 IO_sendGameInfoToRoom(room);
             } catch (e) {
-                IO_sendError(e.message);
+                IO_sendError(socket.id, e.message);
             }
         }
     });
