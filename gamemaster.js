@@ -143,13 +143,15 @@ Game.prototype.nextLeader = function() {
 };
 
 // Toggles a player into the list of selected players of the current mission attempt
-Game.prototype.togglePlayerForMission = function(playerID) {
+Game.prototype.togglePlayerForMission = function(triggeredID, playerID) {
 	var selectedPlayers = this._gameInfo.peek().selectedPlayers;
 	var index = selectedPlayers.indexOf(playerID);
-	if (index == -1) {
-		selectedPlayers.push(playerID);
-	} else {
-		selectedPlayers = selectedPlayers.splice(index, 1);
+	if (triggeredID == this._gameInfo.peek().leaderID) {
+		if (index == -1) {
+			selectedPlayers.push(playerID);
+		} else {
+			selectedPlayers = selectedPlayers.splice(index, 1);
+		}
 	}
 };
 

@@ -101,7 +101,6 @@ var IO_sendRoomDeletedToSocket = function(socketId) {
     io.sockets.sockets[socketId].emit('roomDeleted')
 }
 
-// JOOOOOOOONNNNNNNNNAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHH
 // Send error to a client
 var IO_sendError = function(socketID, message) {
    io.sockets.sockets[socketID].emit('sendError', message);
@@ -157,7 +156,7 @@ io.on('connection', function (socket) {
     socket.on("togglePlayerForMission", function(playerId) {
         var room = IO_getRoomFromSocket(socket);
         if ( room != null) {
-            room.togglePlayerForMission(playerId);
+            room.togglePlayerForMission(socket.id, playerId);
             IO_sendGameInfoToRoom(room);
         }
     });

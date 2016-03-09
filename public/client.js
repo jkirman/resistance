@@ -1,5 +1,6 @@
 /* global io */
 var currentGameInfo; // @cecile remove once all this logic is in the clientController
+var currentPlayers;
 
 var socket = io.connect();
 
@@ -139,6 +140,8 @@ function UI_createAndUpdatePlayerList(players) {
 function UI_createInGamePlayerList(players, gameInfo) {
     var plList = $("#inGamePlayerList");
     
+    $("#inGamePlayerList tr").remove();
+    
     for (var pID in players) {
         var player = $("<tr>");
         var td = $("<td>");
@@ -162,17 +165,31 @@ function UI_createInGamePlayerList(players, gameInfo) {
 }
 
 $('#inGamePlayerList').on('click', 'tr', function(){
-    // alert('You clicked row '+ ($(this).index()) );
-    if ($(this).hasClass('list-item-light')) {
-        $(this).toggleClass("list-item-light list-item-selected-you");
-    } else if ($(this).hasClass('list-item-dark')){
-       $(this).toggleClass("list-item-dark list-item-selected"); 
-    } else if ($(this).hasClass('list-item-selected-you')) {
-        $(this).toggleClass("list-item-selected-you list-item-light");
-    } else if ($(this).hasClass('list-item-selected') ){
-        $(this).toggleClass("list-item-selected list-item-dark");
-    }
+    IO_togglePlayerForMission(UI_getPlayerByName($(this).find('td:first').text()));
+    console.log($(this).text());
 });
+
+function UI_updatePlayersOnMission(gameinfo) {
+    
+    $('#inGamePlayerList tr').each(function(){
+        console.log(gameinfo.GameInfo[gameinfo.GameInfo.length - 1].selectedPlayers);
+        console.log(gameinfo.GameInfo[gameinfo.GameInfo.length - 1].selectedPlayers.indexOf(UI_getPlayerByName($(this).find('td:first').text())));
+        if (gameinfo.GameInfo[gameinfo.GameInfo.length - 1].selectedPlayers.indexOf(UI_getPlayerByName($(this).find('td:first').text())) != -1) {
+            if ($(this).hasClass('list-item-light')) {
+                $(this).toggleClass("list-item-light list-item-selected-you");
+            } else if ($(this).hasClass('list-item-dark')){
+               $(this).toggleClass("list-item-dark list-item-selected");
+            } 
+        } else {
+            if ($(this).hasClass('list-item-selected-you')) {
+                $(this).toggleClass("list-item-selected-you list-item-light");
+            } else if ($(this).hasClass('list-item-selected') ){
+                $(this).toggleClass("list-item-selected list-item-dark");
+            }
+        }
+    });
+
+}
 
 function UI_changePlayerName() {
     var newName = $("#changeName-text").val();
@@ -217,6 +234,14 @@ function UI_getSelectedPlayersByLeader() {
     return selectedPlayers;
 }
 
+function UI_getPlayerByName(name) {
+    for (var pID in currentPlayers) {
+       if (name == currentPlayers[pID].Name) {
+           return pID;
+       } 
+    };
+}
+
 // *********************************
 // IO CALLS
 // *********************************
@@ -240,8 +265,11 @@ var IO_toggleReady = function() {
     socket.emit("toggleReady");
 };
 
+var IO_togglePlayerForMission = function(playerID) {
+    socket.emit("togglePlayerForMission", playerID);
+}
+
 var IO_submitPlayersForMission = function(players) {
-    socket.emit("selectPlayersForMission", players);
     socket.emit("submitPlayersForMission");
 };
 
@@ -258,12 +286,15 @@ socket.on('connect', function() {
 socket.on('gameInfo', function(gameInfo) {
     console.log(gameInfo);
     
+    currentPlayers = gameInfo.PlayerList;
     UI_createAndUpdatePlayerList(gameInfo.PlayerList);
     if(gameInfo.GameInfo.length > 0 && currentGameInfo.GameInfo.length == 0) {
         UI_startGame();
         UI_setCardText(gameInfo.PlayerList, gameInfo.SpyList);
         UI_createInGamePlayerList(gameInfo.PlayerList, gameInfo.GameInfo);
-        UI_showLeaderVotingScreen(gameInfo.PlayerList, gameInfo.GameInfo);
+//        UI_showLeaderVotingScreen(gameInfo.PlayerList, gameInfo.GameInfo);
+    } else if (gameInfo.GameInfo.length > 0) {
+        UI_updatePlayersOnMission(gameInfo)
         if (gameInfo.GameInfo[gameInfo.GameInfo.length - 1].playersChosen == true) {
             UI_updateVoteOnMissionPlayers(gameInfo.GameInfo[gameInfo.GameInfo.length-1].selectedPlayers);
             UI_showVote();
