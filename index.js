@@ -101,7 +101,6 @@ var IO_sendRoomDeletedToSocket = function(socketId) {
     io.sockets.sockets[socketId].emit('roomDeleted')
 }
 
-// JOOOOOOOONNNNNNNNNAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHH
 // Send error to a client
 var IO_sendError = function(socketID, message) {
    io.sockets.sockets[socketID].emit('sendError', message);
