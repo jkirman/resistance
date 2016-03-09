@@ -46,22 +46,53 @@ function UI_changeScore(team, score) {
 
 function UI_setCardText(players,spies) {
     for (var pID in players) {
-           if(pID == "/#" + socket.id){
-               var type = players[pID].Type;
-           }
-       }
-       if (type == "SPY") {
-           $("#other-spies").text("Spy List:");
-       }
-       $("#card-text-flip").text(type);
-        for (var sID in spies) {
-                    var spyName = players[spies[sID]].Name;
-                    console.log(spyName);
-                    $("#card-spylist").append("<li>" + spyName + "</li>");
-                
-            
+        if(pID == "/#" + socket.id){
+            var type = players[pID].Type;
         }
+    }
+    if (type == "SPY") {
+        $("#other-spies").text("Spy List:");
+    }
+    
+    $("#card-text-flip").text(type);
+    
+    for (var sID in spies) {
+        var spyName = players[spies[sID]].Name;
+        $("#card-spylist").append("<li>" + spyName + "</li>");
+    }
 }
+
+function UI_updateVoteOnMissionPlayers(players) {
+    var plList = $("#missionList");
+    
+    while (plList.children().length > 0) {   
+        plList.find(":first-child").remove();
+    }
+    
+    for(var pID in players) {
+        var li_player = $("<li>");
+        var ul = $("<ul>");
+        var li_name = $("<li>").text(players[pID].Name);
+        ul.addClass("list-inline");
+
+        li_player.addClass("list-group-item list-item-dark");
+        li_player.attr("value", pID);
+        
+        ul.append(li_name);
+        
+        li_player.append(ul);
+        plList.append(li_player);
+    }
+}
+
+function UI_showVote() {
+    $(".mission-vote").show();
+}
+
+function UI_hideVote() {
+    $(".mission-vote").hide();
+}
+
 
 function UI_createAndUpdatePlayerList(players) {
     var plList = $("#playerList");
@@ -105,13 +136,14 @@ function UI_createInGamePlayerList(players, gameInfo) {
     var plList = $("#inGamePlayerList");
     
     for (var pID in players) {
-        if(pID == "/#" + socket.id) {
-            var player = $("<tr class =" + '"list-item-light"' + ">");
-            var td = $("<td>");
-        } else {
-            var player = $("<tr>");
-            var td = $("<td>");
+        var player = $("<tr>");
+        var td = $("<td>");
+        
+        if(pID == "/#" + socket.id)
+        {
+            player.addClass("list-item-light");
         }
+        
         td.text(players[pID].Name);
         player.append(td);
         plList.append(player);
@@ -127,6 +159,32 @@ function UI_createInGamePlayerList(players, gameInfo) {
 function UI_changePlayerName() {
     var newName = $("#changeName-text").val();
     IO_changePlayerName(newName);
+}
+
+function UI_showLeaderVotingScreen(players, gameinfo) {
+    var missionSelection = $("#players-for-mission");
+    
+    for (var pID in players) {
+        var input = $("<input>");
+        var label = $("<ul>");
+        input.attr("type", "checkbox");
+        label.text(players[pID].Name + "\t");
+        label.append(input);
+        missionSelection.append(label);
+    }
+    
+    for (var pID in players) {
+        console.log(gameinfo[0].leaderID);
+        if (pID == gameinfo[0].leaderID) {
+            console.log("leader")
+            $("#Select-Mission").show();
+            missionSelection.show();
+        } else {
+            console.log("not leader")
+            $("#Select-Mission").hide();
+            missionSelection.hide();
+        }
+    }
 }
 
 // *********************************
@@ -170,6 +228,14 @@ socket.on('gameInfo', function(gameInfo) {
         UI_startGame();
         UI_setCardText(gameInfo.PlayerList, gameInfo.SpyList);
         UI_createInGamePlayerList(gameInfo.PlayerList, gameInfo.GameInfo);
+        UI_createInGamePlayerList(gameInfo.PlayerList);
+        UI_showLeaderVotingScreen(gameInfo.PlayerList, gameInfo.GameInfo);
+        if (gameInfo.GameInfo[gameInfo.GameInfo.length-1].playersChosen == true) {
+            UI_updateVoteOnMissionPlayers(gameInfo.GameInfo[gameInfo.GameInfo.length-1].selectedPlayers);
+            UI_showVote();
+        } else {
+            UI_hideVote();
+        }
     }
     
     currentGameInfo = gameInfo;
