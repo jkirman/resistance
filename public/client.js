@@ -104,7 +104,6 @@ function UI_createInGamePlayerList(players) {
     var plList = $("#inGamePlayerList");
     
     for (var pID in players) {
-<<<<<<< HEAD
         var player = $("<tr>");
         var td = $("<td>");
         
@@ -113,15 +112,6 @@ function UI_createInGamePlayerList(players) {
             player.addClass("list-item-light");
         }
         
-=======
-        if(pID == "/#" + socket.id) {
-            var player = $("<tr class =" + '"list-item-light"' + ">");
-            var td = $("<td>");
-        } else {
-            var player = $("<tr>");
-            var td = $("<td>");
-        }
->>>>>>> e09e444da18920aaae000ae5b6de16d52dba63e9
         td.text(players[pID].Name);
         player.append(td);
         plList.append(player);
@@ -133,7 +123,7 @@ function UI_changePlayerName() {
     IO_changePlayerName(newName);
 }
 
-function UI_showLeaderVotingScreen(players) {
+function UI_showLeaderVotingScreen(players, gameinfo) {
     var missionSelection = $("#players-for-mission");
     
     for (var pID in players) {
@@ -146,13 +136,14 @@ function UI_showLeaderVotingScreen(players) {
     }
     
     for (var pID in players) {
-        if (pID == players[pID].getIsLeader) {
+        console.log(gameinfo[0].leaderID);
+        if (pID == gameinfo[0].leaderID) {
             console.log("leader")
-            $("Select-Mission").show();
+            $("#Select-Mission").show();
             missionSelection.show();
         } else {
             console.log("not leader")
-            $("Select-Mission").show();
+            $("#Select-Mission").hide();
             missionSelection.hide();
         }
     }
@@ -199,7 +190,7 @@ socket.on('gameInfo', function(gameInfo) {
         UI_startGame();
         UI_setCardText(gameInfo.PlayerList, gameInfo.SpyList);
         UI_createInGamePlayerList(gameInfo.PlayerList);
-        UI_showLeaderVotingScreen(gameInfo.PlayerList);
+        UI_showLeaderVotingScreen(gameInfo.PlayerList, gameInfo.GameInfo);
     }
     
     currentGameInfo = gameInfo;
