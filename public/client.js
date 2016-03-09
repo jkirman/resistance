@@ -103,7 +103,6 @@ function UI_createAndUpdatePlayerList(players) {
 
 function UI_createInGamePlayerList(players) {
     var plList = $("#inGamePlayerList");
-    var trbody = $("<trbody>");
     
     for (var pID in players) {
         var player = $("<tr>");
@@ -111,9 +110,8 @@ function UI_createInGamePlayerList(players) {
         
         td.text(players[pID].Name);
         player.append(td);
-        trbody.append(player);
+        plList.append(player);
     }
-    plList.append(trbody);
 }
 
 function UI_changePlayerName() {
