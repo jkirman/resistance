@@ -63,6 +63,38 @@ function UI_setCardText(players,spies) {
         }
 }
 
+function UI_updateVoteOnMissionPlayers(players) {
+    var plList = $("#missionList");
+    
+    while (plList.children().length > 0) {   
+        plList.find(":first-child").remove();
+    }
+    
+    for(var pID in players) {
+        var li_player = $("<li>");
+        var ul = $("<ul>");
+        var li_name = $("<li>").text(players[pID].Name);
+        ul.addClass("list-inline");
+
+        li_player.addClass("list-group-item list-item-dark");
+        li_player.attr("value", pID);
+        
+        ul.append(li_name);
+        
+        li_player.append(ul);
+        plList.append(li_player);
+    }
+}
+
+function UI_showVote() {
+    $(".mission-vote").show();
+}
+
+function UI_hideVote() {
+    $(".mission-vote").hide();
+}
+
+
 function UI_createAndUpdatePlayerList(players) {
     var plList = $("#playerList");
     
@@ -164,6 +196,13 @@ socket.on('gameInfo', function(gameInfo) {
         UI_startGame();
         UI_setCardText(gameInfo.PlayerList, gameInfo.SpyList);
         UI_createInGamePlayerList(gameInfo.PlayerList);
+        UI_updateVoteOnMissionPlayers(gameInfo.GameInfo[gameInfo.GameInfo.length-1].selectedPlayers);
+        if (gameInfo.GameInfo[gameInfo.GameInfo.length-1].playersChosen == true) {
+            UI_showVote();
+        } else {
+            UI_hideVote();
+        }
+        
     }
     
     currentGameInfo = gameInfo;
