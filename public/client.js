@@ -132,7 +132,7 @@ function UI_createAndUpdatePlayerList(players) {
     }
 }
 
-function UI_createInGamePlayerList(players) {
+function UI_createInGamePlayerList(players, gameInfo) {
     var plList = $("#inGamePlayerList");
     
     for (var pID in players) {
@@ -147,7 +147,13 @@ function UI_createInGamePlayerList(players) {
         td.text(players[pID].Name);
         player.append(td);
         plList.append(player);
+        if(pID == gameInfo[gameInfo.length-1].leaderID){
+            var td2 = $("<td2>");
+            td2.text("[LEADER]");
+            player.append(td2);
+        }
     }
+            
 }
 
 function UI_changePlayerName() {
@@ -221,10 +227,11 @@ socket.on('gameInfo', function(gameInfo) {
     if(gameInfo.GameInfo.length > 0 && currentGameInfo.GameInfo.length == 0) {
         UI_startGame();
         UI_setCardText(gameInfo.PlayerList, gameInfo.SpyList);
+        UI_createInGamePlayerList(gameInfo.PlayerList, gameInfo.GameInfo);
         UI_createInGamePlayerList(gameInfo.PlayerList);
         UI_showLeaderVotingScreen(gameInfo.PlayerList, gameInfo.GameInfo);
-        UI_updateVoteOnMissionPlayers(gameInfo.GameInfo[gameInfo.GameInfo.length-1].selectedPlayers);
         if (gameInfo.GameInfo[gameInfo.GameInfo.length-1].playersChosen == true) {
+            UI_updateVoteOnMissionPlayers(gameInfo.GameInfo[gameInfo.GameInfo.length-1].selectedPlayers);
             UI_showVote();
         } else {
             UI_hideVote();
