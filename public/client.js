@@ -229,11 +229,11 @@ socket.on('gameInfo', function(gameInfo) {
         UI_startGame();
         UI_setCardText(gameInfo.PlayerList, gameInfo.SpyList);
         UI_createInGamePlayerList(gameInfo.PlayerList, gameInfo.GameInfo);
-        UI_createInGamePlayerList(gameInfo.PlayerList);
         UI_selectMission(gameInfo.PlayerList, gameInfo.GameInfo);
         if (gameInfo.GameInfo[gameInfo.GameInfo.length-1].playersChosen == true) {
             UI_updateVoteOnMissionPlayers(gameInfo.GameInfo[gameInfo.GameInfo.length-1].selectedPlayers);
             UI_showVote();
+            console.log("showing vote");
         } else {
             UI_hideVote();
         }
