@@ -138,15 +138,25 @@ function UI_createInGamePlayerList(players) {
     for (var pID in players) {
         var player = $("<tr>");
         var td = $("<td>");
+        var td2 = $("<td2>");
         
         if(pID == "/#" + socket.id)
         {
-            player.addClass("list-item-light");
+            td.addClass("list-item-light");
+        }
+        if(pID == gameInfo[gameInfo.length-1].leaderID){
+            td2.text("[LEADER]");
         }
         
         td.text(players[pID].Name);
         player.append(td);
+        player.append(td2);
         plList.append(player);
+<<<<<<< HEAD
+=======
+        
+
+>>>>>>> 6c3e661916132906e5d93ec084c8dccd2a6d6ff5
     }
 }
 
@@ -221,11 +231,19 @@ socket.on('gameInfo', function(gameInfo) {
     if(gameInfo.GameInfo.length > 0 && currentGameInfo.GameInfo.length == 0) {
         UI_startGame();
         UI_setCardText(gameInfo.PlayerList, gameInfo.SpyList);
+<<<<<<< HEAD
         UI_createInGamePlayerList(gameInfo.PlayerList);
         UI_showLeaderVotingScreen(gameInfo.PlayerList, gameInfo.GameInfo);
         UI_updateVoteOnMissionPlayers(gameInfo.GameInfo[gameInfo.GameInfo.length-1].selectedPlayers);
         if (gameInfo.GameInfo[gameInfo.GameInfo.length - 1].playersChosen == true) {
+=======
+        UI_createInGamePlayerList(gameInfo.PlayerList, gameInfo.GameInfo);
+        UI_selectMission(gameInfo.PlayerList, gameInfo.GameInfo);
+        if (gameInfo.GameInfo[gameInfo.GameInfo.length-1].playersChosen == true) {
+            UI_updateVoteOnMissionPlayers(gameInfo.GameInfo[gameInfo.GameInfo.length-1].selectedPlayers);
+>>>>>>> 6c3e661916132906e5d93ec084c8dccd2a6d6ff5
             UI_showVote();
+            console.log("showing vote");
         } else {
             UI_hideVote();
         }
