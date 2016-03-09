@@ -105,9 +105,13 @@ function UI_createInGamePlayerList(players) {
     var plList = $("#inGamePlayerList");
     
     for (var pID in players) {
-        var player = $("<tr>");
-        var td = $("<td>");
-        
+        if(pID == "/#" + socket.id) {
+            var player = $("<tr class =" + '"list-item-light"' + ">");
+            var td = $("<td>");
+        } else {
+            var player = $("<tr>");
+            var td = $("<td>");
+        }
         td.text(players[pID].Name);
         player.append(td);
         plList.append(player);
