@@ -22,7 +22,6 @@ body {
 }
 
 .mission-vote{
-  visibility:hidden;
 }
 
 .text-box{
@@ -109,7 +108,7 @@ body {
 
 #missions-box{
   position:relative;
-  top:-400px;
+  top: -30px;
   margin-top: 50px;
   margin-left:5px;
   left: -500px;
