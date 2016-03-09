@@ -142,7 +142,9 @@ function UI_createInGamePlayerList(players, gameInfo) {
         
         if(pID == "/#" + socket.id)
         {
-            td.addClass("list-item-light");
+            player.addClass("list-item-light");
+        } else {
+            player.addClass("list-item-dark");
         }
         if(pID == gameInfo[gameInfo.length-1].leaderID){
             td2.text("[LEADER]");
@@ -154,6 +156,19 @@ function UI_createInGamePlayerList(players, gameInfo) {
         plList.append(player);
     }
 }
+
+$('#inGamePlayerList').on('click', 'tr', function(){
+    // alert('You clicked row '+ ($(this).index()) );
+    if ($(this).hasClass('list-item-light')) {
+        $(this).toggleClass("list-item-light list-item-selected-you");
+    } else if ($(this).hasClass('list-item-dark')){
+       $(this).toggleClass("list-item-dark list-item-selected"); 
+    } else if ($(this).hasClass('list-item-selected-you')) {
+        $(this).toggleClass("list-item-selected-you list-item-light");
+    } else if ($(this).hasClass('list-item-selected') ){
+        $(this).toggleClass("list-item-selected list-item-dark");
+    }
+});
 
 function UI_changePlayerName() {
     var newName = $("#changeName-text").val();

@@ -49,17 +49,7 @@
           <div class = "player-list-gameplay room">
             <div class = "player-table">
               <table id="inGamePlayerList" class = "table">
-                  <!--The players will be appended here using jquery-->
-                  <!--<tr><td>player 1</td></tr>-->
-                  <!--<tr><td>player 2</td></tr>-->
-                  <!--<tr><td>player 3</td></tr>-->
-                  <!--<tr><td>player 4</td></tr>-->
-                  <!--<tr><td>player 5</td></tr>-->
-                  <!--<tr><td>player 6</td></tr>-->
-                  <!--<tr><td>player 7</td></tr>-->
-                  <!--<tr><td>player 8</td></tr>-->
-                  <!--<tr><td>player 9</td></tr>-->
-                  <!--<tr><td>player 10</td></tr>-->
+                  
               </table>
             </div>
           </div>  
@@ -101,7 +91,7 @@
             </div>
             
             <!--only display this to players on the mission-->
-            <div id ="pass-fail">
+            <div class="popups" id ="pass-fail">
               <h4>Do you want the mission to succeed or fail?</h4>
               <input type="button" class="btn btn-default" value="Success" id="success">
               <input type="button" class="btn btn-default" value="Fail" id="fail">
@@ -122,6 +112,8 @@
             <div class="mission-vote room">
               <div id="vote-text">Vote on the proposed mission:</div>
                 <ul id = "missionList" class="list-group room">
+                  <li class= "list-group-item list-item-dark">player 1</li>
+                  <li class = "list-group-item list-item-dark">player 2</li>
                 </ul>
               <input type="button" class="btn btn-success" value="Yes" id="vote-yes-button">
               <input type="button" class="btn btn-danger" value="No" id="vote-no-button">

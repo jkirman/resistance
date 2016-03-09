@@ -17,6 +17,14 @@ body {
   background-color: #777;
 }
 
+.list-item-selected{
+  background-color: #66FF00;
+}
+
+.list-item-selected-you{
+  background-color: #66FF99;
+}
+
 .popups{
   margin-top:200px;
 }
@@ -207,8 +215,8 @@ body {
 }
 
 #pass-fail {
-  display:none;
-  position:relative;
+  display: none;
+  position:absolute;
   top: -350px;
 }
 
