@@ -152,11 +152,6 @@ function UI_createInGamePlayerList(players) {
         player.append(td);
         player.append(td2);
         plList.append(player);
-<<<<<<< HEAD
-=======
-        
-
->>>>>>> 6c3e661916132906e5d93ec084c8dccd2a6d6ff5
     }
 }
 
