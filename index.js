@@ -156,7 +156,7 @@ io.on('connection', function (socket) {
     socket.on("togglePlayerForMission", function(playerId) {
         var room = IO_getRoomFromSocket(socket);
         if ( room != null) {
-            room.togglePlayerForMission(playerId);
+            room.togglePlayerForMission(socket.id, playerId);
             IO_sendGameInfoToRoom(room);
         }
     });

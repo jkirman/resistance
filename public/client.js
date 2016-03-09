@@ -140,6 +140,8 @@ function UI_createAndUpdatePlayerList(players) {
 function UI_createInGamePlayerList(players, gameInfo) {
     var plList = $("#inGamePlayerList");
     
+    $("#inGamePlayerList tr").remove();
+    
     for (var pID in players) {
         var player = $("<tr>");
         var td = $("<td>");
@@ -163,20 +165,27 @@ function UI_createInGamePlayerList(players, gameInfo) {
 }
 
 $('#inGamePlayerList').on('click', 'tr', function(){
-    IO_togglePlayerForMission(UI_getPlayerByName($(this).text()));
+    IO_togglePlayerForMission(UI_getPlayerByName($(this).find('td:first').text()));
+    console.log($(this).text());
 });
 
 function UI_updatePlayersOnMission(gameinfo) {
     
     $('#inGamePlayerList tr').each(function(){
-        if ($(this).hasClass('list-item-light')) {
-            $(this).toggleClass("list-item-light list-item-selected-you");
-        } else if ($(this).hasClass('list-item-dark')){
-           $(this).toggleClass("list-item-dark list-item-selected");
-        } else if ($(this).hasClass('list-item-selected-you')) {
-            $(this).toggleClass("list-item-selected-you list-item-light");
-        } else if ($(this).hasClass('list-item-selected') ){
-            $(this).toggleClass("list-item-selected list-item-dark");
+        console.log(gameinfo.GameInfo[gameinfo.GameInfo.length - 1].selectedPlayers);
+        console.log(gameinfo.GameInfo[gameinfo.GameInfo.length - 1].selectedPlayers.indexOf(UI_getPlayerByName($(this).find('td:first').text())));
+        if (gameinfo.GameInfo[gameinfo.GameInfo.length - 1].selectedPlayers.indexOf(UI_getPlayerByName($(this).find('td:first').text())) != -1) {
+            if ($(this).hasClass('list-item-light')) {
+                $(this).toggleClass("list-item-light list-item-selected-you");
+            } else if ($(this).hasClass('list-item-dark')){
+               $(this).toggleClass("list-item-dark list-item-selected");
+            } 
+        } else {
+            if ($(this).hasClass('list-item-selected-you')) {
+                $(this).toggleClass("list-item-selected-you list-item-light");
+            } else if ($(this).hasClass('list-item-selected') ){
+                $(this).toggleClass("list-item-selected list-item-dark");
+            }
         }
     });
 
@@ -283,8 +292,9 @@ socket.on('gameInfo', function(gameInfo) {
         UI_startGame();
         UI_setCardText(gameInfo.PlayerList, gameInfo.SpyList);
         UI_createInGamePlayerList(gameInfo.PlayerList, gameInfo.GameInfo);
-        UI_showLeaderVotingScreen(gameInfo.PlayerList, gameInfo.GameInfo);
-        UI_updatePlayersOnMission(gameInfo);
+//        UI_showLeaderVotingScreen(gameInfo.PlayerList, gameInfo.GameInfo);
+    } else if (gameInfo.GameInfo.length > 0) {
+        UI_updatePlayersOnMission(gameInfo)
         if (gameInfo.GameInfo[gameInfo.GameInfo.length - 1].playersChosen == true) {
             UI_updateVoteOnMissionPlayers(gameInfo.GameInfo[gameInfo.GameInfo.length-1].selectedPlayers);
             UI_showVote();

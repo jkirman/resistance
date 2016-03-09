@@ -204,7 +204,7 @@ function Room(ID) {
 	
 	// GAMEMASTER FUNCTIONS //
 	
-	this.togglePlayerForMission = function(playerID) { _gameMaster.togglePlayerForMission(playerID); };
+	this.togglePlayerForMission = function(triggeredId, playerID) { _gameMaster.togglePlayerForMission(triggeredId, playerID); };
 	this.voteOnMissionAttempt = function(playerID, vote) { _gameMaster.voteOnMissionAttempt(playerID, vote); };
 	this.submitPlayersForMission = function() { _gameMaster.startVoting(); };
 	this.voteOnMissionSuccess = function(playerID, vote) { _gameMaster.voteOnMissionSuccess(playerID, vote); };
@@ -489,19 +489,19 @@ var pList = testRoom.getPlayerList();
 var gm = testRoom.getGameMaster();
 
 // 8 Alternate scenario too few
-gm.togglePlayerForMission(pList[0].getId());
-gm.togglePlayerForMission(pList[1].getId());
+gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[0].getId());
+gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[1].getId());
 
 assert.throws(function() {gm.startVoting()});
 
 // 8 too many
-gm.togglePlayerForMission(pList[2].getId());
-gm.togglePlayerForMission(pList[3].getId());
+gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[2].getId());
+gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[3].getId());
 
 assert.throws(function() {gm.startVoting()});
 
 // 8 just right
-gm.togglePlayerForMission(pList[3].getId());
+gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[3].getId());
 
 gm.startVoting();
 assert.equal(gm.getGameInfo().pop().playersChosen, true);
@@ -541,9 +541,9 @@ testRoom.startGame();
 pList = testRoom.getPlayerList();
 gm = testRoom.getGameMaster();
 
-gm.togglePlayerForMission(pList[0].getId());
-gm.togglePlayerForMission(pList[1].getId());
-gm.togglePlayerForMission(pList[2].getId());
+gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[0].getId());
+gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[1].getId());
+gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[2].getId());
 
 attemptno = gm.getGameInfo().peek().attemptNumber;
 missionno = gm.getGameInfo().peek().missionNumber;
@@ -575,9 +575,9 @@ testRoom.startGame();
 pList = testRoom.getPlayerList();
 gm = testRoom.getGameMaster();
 
-gm.togglePlayerForMission(pList[0].getId());
-gm.togglePlayerForMission(pList[1].getId());
-gm.togglePlayerForMission(pList[2].getId());
+gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[0].getId());
+gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[1].getId());
+gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[2].getId());
 
 for (var i = 0; i < pList.length; i++) {
 	gm.voteOnMissionAttempt(pList[i].getId(), true);
@@ -601,11 +601,11 @@ pList = testRoom.getPlayerList();
 gm = testRoom.getGameMaster();
 gm._gameInfo[0].missionNumber = 4;
 
-gm.togglePlayerForMission(pList[0].getId());
-gm.togglePlayerForMission(pList[1].getId());
-gm.togglePlayerForMission(pList[2].getId());
-gm.togglePlayerForMission(pList[3].getId());
-gm.togglePlayerForMission(pList[4].getId());
+gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[0].getId());
+gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[1].getId());
+gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[2].getId());
+gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[3].getId());
+gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[4].getId());
 
 for (var i = 0; i < 4; i++) {
 	gm.voteOnMissionSuccess(pList[i].getId(), true);
@@ -625,11 +625,11 @@ pList = testRoom.getPlayerList();
 gm = testRoom.getGameMaster();
 gm._gameInfo[0].missionNumber = 4;
 
-gm.togglePlayerForMission(pList[0].getId());
-gm.togglePlayerForMission(pList[1].getId());
-gm.togglePlayerForMission(pList[2].getId());
-gm.togglePlayerForMission(pList[3].getId());
-gm.togglePlayerForMission(pList[4].getId());
+gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[0].getId());
+gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[1].getId());
+gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[2].getId());
+gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[3].getId());
+gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[4].getId());
 
 for (var i = 0; i < 3; i++) {
 	gm.voteOnMissionSuccess(pList[i].getId(), true);
