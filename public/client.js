@@ -30,11 +30,13 @@ document.getElementById("ready-button").onclick = function() {
 // UI CALLS
 // *********************************
 
+//TODO
 function UI_startGame() {
     $(".waiting-room").hide();
     $(".room").show(); // @cecile not sure if inherit is the right property
 }
 
+//TODO
 function UI_showCard() {
     $("#card").toggle();
     $("#card-flip").toggle();
