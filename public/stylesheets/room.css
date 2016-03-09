@@ -202,8 +202,6 @@ body {
 
 #Select-Mission {
   position: relative;
-  top: -350px;
-  display:none;
 }
 
 #pass-fail {
