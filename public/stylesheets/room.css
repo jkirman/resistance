@@ -203,6 +203,7 @@ body {
 
 #Select-Mission {
   position: relative;
+  display:none;
 }
 
 #pass-fail {
