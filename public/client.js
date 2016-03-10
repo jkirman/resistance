@@ -1,6 +1,7 @@
 /* global io */
 var currentGameInfo; // @cecile remove once all this logic is in the clientController
 var currentPlayers;
+var votedOnMission;
 
 var socket = io.connect();
 
@@ -36,6 +37,14 @@ $("#vote-yes-button").click( function() {
 
 $("#vote-no-button").click( function() {
     IO_voteOnMissionAttempt(false);
+});
+
+$("#success").click( function() {
+    IO_voteOnMissionSuccess(true);
+});
+
+$("#fail").click( function() {
+    IO_voteOnMissionSuccess(false);
 });
 
 // *********************************
@@ -96,6 +105,23 @@ function UI_updateVoteOnMissionPlayers(players) {
         li_player.append(ul);
         plList.append(li_player);
     }
+}
+
+function UI_showMissionPassFail(gameinfo, players) {
+    
+    var currentAttempt = gameinfo.GameInfo[gameinfo.GameInfo.length - 1];
+    
+    for (var pID in players) {
+        console.log(pID);
+        console.log(currentAttempt.selectedPlayers.indexOf(pID))
+        if (currentAttempt.selectedPlayers.indexOf(pID) != -1) {
+            $(".pass-fail").show();
+        }
+    }
+}
+
+function UI_hideMissionPassFail() {
+    $(".pass-fail").hide();
 }
 
 function UI_showVote() {
@@ -280,6 +306,11 @@ var IO_voteOnMissionAttempt = function(vote) {
     UI_hideVote();
 };
 
+var IO_voteOnMissionSuccess = function(vote) {
+    socket.emit("voteOnMissionSuccess", vote);
+    UI_hideMissionPassFail();
+};
+
 // *********************************
 // IO HOOKS
 // *********************************
@@ -306,8 +337,6 @@ socket.on('gameInfo', function(gameInfo) {
         UI_updatePlayersOnMission(gameInfo);
         UI_showLeaderVotingScreen(gameInfo.PlayerList, gameInfo.GameInfo);
         
-        console.log(currentAttempt.attemptVote.every(function(vote) {console.log(vote); vote[0] != '/#' + socket.id}));
-        console.log(currentAttempt.attemptAllowed);
         if (currentAttempt.playersChosen &&
             currentAttempt.attemptVote.every(function(vote) {vote[0] != '/#' + socket.id}) &&
             currentAttempt.attemptAllowed != true) {
@@ -315,7 +344,14 @@ socket.on('gameInfo', function(gameInfo) {
             UI_showVote();
         } else if (currentAttempt.attemptAllowed || currentAttempt.attemptVote.find(function(vote) {vote[0] == socket.id}) != undefined) {
             UI_hideVote();
+            votedOnMission = false;
         }
+        
+        if (currentAttempt.attemptAllowed && !votedOnMission) {
+            console.log("IM HERE!!!")
+            UI_showMissionPassFail(gameInfo, currentPlayers);
+        }
+        
     }
     
     currentGameInfo = gameInfo;
