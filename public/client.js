@@ -30,6 +30,14 @@ $("#Submit-Team-Button").click( function() {
     IO_submitPlayersForMission(UI_getSelectedPlayersByLeader());
 });
 
+$("#vote-yes-button").click( function() {
+    IO_voteOnMissionAttempt(true);
+});
+
+$("#vote-no-button").click( function() {
+    IO_voteOnMissionAttempt(false);
+});
+
 // *********************************
 // UI CALLS
 // *********************************
@@ -166,14 +174,11 @@ function UI_createInGamePlayerList(players, gameInfo) {
 
 $('#inGamePlayerList').on('click', 'tr', function(){
     IO_togglePlayerForMission(UI_getPlayerByName($(this).find('td:first').text()));
-    console.log($(this).text());
 });
 
 function UI_updatePlayersOnMission(gameinfo) {
     
     $('#inGamePlayerList tr').each(function(){
-        console.log(gameinfo.GameInfo[gameinfo.GameInfo.length - 1].selectedPlayers);
-        console.log(gameinfo.GameInfo[gameinfo.GameInfo.length - 1].selectedPlayers.indexOf(UI_getPlayerByName($(this).find('td:first').text())));
         if (gameinfo.GameInfo[gameinfo.GameInfo.length - 1].selectedPlayers.indexOf(UI_getPlayerByName($(this).find('td:first').text())) != -1) {
             if ($(this).hasClass('list-item-light')) {
                 $(this).toggleClass("list-item-light list-item-selected-you");
@@ -199,7 +204,7 @@ function UI_changePlayerName() {
 function UI_showLeaderVotingScreen(players, gameinfo) {
     var missionSelection = $("#players-for-mission");
     
-    for (var pID in players) {
+/*    for (var pID in players) {
         var input = $("<input>");
         var label = $("<ul>");
         input.attr("type", "checkbox");
@@ -208,15 +213,12 @@ function UI_showLeaderVotingScreen(players, gameinfo) {
         label.append(input);
         missionSelection.append(label);
     }
+*/
     
-    if (("/#" + socket.id) == gameinfo[gameinfo.length - 1].leaderID) {
-            console.log("leader");
+    if (("/#" + socket.id) == gameinfo[gameinfo.length - 1].leaderID && !gameinfo[gameinfo.length - 1].playersChosen) {
             $("#Select-Mission").show();
             missionSelection.show();
-        } else {
-            console.log(socket.id);
-            console.log(gameinfo[gameinfo.length - 1].leaderID);
-            console.log("not leader");
+    } else {
             $("#Select-Mission").hide();
             missionSelection.hide();
     }
@@ -273,6 +275,11 @@ var IO_submitPlayersForMission = function(players) {
     socket.emit("submitPlayersForMission");
 };
 
+var IO_voteOnMissionAttempt = function(vote) {
+    socket.emit("voteOnMissionAttempt", vote);
+    UI_hideVote();
+};
+
 // *********************************
 // IO HOOKS
 // *********************************
@@ -284,7 +291,10 @@ socket.on('connect', function() {
 });
 
 socket.on('gameInfo', function(gameInfo) {
+    
     console.log(gameInfo);
+    
+    var currentAttempt = gameInfo.GameInfo[gameInfo.GameInfo.length - 1];
     
     currentPlayers = gameInfo.PlayerList;
     UI_createAndUpdatePlayerList(gameInfo.PlayerList);
@@ -292,14 +302,18 @@ socket.on('gameInfo', function(gameInfo) {
         UI_startGame();
         UI_setCardText(gameInfo.PlayerList, gameInfo.SpyList);
         UI_createInGamePlayerList(gameInfo.PlayerList, gameInfo.GameInfo);
-//        UI_showLeaderVotingScreen(gameInfo.PlayerList, gameInfo.GameInfo);
     } else if (gameInfo.GameInfo.length > 0) {
-        UI_updatePlayersOnMission(gameInfo)
-        if (gameInfo.GameInfo[gameInfo.GameInfo.length - 1].playersChosen == true) {
-            UI_updateVoteOnMissionPlayers(gameInfo.GameInfo[gameInfo.GameInfo.length-1].selectedPlayers);
+        UI_updatePlayersOnMission(gameInfo);
+        UI_showLeaderVotingScreen(gameInfo.PlayerList, gameInfo.GameInfo);
+        
+        console.log(currentAttempt.attemptVote.every(function(vote) {console.log(vote); vote[0] != '/#' + socket.id}));
+        console.log(currentAttempt.attemptAllowed);
+        if (currentAttempt.playersChosen &&
+            currentAttempt.attemptVote.every(function(vote) {vote[0] != '/#' + socket.id}) &&
+            currentAttempt.attemptAllowed != true) {
+            UI_updateVoteOnMissionPlayers(currentAttempt.selectedPlayers);
             UI_showVote();
-            console.log("showing vote");
-        } else {
+        } else if (currentAttempt.attemptAllowed || currentAttempt.attemptVote.find(function(vote) {vote[0] == socket.id}) != undefined) {
             UI_hideVote();
         }
     }

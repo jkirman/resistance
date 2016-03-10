@@ -58,7 +58,7 @@ var AttemptInfo = function() {
 	this.selectedPlayers = []; 		// List of Player ID of the players selected for the mission
 	this.playersChosen = false;		// Boolean indicating whether the players chosen have been locked in
 	this.attemptVote = [];			// Voting results for going on the mission [[PlayerID1, YES], [PlayerID2, YES], ...]
-	this.attemptAllowed = false;	// Boolean indicating whether the mission attempt will go with the current players chosen (null if the mission does not happen)
+	this.attemptAllowed = null;		// Boolean indicating whether the mission attempt will go with the current players chosen (null if the mission does not happen)
 	this.missionVote = [0,0];		// The yes and no votes for the mission [3,0]
 	this.missionPassed = null;		// Boolean indicating whether the mission has passed (null if them mission has not happened)
 };
@@ -146,7 +146,7 @@ Game.prototype.nextLeader = function() {
 Game.prototype.togglePlayerForMission = function(triggeredID, playerID) {
 	var selectedPlayers = this._gameInfo.peek().selectedPlayers;
 	var index = selectedPlayers.indexOf(playerID);
-	if (triggeredID == this._gameInfo.peek().leaderID) {
+	if (triggeredID == this._gameInfo.peek().leaderID && !this._gameInfo.peek().playersChosen) {
 		if (index == -1) {
 			selectedPlayers.push(playerID);
 		} else {
