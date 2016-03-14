@@ -84,17 +84,17 @@ function UI_setCardText(players,spies) {
     }
 }
 
-function UI_updateVoteOnMissionPlayers(players) {
+function UI_updateVoteOnMissionPlayers(players, selectedPlayers) {
     var plList = $("#missionList");
     
     while (plList.children().length > 0) {   
         plList.find(":first-child").remove();
     }
     
-    for(var pID in players) {
+    for(var pID in selectedPlayers) {
         var li_player = $("<li>");
         var ul = $("<ul>");
-        var li_name = $("<li>").text(players[pID].Name);
+        var li_name = $("<li>").text(players[selectedPlayers[pID]].Name);
         ul.addClass("list-inline");
 
         li_player.addClass("list-group-item list-item-dark");
@@ -340,7 +340,7 @@ socket.on('gameInfo', function(gameInfo) {
         if (currentAttempt.playersChosen &&
             currentAttempt.attemptVote.every(function(vote) {vote[0] != '/#' + socket.id}) &&
             currentAttempt.attemptAllowed != true) {
-            UI_updateVoteOnMissionPlayers(currentAttempt.selectedPlayers);
+            UI_updateVoteOnMissionPlayers(gameInfo.PlayerList, currentAttempt.selectedPlayers);
             UI_showVote();
         } else if (currentAttempt.attemptAllowed || currentAttempt.attemptVote.find(function(vote) {vote[0] == socket.id}) != undefined) {
             UI_hideVote();
