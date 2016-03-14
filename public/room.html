@@ -73,9 +73,22 @@
                 </ul>
                 
 
+
+              <div id="score-display" class="room">
+                <h2 id="resistance-name">Resistance</h2>
+                <h2 id="spy-name">Spies</h2>
+              <div id="score-box">
+                  <p id="resistance-score">0</p>
+                  <p id="dash"> - </p>
+                  <p id="spy-score">0</p>
+                </div>
+              </div>
+              
+              
               <!--only display this to mission leader-->
-            <div id="Select-Mission">
-              <h4>Select ___ players for this mission</h4>
+            <div id="Select-Mission" class = "popups inner-cover">
+              <h4>Click on players you want to select for the mission in the player list.</h4>
+              <h4 id = "selectInstructions"></h4>
               <!--<ul id= "players-for-mission" class="list-group">-->
                 <!--list of players will need to be appended as labeled checkboxes-->
                 <!--instructions will be found here: -->
@@ -87,25 +100,15 @@
                 <!--<input type= "checkbox" /> Player 4 <br />-->
                 <!--<input type= "checkbox" /> Player 5 <br />-->
               <!--</ul>-->
-              <input type="button" class="btn btn-dfault" value="Submit" id="Submit-Team-Button">
+              <input type="button" class="btn btn-large btn-default" value="Submit" id="Submit-Team-Button">
             </div>
             
             <!--only display this to players on the mission-->
-            <div class="popups" id ="pass-fail">
+            <div class="popups inner-cover" id ="pass-fail">
               <h4>Do you want the mission to succeed or fail?</h4>
               <input type="button" class="btn btn-default" value="Success" id="success">
               <input type="button" class="btn btn-default" value="Fail" id="fail">
             </div>
-              
-              <div id="score-display" class="room">
-                <h2 id="resistance-name">Resistance</h2>
-                <h2 id="spy-name">Spies</h2>
-              <div id="score-box">
-                  <p id="resistance-score">0</p>
-                  <p id="dash"> - </p>
-                  <p id="spy-score">0</p>
-                </div>
-              </div>
 
                                                     
           <div class="inner-cover popups">

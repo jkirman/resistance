@@ -294,6 +294,10 @@ body {
   margin-left: 8px;
 }
 
+#Submit-Team-Button{
+  margin-top: 20px;
+}
+
 .waiting-room{
   display:auto;
 }

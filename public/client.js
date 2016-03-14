@@ -227,8 +227,23 @@ function UI_changePlayerName() {
     IO_changePlayerName(newName);
 }
 
-function UI_showLeaderVotingScreen(players, gameinfo) {
+function UI_showLeaderSelectingScreen(players, gameinfo) {
     var missionSelection = $("#players-for-mission");
+    var instructions = $("#selectInstructions");
+    var playerLookUp = [
+		[2,3,2,3,3],
+		[2,3,3,3,4],
+		[2,3,3,4,4],
+		[3,4,4,5,5],
+		[3,4,4,5,5],
+		[3,4,4,5,5]];
+	var numberOfPlayers = 0;
+	for (var pID in players) {
+	    numberOfPlayers++;
+	}
+	//var number = playerLookUp[players.length - 5][0];
+	var number = playerLookUp[numberOfPlayers - 5][ gameinfo[gameinfo.length-1].missionNumber - 1];
+    instructions.text("Select " + number + " players for this mission");
     
 /*    for (var pID in players) {
         var input = $("<input>");
@@ -331,11 +346,12 @@ socket.on('gameInfo', function(gameInfo) {
     UI_createAndUpdatePlayerList(gameInfo.PlayerList);
     if(gameInfo.GameInfo.length > 0 && currentGameInfo.GameInfo.length == 0) {
         UI_startGame();
+        UI_hideVote();
         UI_setCardText(gameInfo.PlayerList, gameInfo.SpyList);
         UI_createInGamePlayerList(gameInfo.PlayerList, gameInfo.GameInfo);
     } else if (gameInfo.GameInfo.length > 0) {
         UI_updatePlayersOnMission(gameInfo);
-        UI_showLeaderVotingScreen(gameInfo.PlayerList, gameInfo.GameInfo);
+        UI_showLeaderSelectingScreen(gameInfo.PlayerList, gameInfo.GameInfo);
         
         if (currentAttempt.playersChosen &&
             currentAttempt.attemptVote.every(function(vote) {vote[0] != '/#' + socket.id}) &&
