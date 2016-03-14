@@ -116,11 +116,11 @@ body {
 }
 
 #missions-box{
-  position:relative;
-  top: -30px;
-  margin-top: 50px;
-  margin-left:5px;
-  left: -500px;
+  position:absolute;
+  top: 0;
+  margin-top: 250px;
+  margin-left:-300px;
+  left: 0;
 }
 
 #mission-one-head{
