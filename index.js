@@ -72,23 +72,23 @@ var io = require('socket.io').listen(server);
 var IO_getRoomFromSocket = function(socket) {
     for(var roomId in socket.rooms) {
         var room = roommaster.findRoom(parseInt(roomId));
-        return room
+        return room;
     }
-    return null
-}
+    return null;
+};
 
 var IO_sendRoomFullToSocket = function(socketId) {
-    io.sockets.sockets[socketId].emit('roomFull')
-}
+    io.sockets.sockets[socketId].emit('roomFull');
+};
 
 var IO_sendGameInfoToPlayer = function(pID, gameInfo) {
     // gameInfo is a JSON object ready to be sent
-    io.sockets.sockets[pID].emit('gameInfo', gameInfo)
-}
+    io.sockets.sockets[pID].emit('gameInfo', gameInfo);
+};
 
 function IO_sendGameInfoToRoom(room) {
     if(room == null) {
-        return
+        return;
     }
     for(var socket in io.sockets.sockets) { 
         if(room.getPlayerById(socket) != null) {
@@ -98,13 +98,13 @@ function IO_sendGameInfoToRoom(room) {
 }
 
 var IO_sendRoomDeletedToSocket = function(socketId) {
-    io.sockets.sockets[socketId].emit('roomDeleted')
-}
+    io.sockets.sockets[socketId].emit('roomDeleted');
+};
 
 // Send error to a client
 var IO_sendError = function(socketID, message) {
    io.sockets.sockets[socketID].emit('sendError', message);
-}
+};
 
 // *********************************
 // IO HOOKS
@@ -127,21 +127,21 @@ io.on('connection', function (socket) {
                 var name = room.addNewPlayer(pID);   
             }
             else{
-                IO_sendRoomFullToSocket(socket.id)
+                IO_sendRoomFullToSocket(socket.id);
             }
-            IO_sendGameInfoToRoom(room)
+            IO_sendGameInfoToRoom(room);
         }
         else {
-            IO_sendRoomDeletedToSocket(socket.id)
+            IO_sendRoomDeletedToSocket(socket.id);
         }
     });
     
     socket.on("changePlayerName", function(newName) {
-        var room = IO_getRoomFromSocket(socket)
+        var room = IO_getRoomFromSocket(socket);
         if(room != null) {
             // @jeff change to whatever gamemaster call changes a player name, then FROM gamemaster (as long as something changes) call IO_sendGameInfoToRoom and delete call from here
             room.changePlayerName(room.getPlayerById(socket.id), newName);
-            IO_sendGameInfoToRoom(room)
+            IO_sendGameInfoToRoom(room);
         }
     });
     
@@ -161,7 +161,7 @@ io.on('connection', function (socket) {
         }
     });
     
-    socket.on("selectPlayersForMission", function(players) {
+/*    socket.on("selectPlayersForMission", function(players) {
         var room = IO_getRoomFromSocket(socket);
         if ( room != null) {
             players.forEach(function(playerId) {
@@ -170,7 +170,8 @@ io.on('connection', function (socket) {
             IO_sendGameInfoToRoom(room);
         }
     });
-    
+*/
+
     socket.on("submitPlayersForMission", function() {
         var room = IO_getRoomFromSocket(socket);
         if ( room != null) {
