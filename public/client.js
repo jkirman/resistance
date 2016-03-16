@@ -107,21 +107,22 @@ function UI_updateVoteOnMissionPlayers(players, selectedPlayers) {
     }
 }
 
-function UI_showMissionPassFail(gameinfo, players) {
+function UI_showMissionPassFail(gameinfo) {
     
     var currentAttempt = gameinfo.GameInfo[gameinfo.GameInfo.length - 1];
-    
-    for (var pID in players) {
-        console.log(pID);
-        console.log(currentAttempt.selectedPlayers.indexOf(pID))
-        if (currentAttempt.selectedPlayers.indexOf(pID) != -1) {
-            $(".pass-fail").show();
+    for (var pID in currentAttempt.selectedPlayers) {
+       if (currentAttempt.selectedPlayers[pID] == "/#" + socket.id) {
+            $("#pass-fail").show();
         }
     }
 }
 
 function UI_hideMissionPassFail() {
-    $(".pass-fail").hide();
+    $("#pass-fail").hide();
+}
+
+function UI_disableMissionPassFail() {
+    $("#pass-fail input").prop("disabled", true);
 }
 
 function UI_showVote() {
@@ -376,7 +377,7 @@ var IO_voteOnMissionAttempt = function(vote) {
 
 var IO_voteOnMissionSuccess = function(vote) {
     socket.emit("voteOnMissionSuccess", vote);
-    UI_hideMissionPassFail();
+    UI_disableMissionPassFail();
 };
 
 // *********************************
@@ -416,13 +417,16 @@ socket.on('gameInfo', function(gameInfo) {
             currentAttempt.attemptAllowed != true) {
             UI_updateVoteOnMissionPlayers(gameInfo.PlayerList, currentAttempt.selectedPlayers);
             UI_showVote();
-        } else if (currentAttempt.attemptAllowed || currentAttempt.attemptVote.find(function(vote) {vote[0] == socket.id}) != undefined) {
+            // || currentAttempt.attemptVote.find(function(vote) {vote[0] == '\#' + socket.id}) != undefined
+        } else if (currentAttempt.attemptAllowed) {
             UI_hideVote();
             votedOnMission = false;
         }
         
         if (currentAttempt.attemptAllowed && !votedOnMission) {
-            UI_showMissionPassFail(gameInfo, currentPlayers);
+            UI_showMissionPassFail(gameInfo);
+        } else {
+            UI_hideMissionPassFail();
         }
         
     }
