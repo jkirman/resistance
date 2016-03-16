@@ -135,11 +135,11 @@ function UI_hideVote() {
 }
 
 function UI_updateScore(gameinfo) {
-     var currentAttempt = gameinfo.GameInfo[gameinfo.GameInfo.length - 1];
-     var missionNumber = currentAttempt.missionNumber;
+     var lastAttempt = gameinfo.GameInfo[gameinfo.GameInfo.length - 2];
+     var missionNumber = lastAttempt.missionNumber;
      var resistanceScore = gameinfo.ResistancePoints;
      var spyScore = gameinfo.SpyPoints;
-     if (currentAttempt.missionPassed == true) {
+     if (lastAttempt.missionPassed == true) {
          console.log("resistance wins");
          switch (missionNumber) {
              case 1:
@@ -169,7 +169,7 @@ function UI_updateScore(gameinfo) {
                 break;
          }
      }
-     else if (currentAttempt.missionPassed == false){
+     else if (lastAttempt.missionPassed == false){
          console.log("spies win");
          switch (missionNumber) {
              case 1:
@@ -434,7 +434,10 @@ socket.on('gameInfo', function(gameInfo) {
         UI_showLeaderSelectingScreen(gameInfo.PlayerList, gameInfo.GameInfo);
         UI_updateLeader(gameInfo.GameInfo);
         
-        UI_updateScore(gameInfo);
+        if (gameInfo.GameInfo.length > 1) {
+            UI_updateScore(gameInfo);
+        }
+        
         
         // if (currentAttempt.missionPassed != null){
         //     UI_updateScore(gameInfo);
