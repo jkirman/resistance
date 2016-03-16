@@ -180,19 +180,19 @@ function UI_updateScore(gameinfo) {
              case 2:
                  console.log("mission 2 being changed");
                  $("#mission-two-circle").css("background", "red");
-                 $("#resistance-score").text(spyScore);
+                 $("#spy-score").text(spyScore);
                  break;
              case 3:
                  $("#mission-three-circle").css("background", "red");
-                 $("#resistance-score").text(spyScore);
+                 $("#spy-score").text(spyScore);
                  break;
              case 4:
                  $("#mission-four-circle").css("background", "red");
-                 $("#resistance-score").text(spyScore);
+                 $("#spy-score").text(spyScore);
                  break;
              case 5:
                  $("#mission-five-circle").css("background", "red");
-                 $("#resistance-score").text(spyScore);
+                 $("#spy-score").text(spyScore);
                  break;
             default:
                 console.log("default happened");    
