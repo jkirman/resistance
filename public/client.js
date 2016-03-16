@@ -134,6 +134,74 @@ function UI_hideVote() {
     $(".mission-vote").hide();
 }
 
+function UI_updateScore(gameinfo) {
+     var currentAttempt = gameinfo.GameInfo[gameinfo.GameInfo.length - 1];
+     var missionNumber = currentAttempt.missionNumber;
+     var resistanceScore = gameinfo.ResistancePoints;
+     var spyScore = gameinfo.SpyPoints;
+     if (currentAttempt.missionPassed == true) {
+         console.log("resistance wins");
+         switch (missionNumber) {
+             case 1:
+                 console.log("mission 1 being changed");
+                 $("#mission-one-circle").css("background", "blue");
+                 $("#resistance-score").text(resistanceScore);
+                 break;
+             case 2:
+                 console.log("mission 2 being changed");
+                 $("#mission-two-circle").css("background", "blue");
+                 $("#resistance-score").text(resistanceScore);
+                 break;
+             case 3:
+                 $("#mission-three-circle").css("background", "blue");
+                 $("#resistance-score").text(resistanceScore);
+                 break;
+             case 4:
+                 $("#mission-four-circle").css("background", "blue");
+                 $("#resistance-score").text(resistanceScore);
+                 break;
+             case 5:
+                 $("#mission-five-circle").css("background", "blue");
+                 $("#resistance-score").text(resistanceScore);
+                 break;
+            default:
+                console.log("default happened");
+                break;
+         }
+     }
+     else if (currentAttempt.missionPassed == false){
+         console.log("spies win");
+         switch (missionNumber) {
+             case 1:
+                 console.log("mission 1 being changed");
+                 $("#mission-one-circle").css("background", "red");
+                 $("#spy-score").text(spyScore);
+                 break;
+             case 2:
+                 console.log("mission 2 being changed");
+                 $("#mission-two-circle").css("background", "red");
+                 $("#resistance-score").text(spyScore);
+                 break;
+             case 3:
+                 $("#mission-three-circle").css("background", "red");
+                 $("#resistance-score").text(spyScore);
+                 break;
+             case 4:
+                 $("#mission-four-circle").css("background", "red");
+                 $("#resistance-score").text(spyScore);
+                 break;
+             case 5:
+                 $("#mission-five-circle").css("background", "red");
+                 $("#resistance-score").text(spyScore);
+                 break;
+            default:
+                console.log("default happened");    
+                break;
+                
+         }
+     }
+ }
+
 
 function UI_createAndUpdatePlayerList(players) {
     var plList = $("#playerList");
@@ -365,6 +433,12 @@ socket.on('gameInfo', function(gameInfo) {
         UI_updatePlayersOnMission(gameInfo);
         UI_showLeaderSelectingScreen(gameInfo.PlayerList, gameInfo.GameInfo);
         UI_updateLeader(gameInfo.GameInfo);
+        
+        UI_updateScore(gameInfo);
+        
+        // if (currentAttempt.missionPassed != null){
+        //     UI_updateScore(gameInfo);
+        // }
         
         if (currentAttempt.playersChosen &&
             currentAttempt.attemptVote.every(function(vote) {vote[0] != '/#' + socket.id}) &&
