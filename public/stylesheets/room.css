@@ -217,29 +217,32 @@ body {
 #pass-fail {
   display: none;
   position:absolute;
-  top: -350px;
+  top: 300px;
+}
+
+#pass-fail input {
+  width: 100px;
+  height: 60px;
+  position: relative;
+  font-weight: bold;
+  color: white;
+  display:inline-block;
+}
+
+#pass-fail input:disabled {
+  width: 100px;
+  height: 60px;
+  color: gray;
 }
 
 #success {
   background-color: blue;
-  width: 100px;
-  height: 60px;
-  position: relative;
   right:50px;
-  font-weight: bold;
-  color: white;
-  display:inline-block;
 }
 
 #fail {
   background-color: red;
-  width: 100px;
-  height: 60px;
-  position: relative;
   left:50px;
-  font-weight: bold;
-  color: white;
-  display:inline-block;
 }
 
 #card{
