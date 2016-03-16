@@ -179,7 +179,7 @@ function UI_createInGamePlayerList(players, gameInfo) {
     for (var pID in players) {
         var player = $("<tr>");
         var td = $("<td>");
-        var td2 = $("<td2>");
+        var td2 = $("<td>");
         
         if(pID == "/#" + socket.id)
         {
@@ -187,11 +187,9 @@ function UI_createInGamePlayerList(players, gameInfo) {
         } else {
             player.addClass("list-item-dark");
         }
-        if(pID == gameInfo[gameInfo.length-1].leaderID){
-            td2.text("[LEADER]");
-        }
-        
+
         td.text(players[pID].Name);
+        td2.css( "color", "yellow" )
         player.append(td);
         player.append(td2);
         plList.append(player);
@@ -201,6 +199,18 @@ function UI_createInGamePlayerList(players, gameInfo) {
 $('#inGamePlayerList').on('click', 'tr', function(){
     IO_togglePlayerForMission(UI_getPlayerByName($(this).find('td:first').text()));
 });
+
+function UI_updateLeader(gameInfo) {
+    $('#inGamePlayerList tr').each(function(){
+        console.log(UI_getPlayerByName($(this).find('td:first').text()));
+        if ((gameInfo[gameInfo.length-1].leaderID) == UI_getPlayerByName($(this).find('td:first').text())) {
+            console.log("found leader ");
+            $(this).find('td:eq(1)').text("LEADER");
+        } else {
+            $(this).find('td:eq(1)').text("");
+        }
+    });
+}
 
 function UI_updatePlayersOnMission(gameinfo) {
     
@@ -349,17 +359,23 @@ socket.on('gameInfo', function(gameInfo) {
         UI_hideVote();
         UI_setCardText(gameInfo.PlayerList, gameInfo.SpyList);
         UI_createInGamePlayerList(gameInfo.PlayerList, gameInfo.GameInfo);
+        UI_updateLeader(gameInfo.GameInfo);
+        console.log("1")
     } else if (gameInfo.GameInfo.length > 0) {
         UI_updatePlayersOnMission(gameInfo);
         UI_showLeaderSelectingScreen(gameInfo.PlayerList, gameInfo.GameInfo);
+        UI_updateLeader(gameInfo.GameInfo);
+        console.log("2")
         
         if (currentAttempt.playersChosen &&
             currentAttempt.attemptVote.every(function(vote) {vote[0] != '/#' + socket.id}) &&
             currentAttempt.attemptAllowed != true) {
             UI_updateVoteOnMissionPlayers(gameInfo.PlayerList, currentAttempt.selectedPlayers);
             UI_showVote();
+            console.log("3")
         } else if (currentAttempt.attemptAllowed || currentAttempt.attemptVote.find(function(vote) {vote[0] == socket.id}) != undefined) {
             UI_hideVote();
+            console.log("4")
             votedOnMission = false;
         }
         
