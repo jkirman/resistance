@@ -237,6 +237,51 @@ function UI_changePlayerName() {
     IO_changePlayerName(newName);
 }
 
+function UI_updateScore(gameinfo) {
+    var currentAttempt = gameinfo.GameInfo[gameinfo.GameInfo.length - 1];
+    var missionNumber = currentAttempt.missionNumber;
+    var resistanceScore = gameinfo.ResistancePoints;
+    var spyScore = gameinfo.SpyPoints;
+    if (currentAttempt.missionPassed == true) {
+        switch (missionNumber) {
+            case 1:
+                $("#mission-one-circle").css("background", "blue");
+                $("#resistance-score").text(resistanceScore);
+            case 2:
+                $("#mission-two-circle").css("background", "blue");
+                $("#resistance-score").text(resistanceScore);
+            case 3:
+                $("#mission-three-circle").css("background", "blue");
+                $("#resistance-score").text(resistanceScore);
+            case 4:
+                $("#mission-four-circle").css("background", "blue");
+                $("#resistance-score").text(resistanceScore);
+            case 5:
+                $("#mission-five-circle").css("background", "blue");
+                $("#resistance-score").text(resistanceScore);
+        }
+    }
+    else {
+        switch (missionNumber) {
+            case 1:
+                $("#mission-one-circle").css("background", "red");
+                $("#spy-score").text(spyScore);
+            case 2:
+                $("#mission-two-circle").css("background", "red");
+                $("#resistance-score").text(spyScore);
+            case 3:
+                $("#mission-three-circle").css("background", "red");
+                $("#resistance-score").text(spyScore);
+            case 4:
+                $("#mission-four-circle").css("background", "red");
+                $("#resistance-score").text(spyScore);
+            case 5:
+                $("#mission-five-circle").css("background", "red");
+                $("#resistance-score").text(spyScore);
+        }
+    }
+}
+        
 function UI_showLeaderSelectingScreen(players, gameinfo) {
     var missionSelection = $("#players-for-mission");
     var instructions = $("#selectInstructions");
@@ -365,6 +410,7 @@ socket.on('gameInfo', function(gameInfo) {
         UI_updatePlayersOnMission(gameInfo);
         UI_showLeaderSelectingScreen(gameInfo.PlayerList, gameInfo.GameInfo);
         UI_updateLeader(gameInfo.GameInfo);
+        UI_updateScore(gameInfo);
         console.log("2")
         
         if (currentAttempt.playersChosen &&
