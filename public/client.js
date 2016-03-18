@@ -307,6 +307,7 @@ function UI_changePlayerName() {
 
 function UI_showLeaderSelectingScreen(players, gameinfo) {
     var missionSelection = $("#players-for-mission");
+    var other_text = $("#other-players");
     var instructions = $("#selectInstructions");
     var playerLookUp = [
 		[2,3,2,3,3],
@@ -322,7 +323,7 @@ function UI_showLeaderSelectingScreen(players, gameinfo) {
 	//var number = playerLookUp[players.length - 5][0];
 	var number = playerLookUp[numberOfPlayers - 5][ gameinfo[gameinfo.length-1].missionNumber - 1];
     instructions.text("Select " + number + " players for this mission");
-    
+
 /*    for (var pID in players) {
         var input = $("<input>");
         var label = $("<ul>");
@@ -337,9 +338,14 @@ function UI_showLeaderSelectingScreen(players, gameinfo) {
     if (("/#" + socket.id) == gameinfo[gameinfo.length - 1].leaderID && !gameinfo[gameinfo.length - 1].playersChosen) {
             $("#Select-Mission").show();
             missionSelection.show();
+    } else if (!gameinfo[gameinfo.length - 1].playersChosen) {
+            other_text.text("The leader is currently choosing " + number + " players for the next mission");
+            other_text.show();
     } else {
             $("#Select-Mission").hide();
             missionSelection.hide();
+            other_text.hide();
+            
     }
     
 }
