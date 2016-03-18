@@ -135,12 +135,13 @@ function UI_hideVote() {
 }
 
 function UI_updateScore(gameinfo) {
-     var lastAttempt = gameinfo.GameInfo[gameinfo.GameInfo.length - 2];
-     var missionNumber = lastAttempt.missionNumber;
-     var resistanceScore = gameinfo.ResistancePoints;
-     var spyScore = gameinfo.SpyPoints;
+    var index = gameinfo.GameInfo.length - 1;
+    if (gameinfo.GameWinner == "NONE") { index--; }
+    var lastAttempt = gameinfo.GameInfo[index];
+    var missionNumber = lastAttempt.missionNumber;
+    var resistanceScore = gameinfo.ResistancePoints;
+    var spyScore = gameinfo.SpyPoints;
      if (lastAttempt.missionPassed == true) {
-         console.log("resistance wins");
          switch (missionNumber) {
              case 1:
                  console.log("mission 1 being changed");
@@ -170,7 +171,6 @@ function UI_updateScore(gameinfo) {
          }
      }
      else if (lastAttempt.missionPassed == false){
-         console.log("spies win");
          switch (missionNumber) {
              case 1:
                  console.log("mission 1 being changed");
@@ -369,6 +369,18 @@ function UI_getPlayerByName(name) {
     };
 }
 
+function UI_endGame(winner) {
+    if (winner == "RESISTANCE") {
+        alert("Resistance wins!");
+        IO_removePlayerFromRoom();
+        IO_validateRoom();
+    } else if (winner == "SPY") {
+        alert("Spies win!");
+        IO_removePlayerFromRoom();
+        IO_validateRoom();
+    }
+}
+
 // *********************************
 // IO CALLS
 // *********************************
@@ -408,6 +420,14 @@ var IO_voteOnMissionAttempt = function(vote) {
 var IO_voteOnMissionSuccess = function(vote) {
     socket.emit("voteOnMissionSuccess", vote);
     UI_disableMissionPassFail();
+};
+
+var IO_removePlayerFromRoom = function() {
+    socket.emit("removePlayerFromRoom");
+};
+
+var IO_validateRoom = function() {
+    socket.emit("validateRoom");
 };
 
 // *********************************
@@ -466,6 +486,8 @@ socket.on('gameInfo', function(gameInfo) {
             UI_hideMissionPassFail();
         }
         
+        UI_endGame(gameInfo.GameWinner);
+        
     }
     
     currentGameInfo = gameInfo;
@@ -484,4 +506,4 @@ socket.on('roomFull', function() {
 
 socket.on('sendError', function(message) {
     window.alert(message);
-})
+});

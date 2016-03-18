@@ -139,9 +139,12 @@ io.on('connection', function (socket) {
     socket.on("changePlayerName", function(newName) {
         var room = IO_getRoomFromSocket(socket);
         if(room != null) {
-            // @jeff change to whatever gamemaster call changes a player name, then FROM gamemaster (as long as something changes) call IO_sendGameInfoToRoom and delete call from here
-            room.changePlayerName(room.getPlayerById(socket.id), newName);
-            IO_sendGameInfoToRoom(room);
+            try {
+                room.changePlayerName(room.getPlayerById(socket.id), newName);
+                IO_sendGameInfoToRoom(room);
+            } catch (e) {
+                IO_sendError(socket.id, e.message);
+            }
         }
     });
     
@@ -198,6 +201,16 @@ io.on('connection', function (socket) {
             room.voteOnMissionSuccess(socket.id, vote);
             IO_sendGameInfoToRoom(room);
         }
+    });
+    
+    socket.on("removePlayerFromRoom", function() {
+        var room = IO_getRoomFromSocket(socket);
+        room.removePlayer(socket.id);
+    });
+    
+    socket.on("validateRoom", function() {
+        var room = IO_getRoomFromSocket(socket);
+        room.validateRoom();
     });
     
     // socket.on('disconnect', function () {
