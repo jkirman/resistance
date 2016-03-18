@@ -110,15 +110,32 @@ function UI_updateVoteOnMissionPlayers(players, selectedPlayers) {
 function UI_showMissionPassFail(gameinfo) {
     
     var currentAttempt = gameinfo.GameInfo[gameinfo.GameInfo.length - 1];
+    var playerLookUp = [
+		[2,3,2,3,3],
+		[2,3,3,3,4],
+		[2,3,3,4,4],
+		[3,4,4,4,5],
+		[3,4,4,4,5],
+		[3,4,4,4,5]];
+    var numberOfPlayers = 0;
+	for (var pID in gameinfo.PlayerList) {
+	    numberOfPlayers++;
+	}
+	var number = playerLookUp[numberOfPlayers - 5][currentAttempt.missionNumber - 1];
     for (var pID in currentAttempt.selectedPlayers) {
        if (currentAttempt.selectedPlayers[pID] == "/#" + socket.id) {
             $("#pass-fail").show();
+            $("#not-on-mission").hide();
         }
+        $("#not-on-mission").text("The players selected are on the mission. " + number + " players need to pass the mission for the mission to succeed.");
+        $("#not-on-mission").show();
     }
 }
 
 function UI_hideMissionPassFail() {
     $("#pass-fail").hide();
+    $("#on-mission").hide();
+    $("#not-on-mission").hide();
     $("#pass-fail input").prop("disabled", false);
 }
 

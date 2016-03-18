@@ -217,7 +217,8 @@ body {
 #pass-fail {
   display: none;
   position:absolute;
-  top: 300px;
+  top: 200px;
+  margin-left: 110px;
 }
 
 #pass-fail input {
