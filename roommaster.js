@@ -2,8 +2,6 @@
 /* Room Controlling Script */
 /***************************/
 
-var index = require("./index.js")
-
 // Module stuff
 var exports = module.exports = {};
 
@@ -176,10 +174,11 @@ function Room(ID) {
 	// current room
 	this.changePlayerName = function(player, newName) {
 		if (genericNames.indexOf(newName) > -1) {
+			throw new Error(newName + " is a restricted name!");
 		} else if (findPlayerByName(_players, newName) === null) {
 			player.changeName(newName);
 		} else {
-			console.log("A player with the name " + newName + " already exists in this room!");
+			throw new Error("A player with the name " + newName + " already exists in this room!");
 		}
 		return player.getName();
 	};
@@ -212,9 +211,10 @@ function Room(ID) {
 	//////////////////////////
 	
 	// Given a Player object, this function removes them from the current room
-	this.removePlayer = function(player) {
+	this.removePlayer = function(playerID) {
+		var player = findById(_players, playerID);
 		var index = _players.indexOf(player);
-		if (index > -1) {
+		if (player != null) {
 			_genericPlayerNames.push(player.getGenericName());
 			_players.splice(index, 1);
 		} else {
@@ -412,15 +412,18 @@ assert.equal(tplayer.getName(), newTestName);
 
 // Test if you can't change to a restricted name
 for(var i = 0; i < genericNames.length; i++){
-	troom.changePlayerName(tplayer, newTestName);
+	try{troom.changePlayerName(tplayer, newTestName);}
+	catch (e) {}
 }
 assert.equal(tplayer.getName(), newTestName);
 
 // Test if you can't change to a name already in use
 var newTestName2 = "Test2";
 var tplayer2 = troom.addNewPlayerTest();
-troom.changePlayerName(tplayer2, newTestName2);
-troom.changePlayerName(tplayer, newTestName2);
+try {
+	troom.changePlayerName(tplayer2, newTestName2);
+	troom.changePlayerName(tplayer, newTestName2);
+} catch (e) {}
 assert.notEqual(tplayer.getName(), newTestName2);
 
 // User story 4, assigning teams
@@ -641,3 +644,4 @@ assert.equal(gm.getScore()[1], 1);
 
 
 // end 10 test
+
