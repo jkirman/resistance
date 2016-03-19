@@ -210,7 +210,9 @@ io.on('connection', function (socket) {
     
     socket.on("validateRoom", function() {
         var room = IO_getRoomFromSocket(socket);
-        room.validateRoom();
+        if (room != null) {
+            room.validateRoom();
+        }
     });
     
     // socket.on('disconnect', function () {
