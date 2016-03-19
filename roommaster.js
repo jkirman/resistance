@@ -381,267 +381,309 @@ function findPlayerByName(source, name) {
   return null;
 }
 
-// Unit tests for stories 1, 2 and 3
+////////////////////////////////////
+////// GAME LOGIC UNIT TESTS ///////
+////////////////////////////////////
 
 var test = require("unit.js");
-
-// Test setup
 var assert = test.assert;
 
-var troom = null;
-var tplayer = null;
+// ---------------------------------
+// Unit tests for stories 1, 2 and 3
+// ---------------------------------
 
-// Test that a room is created (createRoom() function)
-assert.strictEqual(AllRooms.length, 0, 'Room list not initially empty.');
-exports.startNewRoom();
-assert.strictEqual(AllRooms.length, 1, 'Room was not created.');
+	// Test setup
+	var troom = null;
+	var tplayer = null;
 
-troom = AllRooms[0];
+	// Test that a room is created (createRoom() function)
+	assert.strictEqual(AllRooms.length, 0, 'Room list not initially empty.');
+	exports.startNewRoom();
+	assert.strictEqual(AllRooms.length, 1, 'Room was not created.');
+	
+	troom = AllRooms[0];
+	
+	assert.equal(findById(AllRooms, troom.getId()), troom, 'Room finding does not work.');
 
-assert.equal(findById(AllRooms, troom.getId()), troom, 'Room finding does not work.');
+	// Test if new player has been added to the room
+	assert.notEqual(troom.getPlayerList().length, 0, 'No players in room.');
+	
+	tplayer = troom.getPlayerList()[0];
 
-// Test if new player has been added to the room
-assert.notEqual(troom.getPlayerList().length, 0, 'No players in room.');
+	// Test if you can change the player's name
+	var newTestName = "Test";
+	troom.changePlayerName(tplayer, newTestName);
+	assert.equal(tplayer.getName(), newTestName);
+	
+	// Test if you can't change to a restricted name
+	for(var i = 0; i < genericNames.length; i++){
+		try{troom.changePlayerName(tplayer, newTestName);}
+		catch (e) {}
+	}
+	assert.equal(tplayer.getName(), newTestName);
+	
+	// Test if you can't change to a name already in use
+	var newTestName2 = "Test2";
+	var tplayer2 = troom.addNewPlayerTest();
+	try {
+		troom.changePlayerName(tplayer2, newTestName2);
+		troom.changePlayerName(tplayer, newTestName2);
+	} catch (e) {}
+	assert.notEqual(tplayer.getName(), newTestName2);
 
-tplayer = troom.getPlayerList()[0];
-
-// Test if you can change the player's name
-var newTestName = "Test";
-troom.changePlayerName(tplayer, newTestName);
-assert.equal(tplayer.getName(), newTestName);
-
-// Test if you can't change to a restricted name
-for(var i = 0; i < genericNames.length; i++){
-	try{troom.changePlayerName(tplayer, newTestName);}
-	catch (e) {}
-}
-assert.equal(tplayer.getName(), newTestName);
-
-// Test if you can't change to a name already in use
-var newTestName2 = "Test2";
-var tplayer2 = troom.addNewPlayerTest();
-try {
-	troom.changePlayerName(tplayer2, newTestName2);
-	troom.changePlayerName(tplayer, newTestName2);
-} catch (e) {}
-assert.notEqual(tplayer.getName(), newTestName2);
-
+// -----------------------------
 // User story 4, assigning teams
-for (var i = 5; i <= 10; i++) {
+// -----------------------------
+	for (var i = 5; i <= 10; i++) {
+		var testRoom = exports.createRoom();
+		for (var j = 0; j < i; j++) {
+			testRoom.addNewPlayer(j);
+		}
+		testRoom.startGame();
+		assert.equal(testRoom.getSpyList().length, gamemaster.spiesInGame(i));
+	}
+
+
+// ----------------------------------------------
+// User stories 5 and 6, revealing spies to spies
+// ----------------------------------------------
 	var testRoom = exports.createRoom();
-	for (var j = 0; j < i; j++) {
+	for (var j = 0; j < 10; j++) {
 		testRoom.addNewPlayer(j);
 	}
 	testRoom.startGame();
-	assert.equal(testRoom.getSpyList().length, gamemaster.spiesInGame(i));
-}
-// End test user story 4
+	testRoom.getPlayerList().forEach(function(p) {
+		var gi = testRoom.getRoomInfo(p);
+		assert.equal(p.getType() == PlayerType.SPY, gi.SpyList.length != 0);
+	});
 
-// User stories 5 and 6, revealing spies to spies
-var testRoom = exports.createRoom();
-for (var j = 0; j < 10; j++) {
-	testRoom.addNewPlayer(j);
-}
-testRoom.startGame();
-testRoom.getPlayerList().forEach(function(p) {
-	var gi = testRoom.getRoomInfo(p);
-	assert.equal(p.getType() == PlayerType.SPY, gi.SpyList.length != 0);
-});
-// End test user story 5 and 6
-
+// ----------------------------------------------------------
 // User story 7, only the leader is notified to be the leader
-testRoom = exports.createRoom();
-var lastLeaderID;
-for (var j = 0; j < 10; j++) {
-	testRoom.addNewPlayer(j);
-}
-testRoom.startGame();
-testRoom.getPlayerList().forEach(function(p) {
-	var gi = testRoom.getRoomInfo(p).GameInfo.slice().pop();
-	lastLeaderID = gi.leaderID;
-	assert.equal(lastLeaderID == p.getId(), p.getIsLeader());
-});
+// ----------------------------------------------------------
+	
+	// Normal case
+	testRoom = exports.createRoom();
+	var lastLeaderID;
+	for (var j = 0; j < 10; j++) {
+		testRoom.addNewPlayer(j);
+	}
+	testRoom.startGame();
+	testRoom.getPlayerList().forEach(function(p) {
+		var gi = testRoom.getRoomInfo(p).GameInfo.slice().pop();
+		lastLeaderID = gi.leaderID;
+		assert.equal(lastLeaderID == p.getId(), p.getIsLeader());
+	});
+	
+	// Next mission
+	testRoom.getGameMaster().nextMission();
+	testRoom.getPlayerList().forEach(function(p) {
+		var gi = testRoom.getRoomInfo(p).GameInfo.slice().pop();
+		assert.notEqual(lastLeaderID, gi.leaderID);
+		assert.equal(gi.leaderID == p.getId(), p.getIsLeader());
+	});
+	
+	lastLeaderID = testRoom.getGameMaster().getGameInfo().leaderID;
+	
+	// Next attempt
+	testRoom.getGameMaster().nextAttempt();
+	testRoom.getPlayerList().forEach(function(p) {
+		var gi = testRoom.getRoomInfo(p).GameInfo.slice().pop();
+		assert.notEqual(lastLeaderID, gi.leaderID);
+		assert.equal(gi.leaderID == p.getId(), p.getIsLeader());
+	});
 
-// Next mission
-testRoom.getGameMaster().nextMission();
-testRoom.getPlayerList().forEach(function(p) {
-	var gi = testRoom.getRoomInfo(p).GameInfo.slice().pop();
-	assert.notEqual(lastLeaderID, gi.leaderID);
-	assert.equal(gi.leaderID == p.getId(), p.getIsLeader());
-});
-
-lastLeaderID = testRoom.getGameMaster().getGameInfo().leaderID;
-
-// Next attempt
-testRoom.getGameMaster().nextAttempt();
-testRoom.getPlayerList().forEach(function(p) {
-	var gi = testRoom.getRoomInfo(p).GameInfo.slice().pop();
-	assert.notEqual(lastLeaderID, gi.leaderID);
-	assert.equal(gi.leaderID == p.getId(), p.getIsLeader());
-});
-// End test user story 7
-
+// -----------------------
 // User story 8 and 9 test
-testRoom = exports.createRoom();
-for (var j = 0; j < 10; j++) {
-	testRoom.addNewPlayer(j);
-}
+// -----------------------
 
-testRoom.startGame();
-var pList = testRoom.getPlayerList();
-var gm = testRoom.getGameMaster();
+	testRoom = exports.createRoom();
+	for (var j = 0; j < 10; j++) {
+		testRoom.addNewPlayer(j);
+	}
+	
+	testRoom.startGame();
+	var pList = testRoom.getPlayerList();
+	var gm = testRoom.getGameMaster();
+	
+	// 8 Alternate scenario too few
+	gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[0].getId());
+	gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[1].getId());
+	
+	assert.throws(function() {gm.startVoting()});
+	
+	// 8 too many
+	gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[2].getId());
+	gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[3].getId());
+	
+	assert.throws(function() {gm.startVoting()});
+	
+	// 8 normal case
+	gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[3].getId());
+	
+	gm.startVoting();
+	assert.equal(gm.getGameInfo().pop().playersChosen, true);
+	
+	// no > yes
+	var attemptno = gm.getGameInfo().peek().attemptNumber;
+	for (var i = 0; i < pList.length; i++) {
+		gm.voteOnMissionAttempt(pList[i].getId(), false);
+	}
+	
+	assert.notEqual(gm.getGameInfo().peek().attemptNumber, attemptno);
+	
+	// yes = no
+	gm.togglePlayerForMission(pList[0].getId());
+	gm.togglePlayerForMission(pList[1].getId());
+	gm.togglePlayerForMission(pList[2].getId());
+	
+	var attemptno = gm.getGameInfo().peek().attemptNumber;
+	var missionno = gm.getGameInfo().peek().missionNumber;
+	for (var i = 0; i < pList.length/2; i++) {
+		gm.voteOnMissionAttempt(pList[i].getId(), false);
+	}
+	for (var i = pList.length/2; i < pList.length; i++) {
+		gm.voteOnMissionAttempt(pList[i].getId(), true);
+	}
+	
+	assert.equal(gm.getGameInfo().peek().attemptNumber, attemptno);
+	assert.equal(gm.getGameInfo().peek().missionNumber, missionno);
+	
+	// yes > no
+	testRoom = exports.createRoom();
+	for (var j = 0; j < 10; j++) {
+		testRoom.addNewPlayer(j);
+	}
+	
+	testRoom.startGame();
+	pList = testRoom.getPlayerList();
+	gm = testRoom.getGameMaster();
+	
+	gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[0].getId());
+	gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[1].getId());
+	gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[2].getId());
+	
+	attemptno = gm.getGameInfo().peek().attemptNumber;
+	missionno = gm.getGameInfo().peek().missionNumber;
+	for (var i = 0; i < pList.length; i++) {
+		gm.voteOnMissionAttempt(pList[i].getId(), true);
+	}
+	
+	assert.equal(gm.getGameInfo().peek().attemptNumber, attemptno);
+	assert.equal(gm.getGameInfo().peek().missionNumber, missionno);
 
-// 8 Alternate scenario too few
-gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[0].getId());
-gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[1].getId());
-
-assert.throws(function() {gm.startVoting()});
-
-// 8 too many
-gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[2].getId());
-gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[3].getId());
-
-assert.throws(function() {gm.startVoting()});
-
-// 8 just right
-gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[3].getId());
-
-gm.startVoting();
-assert.equal(gm.getGameInfo().pop().playersChosen, true);
-
-// no > yes
-var attemptno = gm.getGameInfo().peek().attemptNumber;
-for (var i = 0; i < pList.length; i++) {
-	gm.voteOnMissionAttempt(pList[i].getId(), false);
-}
-
-assert.notEqual(gm.getGameInfo().peek().attemptNumber, attemptno);
-
-// yes = no
-gm.togglePlayerForMission(pList[0].getId());
-gm.togglePlayerForMission(pList[1].getId());
-gm.togglePlayerForMission(pList[2].getId());
-
-var attemptno = gm.getGameInfo().peek().attemptNumber;
-var missionno = gm.getGameInfo().peek().missionNumber;
-for (var i = 0; i < pList.length/2; i++) {
-	gm.voteOnMissionAttempt(pList[i].getId(), false);
-}
-for (var i = pList.length/2; i < pList.length; i++) {
-	gm.voteOnMissionAttempt(pList[i].getId(), true);
-}
-
-assert.equal(gm.getGameInfo().peek().attemptNumber, attemptno);
-assert.equal(gm.getGameInfo().peek().missionNumber, missionno);
-
-// yes > no
-testRoom = exports.createRoom();
-for (var j = 0; j < 10; j++) {
-	testRoom.addNewPlayer(j);
-}
-
-testRoom.startGame();
-pList = testRoom.getPlayerList();
-gm = testRoom.getGameMaster();
-
-gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[0].getId());
-gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[1].getId());
-gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[2].getId());
-
-attemptno = gm.getGameInfo().peek().attemptNumber;
-missionno = gm.getGameInfo().peek().missionNumber;
-for (var i = 0; i < pList.length; i++) {
-	gm.voteOnMissionAttempt(pList[i].getId(), true);
-}
-
-assert.equal(gm.getGameInfo().peek().attemptNumber, attemptno);
-assert.equal(gm.getGameInfo().peek().missionNumber, missionno);
-
-// End user story 8 and 9 test
-
+// ------------------
 // User story 10 test
+// ------------------
 
-// Mission success all players
-for (var i = 0; i < 3; i++) {
-	gm.voteOnMissionSuccess(pList[i].getId(),true);
-}
+	// Mission success all players
+	for (var i = 0; i < 3; i++) {
+		gm.voteOnMissionSuccess(pList[i].getId(),true);
+	}
+	
+	assert.equal(gm.getScore()[0], 1);
+	
+	// Mission failure with one no vote
+	testRoom = exports.createRoom();
+	for (var j = 0; j < 10; j++) {
+		testRoom.addNewPlayer(j);
+	}
+	
+	testRoom.startGame();
+	pList = testRoom.getPlayerList();
+	gm = testRoom.getGameMaster();
+	
+	gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[0].getId());
+	gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[1].getId());
+	gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[2].getId());
+	
+	for (var i = 0; i < pList.length; i++) {
+		gm.voteOnMissionAttempt(pList[i].getId(), true);
+	}
+	
+	for (var i = 0; i < 2; i++) {
+		gm.voteOnMissionSuccess(pList[i].getId(), true);
+	}
+	gm.voteOnMissionSuccess(pList[2].getId(), false);
+	
+	assert.equal(gm.getScore()[1], 1);
+	
+	// Pass with one no
+	testRoom = exports.createRoom();
+	for (var j = 0; j < 10; j++) {
+		testRoom.addNewPlayer(j);
+	}
+	
+	testRoom.startGame();
+	pList = testRoom.getPlayerList();
+	gm = testRoom.getGameMaster();
+	gm._gameInfo[0].missionNumber = 4;
+	
+	gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[0].getId());
+	gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[1].getId());
+	gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[2].getId());
+	gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[3].getId());
+	gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[4].getId());
+	
+	for (var i = 0; i < 4; i++) {
+		gm.voteOnMissionSuccess(pList[i].getId(), true);
+	}
+	gm.voteOnMissionSuccess(pList[4].getId(), false);
+	
+	assert.equal(gm.getScore()[0], 1);
+	
+	// Fail with 2 mission that requires 1 less to win
+	testRoom = exports.createRoom();
+	for (var j = 0; j < 10; j++) {
+		testRoom.addNewPlayer(j);
+	}
+	
+	testRoom.startGame();
+	pList = testRoom.getPlayerList();
+	gm = testRoom.getGameMaster();
+	gm._gameInfo[0].missionNumber = 4;
+	
+	gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[0].getId());
+	gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[1].getId());
+	gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[2].getId());
+	gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[3].getId());
+	gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[4].getId());
+	
+	for (var i = 0; i < 3; i++) {
+		gm.voteOnMissionSuccess(pList[i].getId(), true);
+	}
+	gm.voteOnMissionSuccess(pList[3].getId(), false);
+	gm.voteOnMissionSuccess(pList[4].getId(), false);
+	
+	assert.equal(gm.getScore()[1], 1);
 
-assert.equal(gm.getScore()[0], 1);
+// -------------
+// User story 12
+// -------------
 
-// Mission failure with one no vote
-testRoom = exports.createRoom();
-for (var j = 0; j < 10; j++) {
-	testRoom.addNewPlayer(j);
-}
-
-testRoom.startGame();
-pList = testRoom.getPlayerList();
-gm = testRoom.getGameMaster();
-
-gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[0].getId());
-gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[1].getId());
-gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[2].getId());
-
-for (var i = 0; i < pList.length; i++) {
-	gm.voteOnMissionAttempt(pList[i].getId(), true);
-}
-
-for (var i = 0; i < 2; i++) {
-	gm.voteOnMissionSuccess(pList[i].getId(), true);
-}
-gm.voteOnMissionSuccess(pList[2].getId(), false);
-
-assert.equal(gm.getScore()[1], 1);
-
-// Pass with one no
-testRoom = exports.createRoom();
-for (var j = 0; j < 10; j++) {
-	testRoom.addNewPlayer(j);
-}
-
-testRoom.startGame();
-pList = testRoom.getPlayerList();
-gm = testRoom.getGameMaster();
-gm._gameInfo[0].missionNumber = 4;
-
-gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[0].getId());
-gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[1].getId());
-gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[2].getId());
-gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[3].getId());
-gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[4].getId());
-
-for (var i = 0; i < 4; i++) {
-	gm.voteOnMissionSuccess(pList[i].getId(), true);
-}
-gm.voteOnMissionSuccess(pList[4].getId(), false);
-
-assert.equal(gm.getScore()[0], 1);
-
-// Fail with 2 mission that requires 1 less to win
-testRoom = exports.createRoom();
-for (var j = 0; j < 10; j++) {
-	testRoom.addNewPlayer(j);
-}
-
-testRoom.startGame();
-pList = testRoom.getPlayerList();
-gm = testRoom.getGameMaster();
-gm._gameInfo[0].missionNumber = 4;
-
-gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[0].getId());
-gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[1].getId());
-gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[2].getId());
-gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[3].getId());
-gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[4].getId());
-
-for (var i = 0; i < 3; i++) {
-	gm.voteOnMissionSuccess(pList[i].getId(), true);
-}
-gm.voteOnMissionSuccess(pList[3].getId(), false);
-gm.voteOnMissionSuccess(pList[4].getId(), false);
-
-assert.equal(gm.getScore()[1], 1);
-
-
-// end 10 test
-
+	testRoom = exports.createRoom();
+	for (var j = 0; j < 10; j++) {
+		testRoom.addNewPlayer(j);
+	}
+	
+	testRoom.startGame();
+	pList = testRoom.getPlayerList();
+	gm = testRoom.getGameMaster();
+	
+	assert.equal(testRoom.getRoomInfo(pList[0]).ResistancePoints,0);
+	assert.equal(testRoom.getRoomInfo(pList[0]).SpyPoints,0);
+	
+	gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[0].getId());
+	gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[1].getId());
+	gm.togglePlayerForMission(gm.getGameInfo().peek().leaderID, pList[2].getId());
+	
+	for (var i = 0; i < pList.length; i++) {
+		gm.voteOnMissionAttempt(pList[i].getId(), true);
+	}
+	
+	for (var i = 0; i < 2; i++) {
+		gm.voteOnMissionSuccess(pList[i].getId(), true);
+	}
+	gm.voteOnMissionSuccess(pList[2].getId(), false);
+	
+	assert.equal((testRoom.getRoomInfo(pList[0]).ResistancePoints != 0) ||
+		(testRoom.getRoomInfo(pList[0]).SpyPoints != 0), true);
