@@ -51,6 +51,14 @@ $("#fail").click( function() {
 // UI CALLS
 // *********************************
 
+function UI_showOverlay(show) {
+    if(show) {
+        $("#overlay").show();
+    } else {
+        $("#overlay").hide();
+    }
+}
+
 function UI_startGame() {
     $(".waiting-room").hide();
     $(".room").show(); // @cecile not sure if inherit is the right property
@@ -461,6 +469,12 @@ socket.on('gameInfo', function(gameInfo) {
     
     console.log(gameInfo);
     
+    if(gameInfo.Connected) {
+        UI_showOverlay(false);
+    } else {
+        UI_showOverlay(true);
+    }
+    
     var currentAttempt = gameInfo.GameInfo[gameInfo.GameInfo.length - 1];
     
     currentPlayers = gameInfo.PlayerList;
@@ -518,6 +532,11 @@ socket.on('roomDeleted', function() {
 
 socket.on('roomFull', function() {
     alert("Room is full. Redirecting to homepage.");
+    IO_redirectToHome();
+});
+
+socket.on('playerExists', function() {
+    alert("Player already exists in this room. Redirecting to homepage.");
     IO_redirectToHome();
 });
 

@@ -75,7 +75,9 @@ io.use(ios(session));
 // *********************************
 
 var IO_getRoomFromSocket = function(socket) {
+    console.log(socket.rooms);
     for(var roomId in socket.rooms) {
+        console.log(roomId)
         var room = roommaster.findRoom(parseInt(roomId));
         return room;
     }
@@ -85,6 +87,10 @@ var IO_getRoomFromSocket = function(socket) {
 var IO_sendRoomFullToSocket = function(socketId) {
     io.sockets.sockets[socketId].emit('roomFull');
 };
+
+var IO_sendPlayerExistsToSocket = function(socketId) {
+     io.sockets.sockets[socketId].emit('playerExists');
+}
 
 var IO_sendGameInfoToPlayer = function(pID, gameInfo) {
     // gameInfo is a JSON object ready to be sent
@@ -122,15 +128,25 @@ io.on('connection', function (socket) {
             socket.join(rID); // Add this socket to the room with this gameid
             
             var s_pID = socket.handshake.session.pid;
+            var pID = socket.id
+            var playerJoined = false;
             if(s_pID != null) { // If there is already a session on this socket, use the same player
                 var s_Player = room.getPlayerById(s_pID);
                 if(s_Player != null) {
-                    s_Player.setId(socket.id);
-                    socket.handshake.session.pid = socket.id;
-                    socket.handshake.session.save();
+                    if(!s_Player.isConnected()) {
+                        s_Player.setId(pID);
+                        s_Player.setConnected(true);
+                        socket.handshake.session.pid = pID;
+                        socket.handshake.session.save();
+                        playerJoined = true;
+                    } else {
+                        IO_sendPlayerExistsToSocket(socket.id);
+                        playerJoined = true;
+                    }
                 }
-            } else { // If there is not an existing session, then make a new player
-                var pID = socket.id//}
+            } 
+            if(!playerJoined) { // If there is not an existing session, then make a new player
+               //}
             
                 // @jeff: Add your call here
                 // gamemaster/roommaster check if full, add player, whatever
@@ -230,6 +246,23 @@ io.on('connection', function (socket) {
             room.validateRoom();
         }
     });
+    
+    socket.on("disconnect", function() {
+        for(var roomId in roommaster.getRoomList()) {
+            var room = roommaster.getRoomList()[roomId];
+            if(room != null && room.getPlayerById != null) {
+                var player = room.getPlayerById(socket.id);
+                if(player != null) {
+                    if(player.isConnected()) {
+                        player.setConnected(false);
+                        IO_sendGameInfoToRoom(room);
+                        break;
+                    }
+                 }
+            }
+           
+        }
+    })
     
     // socket.on('disconnect', function () {
     //     console.log("DISCONNECT FROM " + socket.id)
