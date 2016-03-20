@@ -254,7 +254,11 @@ io.on('connection', function (socket) {
                 var player = room.getPlayerById(socket.id);
                 if(player != null) {
                     if(player.isConnected()) {
-                        player.setConnected(false);
+                        if(room.getGameMaster().getGameInfo() == null || room.getGameMaster().getGameInfo().length == 0) {
+                            room.removePlayer(player.getId());
+                        } else {
+                            player.setConnected(false);
+                        }
                         IO_sendGameInfoToRoom(room);
                         break;
                     }
