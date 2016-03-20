@@ -479,14 +479,14 @@ socket.on('gameInfo', function(gameInfo) {
     
     currentPlayers = gameInfo.PlayerList;
     UI_createAndUpdatePlayerList(gameInfo.PlayerList);
-    if(gameInfo.GameInfo.length > 0 && currentGameInfo.GameInfo.length == 0) {
+    if(gameInfo.RoomState == "STARTING") {
         UI_startGame();
         UI_hideVote();
         UI_setCardText(gameInfo.PlayerList, gameInfo.SpyList);
         UI_createInGamePlayerList(gameInfo.PlayerList, gameInfo.GameInfo);
         UI_showLeaderSelectingScreen(gameInfo.PlayerList, gameInfo.GameInfo);
         UI_updateLeader(gameInfo.GameInfo);
-    } else if (gameInfo.GameInfo.length > 0) {
+    } else if (gameInfo.RoomState == "INPLAY") {
         UI_updatePlayersOnMission(gameInfo);
         UI_showLeaderSelectingScreen(gameInfo.PlayerList, gameInfo.GameInfo);
         UI_updateLeader(gameInfo.GameInfo);
