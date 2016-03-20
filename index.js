@@ -3,6 +3,9 @@ var http = require('http');
 var express = require('express')
 var app = express();
 var gamelist = [];
+var Session = require('express-session');
+var SessionStore = require('session-file-store')(Session);
+var session = Session({store: new SessionStore({path: __dirname+'/tmp/sessions'}), secret: 'DOOR', resave: true, saveUninitialized: true});
 
 
 // *********************************
@@ -11,6 +14,7 @@ var gamelist = [];
 
 console.log(__dirname + '/public');
 app.use('/static', express.static(__dirname + '/public'));
+app.use(session);
 app.set('port', (process.env.PORT || 5000))
 
 app.get('/', function(request, response) {
@@ -29,7 +33,7 @@ app.param('gameid', function(request, response, next, gameid) {
           
     //Check if the gameID is valid, if not, redirect back to empty request
     var room = roommaster.findRoom(parseInt(gameid));
-
+    
     if(room === null){
 	    response.redirect('/');
     } else {    
@@ -63,8 +67,9 @@ var server = http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
 
+var ios = require('socket.io-express-session');
 var io = require('socket.io').listen(server);
-
+io.use(ios(session));
 // *********************************
 // IO CALLS
 // *********************************
@@ -111,23 +116,34 @@ var IO_sendError = function(socketID, message) {
 // *********************************
 
 io.on('connection', function (socket) {
-    
     socket.on('join', function (rID) {
         var room = roommaster.findRoom(parseInt(rID));
         if(room !== null) {
             socket.join(rID); // Add this socket to the room with this gameid
-            // TODO: More logic around adding the player to the room
-            var pID = socket.id//}
             
-            // @jeff: Add your call here
-            // gamemaster/roommaster check if full, add player, whatever
-            // Then FROM the gamemaster, call room full or update room or whatever IO_* functions (defined above)
-            // Then please remove this code
-            if(!room.isFull()){
-                var name = room.addNewPlayer(pID);   
-            }
-            else{
-                IO_sendRoomFullToSocket(socket.id);
+            var s_pID = socket.handshake.session.pid;
+            if(s_pID != null) { // If there is already a session on this socket, use the same player
+                var s_Player = room.getPlayerById(s_pID);
+                if(s_Player != null) {
+                    s_Player.setId(socket.id);
+                    socket.handshake.session.pid = socket.id;
+                    socket.handshake.session.save();
+                }
+            } else { // If there is not an existing session, then make a new player
+                var pID = socket.id//}
+            
+                // @jeff: Add your call here
+                // gamemaster/roommaster check if full, add player, whatever
+                // Then FROM the gamemaster, call room full or update room or whatever IO_* functions (defined above)
+                // Then please remove this code
+                if(!room.isFull()){
+                    var name = room.addNewPlayer(pID);  
+                    socket.handshake.session.pid = pID;
+                    socket.handshake.session.save();
+                }
+                else{
+                    IO_sendRoomFullToSocket(socket.id);
+                }
             }
             IO_sendGameInfoToRoom(room);
         }
