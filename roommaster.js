@@ -371,7 +371,7 @@ function Room(ID) {
 			GameInfo : _gameInfo,
 			ResistancePoints : _score[0],
 			SpyPoints : _score[1],
-			GameWinner : _gameWinner,
+			GameWinner : _gameWinner
 		};
 	};
 	
