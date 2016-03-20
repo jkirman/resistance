@@ -108,10 +108,12 @@ function Player(pName, pID) {
 	var _isLeader = false;
 	var _type = PlayerType.RESISTANCE;
 	var _ready = false;
+	var _connected = true;
 
 	this.getName = function() { return _name; };
 	this.getGenericName = function() { return _genericName; };
 	this.getId = function() { return _pID; };
+	this.isConnected = function() {return _connected; };
 	this.changeName = function(name) { _name = name; };
 	this.setLeader = function(isLeader) { _isLeader = isLeader; };
 	this.getIsLeader = function() {return _isLeader; };
@@ -119,6 +121,7 @@ function Player(pName, pID) {
 	this.getType = function() { return _type; };
 	this.isReady = function() { return _ready; };
 	this.setReady = function(ready) { _ready = ready; };
+	this.setConnected = function(con) { _connected = con };
 	this.setId = function(id) { _pID = id; };
 	this.toggleReady = function() { _ready =! _ready };
 }
@@ -188,6 +191,16 @@ function Room(ID) {
 		// @jeff we need to check if room is in a state where players are allowed to change their readyStatus before calling this
 		player.setReady(readyStatus);
 	};
+	
+	this.playersAllConnected = function() {
+		var playersConnected = true;
+			_players.forEach(function(p){
+			if (!p.isConnected()) {
+				playersConnected = false;
+			}
+		});
+		return playersConnected;
+	}
 	
 	this.gameCanStart = function() {
 		var gameCanStart = true;
@@ -278,9 +291,11 @@ function Room(ID) {
 		//parameters
 		var _playerList = this.getSerialPlayerList();
 		var _spyList = this.getSerialSpyList();
+		var _connected = this.playersAllConnected();
 		var _gameInfo;
 		var _score;
 		var _gameWinner;
+		var _connected;
 		
 		this.updateSpies;
 		if (player.getType() == PlayerType.SPY){
@@ -299,7 +314,8 @@ function Room(ID) {
 			GameInfo : _gameInfo,
 			ResistancePoints : _score[0],
 			SpyPoints : _score[1],
-			GameWinner : _gameWinner
+			GameWinner : _gameWinner,
+			Connected : _connected
 		};
 		
 	}
