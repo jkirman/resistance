@@ -119,6 +119,7 @@ function Player(pName, pID) {
 	this.getType = function() { return _type; };
 	this.isReady = function() { return _ready; };
 	this.setReady = function(ready) { _ready = ready; };
+	this.setId = function(id) { _pID = id; };
 	this.toggleReady = function() { _ready =! _ready };
 }
 
