@@ -159,6 +159,27 @@ function UI_hideVote() {
     $(".mission-vote").hide();
 }
 
+function UI_showMissionResults(gameinfo) {
+    var index = gameinfo.GameInfo.length - 1;
+    if (gameinfo.GameWinner == "NONE") { index--; }
+    var lastAttempt = gameinfo.GameInfo[index];
+    var numPassed = lastAttempt.missionVote[0];
+    var numFailed = lastAttempt.missionVote[1];
+    if (lastAttempt.missionPassed == true) {
+        $("#mission-results-text").text("The mission passed! " + numPassed + 
+            " players wanted the mission to pass and " + numFailed + " wanted it to fail");
+    }
+    else if (lastAttempt.missionPassed == false) {
+        $("#mission-results-text").text("The mission failed! " + numPassed + 
+            " players wanted the mission to pass and " + numFailed + " wanted it to fail");
+    }
+    $("#mission-results").show();
+}
+
+function UI_hideMissionResults() {
+    $("#mission-results").hide();
+}
+
 function UI_updateScore(gameinfo) {
     var index = gameinfo.GameInfo.length - 1;
     if (gameinfo.GameWinner == "NONE") { index--; }
@@ -226,7 +247,6 @@ function UI_updateScore(gameinfo) {
          }
      }
  }
-
 
 function UI_createAndUpdatePlayerList(players) {
     var plList = $("#playerList");
@@ -492,20 +512,25 @@ socket.on('gameInfo', function(gameInfo) {
         UI_updateLeader(gameInfo.GameInfo);
         
         if (gameInfo.GameInfo.length > 1) {
+            var previousAttempt = gameInfo.GameInfo[gameInfo.GameInfo.length - 2];
             UI_updateScore(gameInfo);
+            if (!currentAttempt.playersChosen) {
+                UI_showMissionResults(gameInfo);
+            }
+            else {
+                UI_hideMissionResults();
+            }
+            if ((currentAttempt.missionNumber == previousAttempt.missionNumber) && (previousAttempt.attemptAllowed == false)) {
+                UI_hideMissionResults();
+            }
         }
-        
-        
-        // if (currentAttempt.missionPassed != null){
-        //     UI_updateScore(gameInfo);
-        // }
         
         if (currentAttempt.playersChosen &&
             currentAttempt.attemptVote.every(function(vote) {vote[0] != '/#' + socket.id}) &&
             currentAttempt.attemptAllowed != true) {
-            UI_updateVoteOnMissionPlayers(gameInfo.PlayerList, currentAttempt.selectedPlayers);
-            UI_showVote();
-            // || currentAttempt.attemptVote.find(function(vote) {vote[0] == '\#' + socket.id}) != undefined
+                UI_updateVoteOnMissionPlayers(gameInfo.PlayerList, currentAttempt.selectedPlayers);
+                UI_showVote();
+                // || currentAttempt.attemptVote.find(function(vote) {vote[0] == '\#' + socket.id}) != undefined
         } else if (currentAttempt.attemptAllowed) {
             UI_hideVote();
             votedOnMission = false;
