@@ -275,6 +275,7 @@ function UI_createInGamePlayerList(players, gameInfo) {
         var player = $("<tr>");
         var td = $("<td>");
         var td2 = $("<td>");
+        var td3 = $("<td>");
         
         if(pID == "/#" + socket.id)
         {
@@ -284,9 +285,11 @@ function UI_createInGamePlayerList(players, gameInfo) {
         }
 
         td.text(players[pID].Name);
-        td2.css( "color", "yellow" )
+        td2.css( "color", "yellow" );
+        td3.css( "color", "white" );
         player.append(td);
         player.append(td2);
+        player.append(td3);
         plList.append(player);
     }
 }
@@ -303,6 +306,39 @@ function UI_updateLeader(gameInfo) {
             $(this).find('td:eq(1)').text("");
         }
     });
+}
+
+function UI_updateAttemptVoteResults(gameInfo) {
+    
+    var currentAttempt =  gameInfo[gameInfo.length - 1];
+    var currentAttemptVotes = currentAttempt.attemptVote;
+    var currentPlayerOnList;
+    var votedYes = false;
+    
+    
+    $('#inGamePlayerList tr').each(function(){
+        currentPlayerOnList = UI_getPlayerByName($(this).find('td:first').text());
+        if (currentAttempt.attemptAllowed != null) {
+            currentAttemptVotes.forEach(function(p) {
+                if (p[0] == currentPlayerOnList) {
+                    if (p[1] == true) {
+                        votedYes = true;
+                    }
+                }
+                
+                if (votedYes) {
+                    $(this).find('td:eq(2)').text("[y]");
+                } else {
+                   $(this).find('td:eq(2)').text("[n]"); 
+                }
+                
+                votedYes = false;
+                
+            });
+        }
+        
+    });
+        
 }
 
 function UI_updatePlayersOnMission(gameinfo) {
@@ -490,6 +526,7 @@ socket.on('gameInfo', function(gameInfo) {
         UI_updatePlayersOnMission(gameInfo);
         UI_showLeaderSelectingScreen(gameInfo.PlayerList, gameInfo.GameInfo);
         UI_updateLeader(gameInfo.GameInfo);
+        UI_updateAttemptVoteResults(gameInfo.GameInfo);
         
         if (gameInfo.GameInfo.length > 1) {
             UI_updateScore(gameInfo);
