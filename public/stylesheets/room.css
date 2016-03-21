@@ -72,7 +72,11 @@ body {
     width: 100%;
     height: 100%;
     display: none;
-}g
+}
+
+#mission-results {
+  display: none;
+}
 
 #score-display{
   position:relative;

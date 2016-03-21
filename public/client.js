@@ -507,6 +507,7 @@ socket.on('gameInfo', function(gameInfo) {
         UI_showLeaderSelectingScreen(gameInfo.PlayerList, gameInfo.GameInfo);
         UI_updateLeader(gameInfo.GameInfo);
     } else if (gameInfo.RoomState == "INPLAY") {
+        UI_startGame();
         UI_updatePlayersOnMission(gameInfo);
         UI_showLeaderSelectingScreen(gameInfo.PlayerList, gameInfo.GameInfo);
         UI_updateLeader(gameInfo.GameInfo);
