@@ -257,10 +257,6 @@ body {
   left:50px;
 }
 
-#mission-results {
-  display: none;
-}
-
 #card{
   background-color: #ccc;
   background-image: url("images/playcard-background.jpg");

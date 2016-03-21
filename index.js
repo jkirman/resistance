@@ -75,9 +75,7 @@ io.use(ios(session));
 // *********************************
 
 var IO_getRoomFromSocket = function(socket) {
-    console.log(socket.rooms);
     for(var roomId in socket.rooms) {
-        console.log(roomId)
         var room = roommaster.findRoom(parseInt(roomId));
         return room;
     }
@@ -135,7 +133,7 @@ io.on('connection', function (socket) {
                 if(s_Player != null) {
                     if(!s_Player.isConnected()) {
                         s_Player.setId(pID);
-                        s_Player.setConnected(true);
+                        room.setPlayerConnected(s_Player, true);
                         socket.handshake.session.pid = pID;
                         socket.handshake.session.save();
                         playerJoined = true;
@@ -257,7 +255,7 @@ io.on('connection', function (socket) {
                         if(room.getGameMaster().getGameInfo() == null || room.getGameMaster().getGameInfo().length == 0) {
                             room.removePlayer(player.getId());
                         } else {
-                            player.setConnected(false);
+                            room.setPlayerConnected(player, false);
                         }
                         IO_sendGameInfoToRoom(room);
                         break;

@@ -11,12 +11,6 @@ var PlayerType = {
 	SPY : "SPY"
 };
 
-var RoomState = {
-	WAITINGROOM : "WAITINGROOM",
-	STARTING : "STARTING",
-	INPLAY : "INPLAY"
-};
-
 exports.getPlayerTypes = function() { return PlayerType; };
 
 var gamemaster = require("./gamemaster.js");
@@ -143,7 +137,6 @@ function Room(ID) {
 	var _genericPlayerNames = genericNames.slice();
 	var _spies = [];
 	var _gameMaster = gamemaster.createGame();
-	var _roomState = RoomState.WAITINGROOM;
 	
 	// Add a new player with a generic name
 	this.addNewPlayer = function(pID) {
@@ -170,7 +163,6 @@ function Room(ID) {
 		_gameMaster.startGame(_players);
 		_gameMaster.nextMission();
 		this.updateSpies();
-		_roomState = RoomState.STARTING;
 	};
 	
 	this.updateSpies = function(){
@@ -202,12 +194,29 @@ function Room(ID) {
 	
 	this.playersAllConnected = function() {
 		var playersConnected = true;
-			_players.forEach(function(p){
+		_players.forEach(function(p){
 			if (!p.isConnected()) {
 				playersConnected = false;
 			}
 		});
 		return playersConnected;
+	}
+	
+	this.playersNoneConnected = function() {
+		var playersConnected = false;
+		_players.forEach(function(p){
+			if (p.isConnected()) {
+				playersConnected = true;
+			}
+		});
+		return !playersConnected;
+	}
+	
+	this.setPlayerConnected = function(player, connected) {
+		player.setConnected(connected);
+		if(this.playersNoneConnected()) {
+			closeRoom(this);
+		}
 	}
 	
 	this.gameCanStart = function() {
@@ -225,26 +234,10 @@ function Room(ID) {
 	
 	// GAMEMASTER FUNCTIONS //
 	
-	this.togglePlayerForMission = function(triggeredId, playerID) { 
-		_gameMaster.togglePlayerForMission(triggeredId, playerID);
-		_roomState = RoomState.INPLAY;
-	};
-	
-	this.voteOnMissionAttempt = function(playerID, vote) { 
-		_gameMaster.voteOnMissionAttempt(playerID, vote);
-		_roomState = RoomState.INPLAY;
-		
-	};
-	
-	this.submitPlayersForMission = function() { 
-		_gameMaster.startVoting(); 
-		_roomState = RoomState.INPLAY;
-	};
-	
-	this.voteOnMissionSuccess = function(playerID, vote) { 
-		_gameMaster.voteOnMissionSuccess(playerID, vote); 
-		_roomState = RoomState.INPLAY;
-	};
+	this.togglePlayerForMission = function(triggeredId, playerID) { _gameMaster.togglePlayerForMission(triggeredId, playerID); };
+	this.voteOnMissionAttempt = function(playerID, vote) { _gameMaster.voteOnMissionAttempt(playerID, vote); };
+	this.submitPlayersForMission = function() { _gameMaster.startVoting(); };
+	this.voteOnMissionSuccess = function(playerID, vote) { _gameMaster.voteOnMissionSuccess(playerID, vote); };
 	
 	//////////////////////////
 	
@@ -257,6 +250,9 @@ function Room(ID) {
 			_players.splice(index, 1);
 		} else {
 			console.log("Attempted to remove non-existant player: \n" + player);
+		}
+		if(_players.length == 0) {
+			closeRoom(this);
 		}
 	};
 	
@@ -339,11 +335,10 @@ function Room(ID) {
 			ResistancePoints : _score[0],
 			SpyPoints : _score[1],
 			GameWinner : _gameWinner,
-			Connected : _connected,
-			RoomState : _roomState
+			Connected : _connected
 		};
 		
-	};
+	}
 	
 	
 	this.getRoomInfo = function(player) {
