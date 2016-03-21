@@ -47,6 +47,10 @@ $("#fail").click( function() {
     IO_voteOnMissionSuccess(false);
 });
 
+$('#inGamePlayerList').on('click', 'tr', function(){
+    IO_togglePlayerForMission(UI_getPlayerByName($(this).find('td:first').text()));
+});
+
 $("#mission-one-circle").click( function() {
     UI_pastMissionResults(1);
 });
@@ -348,10 +352,6 @@ function UI_createInGamePlayerList(players, gameInfo) {
     }
 }
 
-$('#inGamePlayerList').on('click', 'tr', function(){
-    IO_togglePlayerForMission(UI_getPlayerByName($(this).find('td:first').text()));
-});
-
 function UI_updateLeader(gameInfo) {
     $('#inGamePlayerList tr').each(function(){
         if ((gameInfo[gameInfo.length-1].leaderID) == UI_getPlayerByName($(this).find('td:first').text())) {
@@ -538,13 +538,14 @@ socket.on('gameInfo', function(gameInfo) {
     UI_createAndUpdatePlayerList(gameInfo.PlayerList);
     if(gameInfo.RoomState == "STARTING") {
         UI_startGame();
-        UI_hideVote();
         UI_setCardText(gameInfo.PlayerList, gameInfo.SpyList);
         UI_createInGamePlayerList(gameInfo.PlayerList, gameInfo.GameInfo);
         UI_showLeaderSelectingScreen(gameInfo.PlayerList, gameInfo.GameInfo);
         UI_updateLeader(gameInfo.GameInfo);
     } else if (gameInfo.RoomState == "INPLAY") {
         UI_startGame();
+        UI_createInGamePlayerList(gameInfo.PlayerList, gameInfo.GameInfo);
+        UI_setCardText(gameInfo.PlayerList, gameInfo.SpyList);
         UI_updatePlayersOnMission(gameInfo);
         UI_showLeaderSelectingScreen(gameInfo.PlayerList, gameInfo.GameInfo);
         UI_updateLeader(gameInfo.GameInfo);

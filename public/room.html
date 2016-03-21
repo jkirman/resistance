@@ -1,193 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
-
-    <title>Resistance</title>
-
-		<!-- Bootstrap CSS -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-
-		<!-- jQuery library -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-		
-		<!-- Bootstrap JavaScript -->
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-		
-		<!-- Socket.io -->
-		<script src="/socket.io/socket.io.js"></script>
-        
-    <!-- Custom styles for this template -->
-		<link rel="stylesheet" type="text/css" href="static/stylesheets/index.css">
-		<link rel="stylesheet" type="text/css" href="static/stylesheets/room.css">
-
-  </head>
-
-  <body>
-    
-    <div class="site-wrapper">
-      
-      <div class="site-wrapper-inner">
-                            
-        
-        <div id="overlay">
-          <p class = "lead">Waiting for players in room...</p>
-        </div>
-        
-        <div class="room" id ="card"></div>
-        <div class="" id ="card-flip">
-            <p class = "room" id = "card-text-flip">role</p>
-            <p class = "room" id = "other-spies"></p>
-            <ol class = "room" id = "card-spylist"></ol>
-        </div>
-        <p class = "room" id = "card-text">Click to Reveal</p>
-        
-
-          <div class = "player-list-gameplay room">
-            <div class = "player-table">
-              <table id="inGamePlayerList" class = "table">
-                  
-              </table>
-            </div>
-          </div>  
-
-        <div class="cover-container">
-
-          <div class="masthead clearfix">
-            <div class="inner">
-              
-              <h1 class="header waiting-room">New Game Successfully Created!</h1>
-                <div class= "lead waiting-room">Share this link with other players : 
-                <p id="link"></p></div>
-                <div class="options waiting-room">
-                    <input type="text" class="text-box" id="changeName-text">
-                    <input type="button" class="btn btn-default" value="Change Name" id="changeName-button">
-                    <input type="button" value="Ready" class="btn btn-default" id="ready-button">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="icon" href="../../favicon.ico">
+        <title>Resistance</title>
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+        <!-- Bootstrap JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <!-- Socket.io -->
+        <script src="/socket.io/socket.io.js"></script>
+        <!-- Custom styles for this template -->
+        <link rel="stylesheet" type="text/css" href="static/stylesheets/index.css">
+        <link rel="stylesheet" type="text/css" href="static/stylesheets/room.css">
+    </head>
+    <body>
+        <div class="site-wrapper">
+            <div class="site-wrapper-inner">
+                <div id="overlay">
+                    <p class = "lead">Waiting for players in room...</p>
                 </div>
-                <div class= "middle-text waiting-room"> These players have joined so far : </div>
-
-                <ul id = "playerList" class="list-group waiting-room">
-                </ul>
-
-
-              <div id="score-display" class="room">
-                <h2 id="resistance-name">Resistance</h2>
-                <h2 id="spy-name">Spies</h2>
-              <div id="score-box">
-                  <p id="resistance-score">0</p>
-                  <p id="dash"> - </p>
-                  <p id="spy-score">0</p>
+                <div class="room">
+                    <div id ="card"></div>
+                    <div id ="card-flip">
+                        <p id = "card-text-flip">role</p>
+                        <p id = "other-spies"></p>
+                        <ol id = "card-spylist"></ol>
+                    </div>
+                    <p id = "card-text">Click to Reveal</p>
+                    <div class = "player-list-gameplay">
+                        <div class = "player-table">
+                            <table id="inGamePlayerList" class = "table">
+                            </table>
+                        </div>
+                    </div>
+                    <div class="cover-container">
+                        <div class="masthead clearfix">
+                            <div class="inner">
+                                <div id="score-display">
+                                    <h2 id="resistance-name">Resistance</h2>
+                                    <h2 id="spy-name">Spies</h2>
+                                    <div id="score-box">
+                                        <p id="resistance-score">0</p>
+                                        <p id="dash"> - </p>
+                                        <p id="spy-score">0</p>
+                                    </div>
+                                </div>
+                                <div id="mission-results">
+                                    <h4 id= "mission-results-text"></h4>
+                                </div>
+                                <h4 id = "other-players" class = "popups inner-cover"></h4>
+                                <!--only display this to mission leader-->
+                                <div id="Select-Mission" class = "popups inner-cover">
+                                    <h4>Click on players you want to select for the mission in the player list.</h4>
+                                    <h4 id = "selectInstructions"></h4>
+                                    <!--<ul id= "players-for-mission" class="list-group">-->
+                                    <!--list of players will need to be appended as labeled checkboxes-->
+                                    <!--instructions will be found here: -->
+                                    <!--http://stackoverflow.com/questions/866239/creating-the-checkbox-dynamically-using-javascript-->
+                                    <!--<input type= "checkbox" /> Player 1 <br />-->
+                                    <!--<input type= "checkbox" /> Player 2 <br />-->
+                                    <!--<input type= "checkbox" /> Player 3 <br />-->
+                                    <!--<input type= "checkbox" /> Player 4 <br />-->
+                                    <!--<input type= "checkbox" /> Player 5 <br />-->
+                                    <!--</ul>-->
+                                    <input type="button" class="btn btn-large btn-default" value="Submit" id="Submit-Team-Button">
+                                </div>
+                                <h4 id = "not-on-mission"></h4>
+                                <!--only display this to players on the mission-->
+                                <div class="popups inner-cover" id ="pass-fail">
+                                    <h4>Do you want the mission to succeed or fail?</h4>
+                                    <input type="button" class="btn btn-default" value="Success" id="success">
+                                    <input type="button" class="btn btn-default" value="Fail" id="fail">
+                                </div>
+                                <div class="inner-cover popups">
+                                    <div class="mission-vote">
+                                        <div id="vote-text">Vote on the proposed mission:</div>
+                                        <ul id = "missionList" class="list-group">
+                                            <li class= "list-group-item list-item-dark">player 1</li>
+                                            <li class = "list-group-item list-item-dark">player 2</li>
+                                        </ul>
+                                        <input type="button" class="btn btn-success" value="Yes" id="vote-yes-button">
+                                        <input type="button" class="btn btn-danger" value="No" id="vote-no-button">
+                                    </div>
+                                </div>
+                                <div id="missions-box">
+                                    <h2 id="missions-title">Missions</h2>
+                                    <div id="mission-one">
+                                        <h1 id="mission-one-head">1.</h1>
+                                        <div id="mission-one-circle"></div>
+                                    </div>
+                                    <div id="mission-two">
+                                        <h1 id="mission-two-head">2.</h1>
+                                        <div id="mission-two-circle"></div>
+                                    </div>
+                                    <div id="mission-three">
+                                        <h1 id="mission-three-head">3.</h1>
+                                        <div id="mission-three-circle"></div>
+                                    </div>
+                                    <div id="mission-four">
+                                        <h1 id="mission-four-head">4.</h1>
+                                        <div id="mission-four-circle"></div>
+                                    </div>
+                                    <div id="mission-five">
+                                        <h1 id="mission-five-head">5.</h1>
+                                        <div id="mission-five-circle"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              
-              <div id="mission-results">
-                <h4 id= "mission-results-text"></h4>
-              </div>
-              
-              <h4 id = "other-players" class = "popups inner-cover"></h4>
-              <!--only display this to mission leader-->
-            <div id="Select-Mission" class = "popups inner-cover">
-              <h4>Click on players you want to select for the mission in the player list.</h4>
-              <h4 id = "selectInstructions"></h4>
-              <!--<ul id= "players-for-mission" class="list-group">-->
-                <!--list of players will need to be appended as labeled checkboxes-->
-                <!--instructions will be found here: -->
-                <!--http://stackoverflow.com/questions/866239/creating-the-checkbox-dynamically-using-javascript-->
-                
-                <!--<input type= "checkbox" /> Player 1 <br />-->
-                <!--<input type= "checkbox" /> Player 2 <br />-->
-                <!--<input type= "checkbox" /> Player 3 <br />-->
-                <!--<input type= "checkbox" /> Player 4 <br />-->
-                <!--<input type= "checkbox" /> Player 5 <br />-->
-              <!--</ul>-->
-              <input type="button" class="btn btn-large btn-default" value="Submit" id="Submit-Team-Button">
+                <!-- class room -->
+                <div class="waiting-room">
+                    <div class="cover-container">
+                        <div class="masthead clearfix">
+                            <div class="inner">
+                                <h1 class="header">New Game Successfully Created!</h1>
+                                <div class= "lead">
+                                    Share this link with other players : 
+                                    <p id="link"></p>
+                                </div>
+                                <div class="options">
+                                    <input type="text" class="text-box" id="changeName-text">
+                                    <input type="button" class="btn btn-default" value="Change Name" id="changeName-button">
+                                    <input type="button" value="Ready" class="btn btn-default" id="ready-button">
+                                </div>
+                                <div class= "middle-text"> These players have joined so far : </div>
+                                <ul id = "playerList" class="list-group">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- waiting room -->
             </div>
-            
-            <h4 id = "not-on-mission"></h4>
-            <!--only display this to players on the mission-->
-            <div class="popups inner-cover" id ="pass-fail">
-              <h4>Do you want the mission to succeed or fail?</h4>
-              <input type="button" class="btn btn-default" value="Success" id="success">
-              <input type="button" class="btn btn-default" value="Fail" id="fail">
-            </div>
-
-                                                    
-          <div class="inner-cover popups">
-            <div class="mission-vote room">
-              <div id="vote-text">Vote on the proposed mission:</div>
-                <ul id = "missionList" class="list-group room">
-                  <li class= "list-group-item list-item-dark">player 1</li>
-                  <li class = "list-group-item list-item-dark">player 2</li>
-                </ul>
-              <input type="button" class="btn btn-success" value="Yes" id="vote-yes-button">
-              <input type="button" class="btn btn-danger" value="No" id="vote-no-button">
-            </div>
-          </div>
-            
-            
-          <div id="missions-box" class="room">
-              <h2 id="missions-title">Missions</h2>
-             
-              <div id="mission-one">
-                <h1 id="mission-one-head">1.</h1>
-                <div id="mission-one-circle"></div>
-              </div>
-              
-              <div id="mission-two">
-                <h1 id="mission-two-head">2.</h1>
-                <div id="mission-two-circle"></div>
-              </div>
-              
-              <div id="mission-three">
-                <h1 id="mission-three-head">3.</h1>
-                <div id="mission-three-circle"></div>
-              </div>
-              
-              <div id="mission-four">
-                <h1 id="mission-four-head">4.</h1>
-                <div id="mission-four-circle"></div>
-              </div>
-              
-              <div id="mission-five">
-                <h1 id="mission-five-head">5.</h1>
-                <div id="mission-five-circle"></div>
-              </div>
-            
-                
-          </div>
-          
-
-          
-          <div class="mastfoot">
-
-              	  <!-- Client javascript files -->
-                  <script src="static/client.js"></script>
-                  <script src="static/clientController.js"></script>
-          </div>
-
-
-        
-          
         </div>
-
-
-      </div>
-      
-    </div>
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-    <script src="../../dist/js/bootstrap.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
-  </body>
+        <!-- Bootstrap core JavaScript
+            ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+        <script src="../../dist/js/bootstrap.min.js"></script>
+        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+        <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+        <!-- Client javascript files -->
+        <script src="static/client.js"></script>
+        <script src="static/clientController.js"></script>
+    </body>
 </html>
