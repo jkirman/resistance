@@ -51,9 +51,50 @@ $('#inGamePlayerList').on('click', 'tr', function(){
     IO_togglePlayerForMission(UI_getPlayerByName($(this).find('td:first').text()));
 });
 
+$("#mission-one-circle").click( function() {
+    UI_pastMissionResults(1);
+});
+
+$("#mission-two-circle").click( function() {
+    UI_pastMissionResults(2);
+});
+
+$("#mission-three-circle").click( function() {
+    UI_pastMissionResults(3);
+});
+
+$("#mission-four-circle").click( function() {
+    UI_pastMissionResults(4);
+});
+
+$("#mission-five-circle").click( function() {
+    UI_pastMissionResults(5);
+});
+
 // *********************************
 // UI CALLS
 // *********************************
+
+function UI_pastMissionResults(missionNumber) {
+    for (var i = 0; i < currentGameInfo.GameInfo.length; i++) {
+        var outcome = currentGameInfo.GameInfo[i].missionPassed
+        if ((outcome != null) && (currentGameInfo.GameInfo[i].missionNumber == missionNumber)) {
+            var playersOnMission = currentGameInfo.GameInfo[i].selectedPlayers;
+            var text = "";
+            var outcomeText = "";
+            for (var pID in playersOnMission) {
+                text += currentGameInfo.PlayerList[playersOnMission[pID]].Name + ", ";
+            }
+            if (outcome == true) {
+                outcomeText = "passed"
+            }
+            else if (outcome == false) {
+                outcomeText = "failed"
+            }
+            alert("The players " + text + "were on mission " + missionNumber +  ", and the mission " + outcomeText);
+        }
+    }
+}
 
 function UI_showOverlay(show) {
     if(show) {
@@ -194,12 +235,10 @@ function UI_updateScore(gameinfo) {
      if (lastAttempt.missionPassed == true) {
          switch (missionNumber) {
              case 1:
-                 console.log("mission 1 being changed");
                  $("#mission-one-circle").css("background", "blue");
                  $("#resistance-score").text(resistanceScore);
                  break;
              case 2:
-                 console.log("mission 2 being changed");
                  $("#mission-two-circle").css("background", "blue");
                  $("#resistance-score").text(resistanceScore);
                  break;
@@ -223,12 +262,10 @@ function UI_updateScore(gameinfo) {
      else if (lastAttempt.missionPassed == false){
          switch (missionNumber) {
              case 1:
-                 console.log("mission 1 being changed");
                  $("#mission-one-circle").css("background", "red");
                  $("#spy-score").text(spyScore);
                  break;
              case 2:
-                 console.log("mission 2 being changed");
                  $("#mission-two-circle").css("background", "red");
                  $("#spy-score").text(spyScore);
                  break;
