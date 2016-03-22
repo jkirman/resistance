@@ -310,7 +310,15 @@ function UI_updateLeader(gameInfo) {
 
 function UI_updateAttemptVoteResults(gameInfo) {
     
-    var currentAttempt =  gameInfo[gameInfo.length - 1];
+    var currentAttempt = gameInfo.GameInfo[gameInfo.GameInfo.length - 1];
+    var lastAttempt = ((gameInfo.GameInfo.length < 2) ? null : gameInfo.GameInfo[gameInfo.GameInfo.length - 2]);
+
+    if (currentAttempt.attemptAllowed == null) {
+        if (lastAttempt != null) {
+            currentAttempt = lastAttempt;
+        }
+    }
+    
     var currentAttemptVotes = currentAttempt.attemptVote;
     var currentPlayerOnList;
     var votedYes = false;
@@ -318,8 +326,18 @@ function UI_updateAttemptVoteResults(gameInfo) {
     
     $('#inGamePlayerList tr').each(function(){
         currentPlayerOnList = UI_getPlayerByName($(this).find('td:first').text());
-        if (currentAttempt.attemptAllowed != null) {
-            console.log("entered if");
+        
+        console.log(currentAttemptVotes.length);
+        console.log(gameInfo.PlayerList.length);
+        var count = 0;
+        
+        for (var p in gameInfo.PlayerList) {
+            count++;
+        }
+
+        if (currentAttemptVotes.length == count) {
+        
+            console.log(currentAttemptVotes);
             currentAttemptVotes.forEach(function(p) {
                 console.log("vote");
                 if (p[0] == currentPlayerOnList) {
@@ -332,7 +350,7 @@ function UI_updateAttemptVoteResults(gameInfo) {
             });
             if (votedYes) {
                 $(this).find('td:eq(2)').text("Y");
-                $(this).find('td:eq(2)').css( "color", "lime" );
+                $(this).find('td:eq(2)').css( "color", "white" );
                 console.log("td changed");
             } else {
                $(this).find('td:eq(2)').text("N"); 
@@ -340,7 +358,7 @@ function UI_updateAttemptVoteResults(gameInfo) {
             }
             
             votedYes = false;
-
+        
         }
         
     });
@@ -532,7 +550,7 @@ socket.on('gameInfo', function(gameInfo) {
         UI_updatePlayersOnMission(gameInfo);
         UI_showLeaderSelectingScreen(gameInfo.PlayerList, gameInfo.GameInfo);
         UI_updateLeader(gameInfo.GameInfo);
-        UI_updateAttemptVoteResults(gameInfo.GameInfo);
+        UI_updateAttemptVoteResults(gameInfo);
         
         if (gameInfo.GameInfo.length > 1) {
             UI_updateScore(gameInfo);
