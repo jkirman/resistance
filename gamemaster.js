@@ -255,6 +255,26 @@ Game.prototype.checkGameWinner = function() {
 	}
 };
 
+Game.prototype.changePlayerID = function(oldID, newID) {
+	
+	var PL = this._playerList;
+	for (var p in PL) {
+		if (PL[p] == oldID) {PL[p] = newID;} 
+	}
+
+	var GI = this._gameInfo;
+	for (var att in GI) {
+		if (GI[att].leaderID == oldID) {GI[att].leaderID = newID;}
+		for (var SP in GI[att].selectedPlayers) {
+			if (GI[att].selectedPlayers[SP] == oldID) {GI[att].selectedPlayers[SP] = newID;}
+		}
+		for (var AV in GI[att].attemptVote) {
+			if (GI[att].attemptVote[AV][0] == oldID) {GI[att].attemptVote[AV][0] = newID;}
+		}
+	}
+
+};
+
 Game.prototype.getGameInfo = function() {
 	return this._gameInfo.slice();
 };
