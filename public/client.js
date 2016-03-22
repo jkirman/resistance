@@ -336,6 +336,7 @@ function UI_createInGamePlayerList(players, gameInfo) {
         var player = $("<tr>");
         var td = $("<td>");
         var td2 = $("<td>");
+        var td3 = $("<td>");
         
         if(pID == "/#" + socket.id)
         {
@@ -345,9 +346,11 @@ function UI_createInGamePlayerList(players, gameInfo) {
         }
 
         td.text(players[pID].Name);
-        td2.css( "color", "yellow" )
+        td2.css( "color", "yellow" );
+        td3.css( "color", "white" );
         player.append(td);
         player.append(td2);
+        player.append(td3);
         plList.append(player);
     }
 }
@@ -360,6 +363,63 @@ function UI_updateLeader(gameInfo) {
             $(this).find('td:eq(1)').text("");
         }
     });
+}
+
+function UI_updateAttemptVoteResults(gameInfo) {
+    
+    var currentAttempt = gameInfo.GameInfo[gameInfo.GameInfo.length - 1];
+    var lastAttempt = ((gameInfo.GameInfo.length < 2) ? null : gameInfo.GameInfo[gameInfo.GameInfo.length - 2]);
+
+    if (currentAttempt.attemptAllowed == null) {
+        if (lastAttempt != null) {
+            currentAttempt = lastAttempt;
+        }
+    }
+    
+    var currentAttemptVotes = currentAttempt.attemptVote;
+    var currentPlayerOnList;
+    var votedYes = false;
+    console.log("update vote function");
+    
+    $('#inGamePlayerList tr').each(function(){
+        currentPlayerOnList = UI_getPlayerByName($(this).find('td:first').text());
+        
+        console.log(currentAttemptVotes.length);
+        console.log(gameInfo.PlayerList.length);
+        var count = 0;
+        
+        for (var p in gameInfo.PlayerList) {
+            count++;
+        }
+
+        if (currentAttemptVotes.length == count) {
+        
+            console.log(currentAttemptVotes);
+            currentAttemptVotes.forEach(function(p) {
+                console.log("vote");
+                if (p[0] == currentPlayerOnList) {
+                    if (p[1] == true) {
+                        console.log("voted yes");
+                        votedYes = true;
+                    }
+                }
+                                
+            });
+            if (votedYes) {
+                $(this).find('td:eq(2)').text("Y");
+                $(this).find('td:eq(2)').css( "color", "white" );
+                console.log("td changed");
+            } else {
+               $(this).find('td:eq(2)').text("N"); 
+               $(this).find('td:eq(2)').css( "color", "red" );
+            }
+            
+            votedYes = false;
+        
+        }
+        
+    });
+        
 }
 
 function UI_updatePlayersOnMission(gameinfo) {
@@ -549,6 +609,7 @@ socket.on('gameInfo', function(gameInfo) {
         UI_updatePlayersOnMission(gameInfo);
         UI_showLeaderSelectingScreen(gameInfo.PlayerList, gameInfo.GameInfo);
         UI_updateLeader(gameInfo.GameInfo);
+        UI_updateAttemptVoteResults(gameInfo);
         
         if (gameInfo.GameInfo.length > 1) {
             var previousAttempt = gameInfo.GameInfo[gameInfo.GameInfo.length - 2];
