@@ -131,6 +131,8 @@ function UI_setCardText(players,spies) {
     
     $("#card-text-flip").text(type);
     
+    $("#card-spylist").empty();
+    
     for (var sID in spies) {
         var spyName = players[spies[sID]].Name;
         $("#card-spylist").append("<li>" + spyName + "</li>");

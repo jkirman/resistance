@@ -280,6 +280,12 @@ function Room(ID) {
 		}
 	};
 	
+	this.changePlayerID = function(oldID, newID) {
+		var player = findById(_players, oldID);
+		_gameMaster.changePlayerID(oldID, newID);
+		player.setId(newID);
+	};
+	
 	this.changeRoomType = function(rType) {
 		_type = rType;
 	};
