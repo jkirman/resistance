@@ -314,27 +314,33 @@ function UI_updateAttemptVoteResults(gameInfo) {
     var currentAttemptVotes = currentAttempt.attemptVote;
     var currentPlayerOnList;
     var votedYes = false;
-    
+    console.log("update vote function");
     
     $('#inGamePlayerList tr').each(function(){
         currentPlayerOnList = UI_getPlayerByName($(this).find('td:first').text());
         if (currentAttempt.attemptAllowed != null) {
+            console.log("entered if");
             currentAttemptVotes.forEach(function(p) {
+                console.log("vote");
                 if (p[0] == currentPlayerOnList) {
                     if (p[1] == true) {
+                        console.log("voted yes");
                         votedYes = true;
                     }
                 }
-                
-                if (votedYes) {
-                    $(this).find('td:eq(2)').text("[y]");
-                } else {
-                   $(this).find('td:eq(2)').text("[n]"); 
-                }
-                
-                votedYes = false;
-                
+                                
             });
+            if (votedYes) {
+                $(this).find('td:eq(2)').text("Y");
+                $(this).find('td:eq(2)').css( "color", "lime" );
+                console.log("td changed");
+            } else {
+               $(this).find('td:eq(2)').text("N"); 
+               $(this).find('td:eq(2)').css( "color", "red" );
+            }
+            
+            votedYes = false;
+
         }
         
     });
