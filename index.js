@@ -132,10 +132,11 @@ io.on('connection', function (socket) {
                 var s_Player = room.getPlayerById(s_pID);
                 if(s_Player != null) {
                     if(!s_Player.isConnected()) {
-                        s_Player.setId(pID);
-                        if(s_Player.getIsLeader()) {
+                        room.changePlayerID(s_pID, pID);
+                        //s_Player.setId(pID);
+                        //if(s_Player.getIsLeader()) {
                             // @JEFF this is where the leader ID of the current mission needs to be updated to the players new id
-                        }
+                        //}
                         room.setPlayerConnected(s_Player, true);
                         socket.handshake.session.pid = pID;
                         socket.handshake.session.save();
