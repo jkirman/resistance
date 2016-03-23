@@ -321,6 +321,8 @@ function Room(ID) {
 	
 	this.getSpyList = function() { return _spies; };
 	
+	this.getRoomState = function() { return _roomState; };
+	
 	this.getPlayerList = function() { return _players; };
 	
 	this.getSerialPlayerList = function() {

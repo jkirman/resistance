@@ -154,7 +154,7 @@ io.on('connection', function (socket) {
                 // gamemaster/roommaster check if full, add player, whatever
                 // Then FROM the gamemaster, call room full or update room or whatever IO_* functions (defined above)
                 // Then please remove this code
-                if(!room.isFull()){
+                if(!room.isFull() && !(room.getRoomState() == "INPLAY")){
                     var name = room.addNewPlayer(pID);  
                     socket.handshake.session.pid = pID;
                     socket.handshake.session.save();
