@@ -48,6 +48,12 @@ body {
   width: 200px;
 }
 
+.selected {
+  border-style: solid;
+  border-color: white;
+  border-width: 0px 20px 0px 0px;
+}
+
 .player-table{
   width: 50%;
   margin: 0 auto; 

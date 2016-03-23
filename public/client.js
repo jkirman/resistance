@@ -257,7 +257,6 @@ function UI_updateScore(gameinfo) {
                  $("#resistance-score").text(resistanceScore);
                  break;
             default:
-                console.log("default happened");
                 break;
          }
      }
@@ -284,7 +283,6 @@ function UI_updateScore(gameinfo) {
                  $("#spy-score").text(spyScore);
                  break;
             default:
-                console.log("default happened");    
                 break;
                 
          }
@@ -381,13 +379,10 @@ function UI_updateAttemptVoteResults(gameInfo) {
     var currentAttemptVotes = currentAttempt.attemptVote;
     var currentPlayerOnList;
     var votedYes = false;
-    console.log("update vote function");
     
     $('#inGamePlayerList tr').each(function(){
         currentPlayerOnList = UI_getPlayerByName($(this).find('td:first').text());
         
-        console.log(currentAttemptVotes.length);
-        console.log(gameInfo.PlayerList.length);
         var count = 0;
         
         for (var p in gameInfo.PlayerList) {
@@ -396,28 +391,31 @@ function UI_updateAttemptVoteResults(gameInfo) {
 
         if (currentAttemptVotes.length == count) {
         
-            console.log(currentAttemptVotes);
             currentAttemptVotes.forEach(function(p) {
-                console.log("vote");
                 if (p[0] == currentPlayerOnList) {
                     if (p[1] == true) {
-                        console.log("voted yes");
                         votedYes = true;
                     }
                 }
                                 
             });
+            
             if (votedYes) {
                 $(this).find('td:eq(2)').text("Y");
-                $(this).find('td:eq(2)').css( "color", "white" );
-                console.log("td changed");
+                $(this).find('td:eq(2)').css( "color", "green" );
             } else {
                $(this).find('td:eq(2)').text("N"); 
                $(this).find('td:eq(2)').css( "color", "red" );
             }
             
             votedYes = false;
-        
+            
+            if (currentAttempt.selectedPlayers.indexOf(currentPlayerOnList) > -1) {
+                $(this).addClass('selected');
+            } else {
+                $(this).removeClass('selected');
+            }
+            
         }
         
     });
