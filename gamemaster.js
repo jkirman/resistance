@@ -165,8 +165,8 @@ Game.prototype.startVoting = function() {
 	} else {
 		currentAttempt.playersChosen = true;
 		
-		// Automatically go to a mission if it is the third attempt
-		if (currentAttempt.attemptNumber == 3) {
+		// Automatically go to a mission if it is the fifth attempt
+		if (currentAttempt.attemptNumber == 5) {
 			currentAttempt.attemptAllowed = true;
 		}
 		
