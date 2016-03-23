@@ -1,0 +1,323 @@
+/**
+ * ----------------------
+ * Game Controller Script
+ * ----------------------
+ * 
+ * This script has all the functions to control a game datatype
+ * 
+**/
+
+var PlayerType = require("./roommaster.js").getPlayerTypes();
+
+//////////////////////
+// Helper functions //
+//////////////////////
+
+Array.prototype.peek = function() {
+    return this[this.length - 1];
+};
+
+// Finds in a list objects by ID
+// source : http://stackoverflow.com/questions/7364150/find-object-by-id-in-an-array-of-javascript-objects
+function indexById(source, id) {
+  for (var i = 0; i < source.length; i++) {
+    if (source[i].getId() === id) {
+      return i;
+    }
+  }
+  return null;
+}
+
+function PlayerSubmissionError(amount, expected) {
+   this.amount = amount;
+   this.expected = expected;
+   this.message = "Submitted " + amount + " players but only " + expected + " should have been submitted.";
+}
+
+//*******************************//
+
+// Module stuff
+var exports = module.exports = {};
+
+// Game object
+var Game = function() {
+	this._playerList = [];
+	this._numberOfPlayers = 0;
+	this._gameInfo = [];
+	// Main array that contains all game attempts history (to be sent to client for info)
+	// It contains several attempt objects (AttemptsInfo)
+	this._gameWinner = PlayerType.NONE;
+	this._score = [0,0]; // Resistance, spies
+};
+
+// The attempt object
+var AttemptInfo = function() {
+	this.missionNumber = null; 		// Mission #
+	this.attemptNumber = null; 		// Mission Attempt #
+	this.leaderID = null; 			// Leader Player ID (for that attempt)
+	this.selectedPlayers = []; 		// List of Player ID of the players selected for the mission
+	this.playersChosen = false;		// Boolean indicating whether the players chosen have been locked in
+	this.attemptVote = [];			// Voting results for going on the mission [[PlayerID1, YES], [PlayerID2, YES], ...]
+	this.attemptAllowed = null;		// Boolean indicating whether the mission attempt will go with the current players chosen (null if the mission does not happen)
+	this.missionVote = [0,0];		// The yes and no votes for the mission [3,0]
+	this.missionPassed = null;		// Boolean indicating whether the mission has passed (null if them mission has not happened)
+};
+
+// Export Constructor
+exports.createGame = function() {
+	return new Game();
+};
+
+// Export start game
+Game.prototype.startGame = function(players) {
+	this._playerList = players;
+	this._numberOfPlayers = players.length;
+	this.setPlayerTypes();
+}
+
+// This function sets the player types for the players in the game randomly
+Game.prototype.setPlayerTypes = function() {
+	var playersIndeces = [];
+	
+	do {
+		var newIndex = Math.floor(Math.random() * this._playerList.length);
+		if (playersIndeces.indexOf(newIndex) == -1) {
+			playersIndeces.push(newIndex);
+		}
+	} while (playersIndeces.length < exports.spiesInGame(this._playerList.length));
+	
+	for (var i = 0; i < playersIndeces.length; i++) {
+		this._playerList[playersIndeces[i]].setType(PlayerType.SPY);
+	}
+	
+};
+
+// This function goes to the next mission
+// Attempts set to 1
+// If it is the first mission, it sets the spies to spies
+Game.prototype.nextMission = function() {
+	if (this._gameInfo.length == 0) {
+		this._gameInfo.push(newAttempt(1, 1, this.nextLeader()));
+	} else {
+		var lastMission = this._gameInfo.peek();
+		this._gameInfo.push(newAttempt(lastMission.missionNumber + 1, 1, this.nextLeader()));
+	}
+};
+
+// This function goes to the next mission attempt
+// Sets the current attempt leader and increments the attempt number
+Game.prototype.nextAttempt = function() {
+	if (this._gameInfo.length == 0) {
+		// TODO Error here
+		console.log("Error, no mission has started!");
+	} else {
+		var lastMission = this._gameInfo.peek();
+		if (lastMission.attemptNumber < 3) {
+			this._gameInfo.push(newAttempt(lastMission.missionNumber, lastMission.attemptNumber + 1, this.nextLeader()));
+		} else {
+			// TODO Error here
+			console.log("Maximum amount of attempts reached");
+		}
+	}
+};
+
+// This function loops the list of players based on the last leader
+// and sets the next player as the leader also returning their id
+Game.prototype.nextLeader = function() {
+	var currentAttempt = this._gameInfo.peek();
+	if (currentAttempt == undefined) {
+		var leaderIndex = Math.floor(Math.random() * this._playerList.length);
+		this._playerList[leaderIndex].setLeader(true);
+		return this._playerList[leaderIndex].getId();
+	} else {
+		var currentIndex = indexById(this._playerList, currentAttempt.leaderID);
+		this._playerList[currentIndex].setLeader(false);
+		if (currentIndex == this._playerList.length - 1) {
+			this._playerList[0].setLeader(true);
+			return this._playerList[0].getId();
+		} else {
+			this._playerList[currentIndex + 1].setLeader(true);
+			return this._playerList[currentIndex + 1].getId();
+		}
+	}
+};
+
+// Toggles a player into the list of selected players of the current mission attempt
+Game.prototype.togglePlayerForMission = function(triggeredID, playerID) {
+	var selectedPlayers = this._gameInfo.peek().selectedPlayers;
+	var index = selectedPlayers.indexOf(playerID);
+	if (triggeredID == this._gameInfo.peek().leaderID && !this._gameInfo.peek().playersChosen) {
+		if (index == -1) {
+			selectedPlayers.push(playerID);
+		} else {
+			selectedPlayers = selectedPlayers.splice(index, 1);
+		}
+	}
+};
+
+// Checks to make sure that the right amount of players have been selected and
+// subsequently lets client know the voting to go on the mission has started
+// Checks to see if voting is even required (ie 3rd attempt)
+Game.prototype.startVoting = function() {
+	var currentAttempt = this._gameInfo.peek();
+	if (currentAttempt.selectedPlayers.length != exports.amountOnMission(this._numberOfPlayers, currentAttempt.missionNumber)) {
+		throw new PlayerSubmissionError(currentAttempt.selectedPlayers.length, exports.amountOnMission(this._numberOfPlayers, currentAttempt.missionNumber));
+	} else {
+		currentAttempt.playersChosen = true;
+		
+		// Automatically go to a mission if it is the fifth attempt
+		if (currentAttempt.attemptNumber == 5) {
+			currentAttempt.attemptAllowed = true;
+		}
+		
+	}
+};
+
+// Adds a players vote to the list of votes for the mission attempt
+// Checks to see if the player already voted, and also checks to see if the
+// last player voted and subsequently calls the mission attempt function
+Game.prototype.voteOnMissionAttempt = function(playerID, vote) {
+	var currentVotes = this._gameInfo.peek().attemptVote;
+	currentVotes.push([playerID, vote]);
+	
+	if (currentVotes.length === this._numberOfPlayers) {
+		this.missionAttempt();
+	}
+	
+	
+};
+
+// Updates the mission attempt to either go on the attempt or not
+// If voted no, triggers the next mission attempt
+Game.prototype.missionAttempt = function() {
+	var currentAttempt = this._gameInfo.peek();
+	var votes = currentAttempt.attemptVote;
+	var yesVotes = 0;
+	var noVotes = 0;
+	votes.forEach(function(vote) {
+		if (vote[1]) {
+			yesVotes++;
+		} else {
+			noVotes++;
+		}
+	});
+	if (yesVotes >= noVotes) {
+		currentAttempt.attemptAllowed = true;
+	} else {
+		currentAttempt.attemptAllowed = false;
+		this.nextAttempt();
+	}
+};
+
+// Adds a players vote to the list of votes for the mission success
+// Checks to see if the player that voted is on the list of players that are
+// able to vote
+// Checks to see if the player already voted, and also checks to see if the
+// last player voted and subsequently calls the mission success function
+Game.prototype.voteOnMissionSuccess = function(playerID, vote) {
+	var currentAttempt = this._gameInfo.peek();
+	if (currentAttempt.selectedPlayers.indexOf(playerID) != -1) {
+		
+		if (vote) {
+			currentAttempt.missionVote[0]++;
+		} else {
+			currentAttempt.missionVote[1]++;
+		}
+		
+		if (currentAttempt.missionVote[0] + currentAttempt.missionVote[1] == exports.amountOnMission(this._numberOfPlayers, currentAttempt.missionNumber)) {
+			this.missionSuccess();			
+		}
+	}
+};
+
+// Updates the mission success
+Game.prototype.missionSuccess = function() {
+	var currentMission = this._gameInfo.peek();
+	if (currentMission.missionVote[0] >= exports.toWinMission(this._numberOfPlayers, currentMission.missionNumber)) {
+		currentMission.missionPassed = true;
+		this._score[0]++;
+	} else {
+		currentMission.missionPassed = false;
+		this._score[1]++;
+	}
+	this.checkGameWinner();
+};
+
+// Checks to see if a team won the game
+// if not it will trigger the next mission
+Game.prototype.checkGameWinner = function() {
+	if (this._score[0] == 3) {
+		this._gameWinner = PlayerType.RESISTANCE;
+	} else if (this._score[1] == 3) {
+		this._gameWinner = PlayerType.SPY;
+	} else {
+		this.nextMission();
+	}
+};
+
+Game.prototype.changePlayerID = function(oldID, newID) {
+	
+	var PL = this._playerList;
+	for (var p in PL) {
+		if (PL[p] == oldID) {PL[p] = newID;} 
+	}
+
+	var GI = this._gameInfo;
+	for (var att in GI) {
+		if (GI[att].leaderID == oldID) {GI[att].leaderID = newID;}
+		for (var SP in GI[att].selectedPlayers) {
+			if (GI[att].selectedPlayers[SP] == oldID) {GI[att].selectedPlayers[SP] = newID;}
+		}
+		for (var AV in GI[att].attemptVote) {
+			if (GI[att].attemptVote[AV][0] == oldID) {GI[att].attemptVote[AV][0] = newID;}
+		}
+	}
+
+};
+
+Game.prototype.getGameInfo = function() {
+	return this._gameInfo.slice();
+};
+
+Game.prototype.getGameWinner = function() {
+	return this._gameWinner;
+};
+
+Game.prototype.getScore = function() {
+	return this._score.slice();
+};
+
+var newAttempt = function(mno, ano, leaderID) {
+	var newInfo = new AttemptInfo();
+	newInfo.missionNumber = mno;
+	newInfo.attemptNumber = ano;
+	newInfo.leaderID = leaderID;
+	return newInfo;
+};
+
+exports.spiesInGame = function(numberOfPlayers) {
+	var spyCount = [2,2,3,3,3,4];
+	return spyCount[numberOfPlayers - 5];
+};
+
+exports.amountOnMission = function(numberOfPlayers, missionNumber) {
+	var playerLookUp = [
+		[2,3,2,3,3],
+		[2,3,3,3,4],
+		[2,3,3,4,4],
+		[3,4,4,5,5],
+		[3,4,4,5,5],
+		[3,4,4,5,5]];
+		return playerLookUp[numberOfPlayers - 5][missionNumber - 1];
+};
+
+exports.toWinMission = function(numberOfPlayers, missionNumber) {
+	var playerLookUp = [
+		[2,3,2,3,3],
+		[2,3,3,3,4],
+		[2,3,3,4,4],
+		[3,4,4,4,5],
+		[3,4,4,4,5],
+		[3,4,4,4,5]];
+		return playerLookUp[numberOfPlayers - 5][missionNumber - 1];
+};
