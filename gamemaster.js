@@ -112,7 +112,7 @@ Game.prototype.nextAttempt = function() {
 		console.log("Error, no mission has started!");
 	} else {
 		var lastMission = this._gameInfo.peek();
-		if (lastMission.attemptNumber < 3) {
+		if (lastMission.attemptNumber < 5) {
 			this._gameInfo.push(newAttempt(lastMission.missionNumber, lastMission.attemptNumber + 1, this.nextLeader()));
 		} else {
 			// TODO Error here
