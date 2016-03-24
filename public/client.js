@@ -189,7 +189,7 @@ function UI_showHideMissionDescription(gameinfo) {
 	var pnumber = playerLookUp[numberOfPlayers - 5][currentAttempt.missionNumber - 1];
 	var wnumber = winLookUp[numberOfPlayers - 5][currentAttempt.missionNumber - 1];
         
-        $("#mission-description").text("Mission " + currentAttempt.missionNumber + ": " + pnumber + " players selected and " +
+        $("#mission-description").text("Mission " + currentAttempt.missionNumber + " (Attempt " + currentAttempt.attemptNumber + "/5): " + pnumber + " players selected and " +
           wnumber  + " players need to pass for mission success.");
           
         $("#mission-details").show();
