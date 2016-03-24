@@ -162,10 +162,20 @@ function UI_updateVoteOnMissionPlayers(players, selectedPlayers) {
     }
 }
 
-function UI_showMissionPassFail(gameinfo) {
-    
+function UI_showHideMissionDescription(gameinfo) {
+    if (gameinfo.GameWinner != "NONE") {
+        $("#mission-details").hide();
+    } else {
+        console.log("POOP");
     var currentAttempt = gameinfo.GameInfo[gameinfo.GameInfo.length - 1];
     var playerLookUp = [
+		[2,3,2,3,3],
+		[2,3,3,3,4],
+		[2,3,3,4,4],
+		[3,4,4,4,5],
+		[3,4,4,4,5],
+		[3,4,4,4,5]];
+	var winLookUp = [
 		[2,3,2,3,3],
 		[2,3,3,3,4],
 		[2,3,3,4,4],
@@ -176,13 +186,25 @@ function UI_showMissionPassFail(gameinfo) {
 	for (var pID in gameinfo.PlayerList) {
 	    numberOfPlayers++;
 	}
-	var number = playerLookUp[numberOfPlayers - 5][currentAttempt.missionNumber - 1];
+	var pnumber = playerLookUp[numberOfPlayers - 5][currentAttempt.missionNumber - 1];
+	var wnumber = winLookUp[numberOfPlayers - 5][currentAttempt.missionNumber - 1];
+        
+        $("#mission-description").text("Mission " + currentAttempt.missionNumber + " (Attempt " + currentAttempt.attemptNumber + "/5): " + pnumber + " players selected and " +
+          wnumber  + " players need to pass for mission success.");
+          
+        $("#mission-details").show();
+    }
+}
+
+function UI_showMissionPassFail(gameinfo) {
+    
+    var currentAttempt = gameinfo.GameInfo[gameinfo.GameInfo.length - 1];
     for (var pID in currentAttempt.selectedPlayers) {
        if (currentAttempt.selectedPlayers[pID] == "/#" + socket.id) {
             $("#pass-fail").show();
             $("#not-on-mission").hide();
         }
-        $("#not-on-mission").text("The players selected are on the mission. " + number + " players need to pass the mission for the mission to succeed.");
+        $("#not-on-mission").text("The players selected are on the mission...");
         $("#not-on-mission").show();
     }
 }
@@ -228,66 +250,61 @@ function UI_hideMissionResults() {
 }
 
 function UI_updateScore(gameinfo) {
-    var index = gameinfo.GameInfo.length - 1;
-    if (gameinfo.GameWinner == "NONE") { index--; }
-    var lastAttempt = gameinfo.GameInfo[index];
-    var missionNumber = lastAttempt.missionNumber;
     var resistanceScore = gameinfo.ResistancePoints;
     var spyScore = gameinfo.SpyPoints;
-     if (lastAttempt.missionPassed == true) {
+    $("#resistance-score").text(resistanceScore);
+    $("#spy-score").text(spyScore);
+    gameinfo.GameInfo.forEach(function(gi){
+        if (gi.missionPassed != null) { UI_updateMissionCircle(gi.missionNumber, gi.missionPassed) }
+    });
+
+ }
+ 
+function UI_updateMissionCircle(missionNumber, missionPassed) {
+         if (missionPassed) {
          switch (missionNumber) {
              case 1:
                  $("#mission-one-circle").css("background", "blue");
-                 $("#resistance-score").text(resistanceScore);
                  break;
              case 2:
                  $("#mission-two-circle").css("background", "blue");
-                 $("#resistance-score").text(resistanceScore);
                  break;
              case 3:
                  $("#mission-three-circle").css("background", "blue");
-                 $("#resistance-score").text(resistanceScore);
                  break;
              case 4:
                  $("#mission-four-circle").css("background", "blue");
-                 $("#resistance-score").text(resistanceScore);
                  break;
              case 5:
                  $("#mission-five-circle").css("background", "blue");
-                 $("#resistance-score").text(resistanceScore);
                  break;
             default:
                 break;
          }
      }
-     else if (lastAttempt.missionPassed == false){
+     else if (!missionPassed){
          switch (missionNumber) {
              case 1:
                  $("#mission-one-circle").css("background", "red");
-                 $("#spy-score").text(spyScore);
                  break;
              case 2:
                  $("#mission-two-circle").css("background", "red");
-                 $("#spy-score").text(spyScore);
                  break;
              case 3:
                  $("#mission-three-circle").css("background", "red");
-                 $("#spy-score").text(spyScore);
                  break;
              case 4:
                  $("#mission-four-circle").css("background", "red");
-                 $("#spy-score").text(spyScore);
                  break;
              case 5:
                  $("#mission-five-circle").css("background", "red");
-                 $("#spy-score").text(spyScore);
                  break;
             default:
                 break;
                 
          }
      }
- }
+}
 
 function UI_createAndUpdatePlayerList(players) {
     var plList = $("#playerList");
@@ -464,7 +481,7 @@ function UI_showLeaderSelectingScreen(players, gameinfo) {
 	}
 	//var number = playerLookUp[players.length - 5][0];
 	var number = playerLookUp[numberOfPlayers - 5][ gameinfo[gameinfo.length-1].missionNumber - 1];
-    instructions.text("Select " + number + " players for this mission");
+    instructions.text("Select " + number + " players for this mission.");
 
 /*    for (var pID in players) {
         var input = $("<input>");
@@ -481,7 +498,7 @@ function UI_showLeaderSelectingScreen(players, gameinfo) {
             $("#Select-Mission").show();
             missionSelection.show();
     } else if (!gameinfo[gameinfo.length - 1].playersChosen) {
-            other_text.text("The leader is currently choosing " + number + " players for the next mission");
+            other_text.text("The leader is currently choosing " + number + " players for the next mission.");
             other_text.show();
     } else {
             $("#Select-Mission").hide();
@@ -598,12 +615,14 @@ socket.on('gameInfo', function(gameInfo) {
     UI_createAndUpdatePlayerList(gameInfo.PlayerList);
     if(gameInfo.RoomState == "STARTING") {
         UI_startGame();
+        UI_showHideMissionDescription(gameInfo);
         UI_setCardText(gameInfo.PlayerList, gameInfo.SpyList);
         UI_createInGamePlayerList(gameInfo.PlayerList, gameInfo.GameInfo);
         UI_showLeaderSelectingScreen(gameInfo.PlayerList, gameInfo.GameInfo);
         UI_updateLeader(gameInfo.GameInfo);
     } else if (gameInfo.RoomState == "INPLAY") {
         UI_startGame();
+        UI_showHideMissionDescription(gameInfo);
         UI_createInGamePlayerList(gameInfo.PlayerList, gameInfo.GameInfo);
         UI_setCardText(gameInfo.PlayerList, gameInfo.SpyList);
         UI_updatePlayersOnMission(gameInfo);

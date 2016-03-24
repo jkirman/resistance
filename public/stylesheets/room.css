@@ -31,6 +31,8 @@ body {
 
 .mission-vote{
   display: none;
+  position: relative;
+  margin-top: -150px; 
 }
 
 .text-box{
@@ -80,8 +82,25 @@ body {
     display: none;
 }
 
+#not-on-mission {
+  display: none;
+  text-shadow: 0px 0px 18px rgba(255, 0, 255, 1);
+  position:relative;
+  top: 30px;
+}
+
 #mission-results {
   display: none;
+  border-color: yellow;
+  border-style: dotted;
+  border-width: medium;
+  position:relative;
+  top: 30px;
+}
+
+#mission-details {
+  display: none;
+  font-style: italic;
 }
 
 #score-display{
@@ -105,12 +124,16 @@ body {
   display:inline-block;
   position: relative;
   right: 100px;
+  color: white;
+  text-shadow: 0px 0px 20px rgba(0, 0, 255, 1);
 }
 
 #spy-name{
   display:inline-block;
   position: relative;
   left: 100px;
+  color: white;
+  text-shadow: 0px 0px 20px rgba(255, 0, 0, 1);
 }
 
 #resistance-score{
@@ -119,6 +142,8 @@ body {
   position:relative;
   top:-10px;
   right:20px;
+  color: white;
+  text-shadow: 0px 0px 20px rgba(0, 0, 255, 1);
 }
 
 #dash{
@@ -126,6 +151,8 @@ body {
   font-size: 40px;
   position:relative;
   top:-10px;
+  color: white;
+  text-shadow: 0px 0px 18px rgba(255, 0, 255, 1);
 }
 
 #spy-score{
@@ -134,6 +161,8 @@ body {
   position:relative;
   top:-10px;
   left:20px;
+  color: white;
+  text-shadow: 0px 0px 15px rgba(255, 0, 0, 1);
 }
 
 #missions-box{
@@ -149,6 +178,7 @@ body {
   position:relative;
   left: -20px;
   top:-10px;
+  text-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
 }
 
 #mission-one-circle{
@@ -159,6 +189,7 @@ body {
 	-webkit-border-radius: 50px;
 	border-radius: 50px;
 	display:inline-block;
+	text-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
 
 }
 
@@ -167,6 +198,7 @@ body {
   position:relative;
   left: -20px;
   top:-10px;
+  text-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
 }
 
 #mission-two-circle{
@@ -177,6 +209,7 @@ body {
 	-webkit-border-radius: 50px;
 	border-radius: 50px;
 	display:inline-block;
+	text-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
 }
 
 #mission-three-head{
@@ -184,6 +217,7 @@ body {
   position:relative;
   left: -20px;
   top:-10px;
+  text-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
 }
 
 #mission-three-circle{
@@ -194,6 +228,7 @@ body {
 	-webkit-border-radius: 50px;
 	border-radius: 50px;
 	display:inline-block;
+	text-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
 }
 
 #mission-four-head{
@@ -201,6 +236,7 @@ body {
   position:relative;
   left: -20px;
   top:-10px;
+  text-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
 }
 
 #mission-four-circle{
@@ -211,6 +247,7 @@ body {
 	-webkit-border-radius: 50px;
 	border-radius: 50px;
 	display:inline-block;
+	text-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
 }
 
 #mission-five-head{
@@ -218,6 +255,7 @@ body {
   position:relative;
   left: -20px;
   top:-10px;
+  text-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
 }
 
 #mission-five-circle{
@@ -228,6 +266,7 @@ body {
 	-webkit-border-radius: 50px;
 	border-radius: 50px;
 	display:inline-block;
+	text-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
 }
 
 #Select-Mission {
@@ -239,7 +278,7 @@ body {
   display: none;
   position:absolute;
   top: 200px;
-  margin-left: 110px;
+  margin-left: 150px;
 }
 
 #pass-fail input {
