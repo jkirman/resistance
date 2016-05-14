@@ -27,101 +27,107 @@
                 <div id="overlay">
                     <p class = "lead">Waiting for players in room...</p>
                 </div>
-                <div class="room">
-                    <div id ="card"></div>
-                    <div id ="card-flip">
-                        <p id = "card-text-flip">role</p>
-                        <p id = "other-spies"></p>
-                        <ol id = "card-spylist"></ol>
+            </div>
+        </div>
+                
+        <!-- class room -->
+        <div class="room">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-10" id="score-box">
+                        <h2 class="name" id="resistance">Resistance</h2>
+                        <h2 id="resistance-score">0</h2>
+                        <h2 id="dash"> — </h2>
+                        <h2 id="spy-score">0</h2>
+                        <h2 class="name" id="spy">Spies</h2>
                     </div>
-                    <p id = "card-text">Click to Reveal</p>
-                    <div class = "player-list-gameplay">
-                        <div class = "player-table">
-                            <table id="inGamePlayerList" class = "table">
-                            </table>
+                    <div class="col-md-2" id="card-container">
+                        <div id ="card"></div>
+                        <div id ="card-flip">
+                            <p id = "card-text-flip">role</p>
+                            <p id = "other-spies"></p>
+                            <ol id = "card-spylist"></ol>
+                        </div>
+                        <p id = "card-text">Click to Reveal</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="mission-details">
+                        <h3 id = "mission-description"></h3>                                    
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="mission-results">
+                        <h4 id = "mission-results-text"></h4>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 25px;">
+                    <!-- Mission Count -->
+                    <div class="col-md-2" id="missions-box">
+                        <h2 id="missions-title">Missions</h2>
+                        <div id="mission-one">
+                            <h1 class="mission-head">1.</h1>
+                            <div class="mission-circle"></div>
+                        </div>
+                        <div id="mission-two">
+                            <h1 class="mission-head">2.</h1>
+                            <div class="mission-circle"></div>
+                        </div>
+                        <div id="mission-three">
+                            <h1 class="mission-head">3.</h1>
+                            <div class="mission-circle"></div>
+                        </div>
+                        <div id="mission-four">
+                            <h1 class="mission-head">4.</h1>
+                            <div class="mission-circle"></div>
+                        </div>
+                        <div id="mission-five">
+                            <h1 class="mission-head">5.</h1>
+                            <div class="mission-circle"></div>
                         </div>
                     </div>
-                    <div class="cover-container">
-                        <div class="masthead clearfix">
-                            <div class="inner">
-                                <div id="score-display">
-                                    <h2 id="resistance-name">Resistance</h2>
-                                    <h2 id="spy-name">Spies</h2>
-                                    <div id="score-box">
-                                        <p id="resistance-score">0</p>
-                                        <p id="dash"> — </p>
-                                        <p id="spy-score">0</p>
-                                    </div>
-                                </div>
-                                <div id="mission-details">
-                                    <h3 id = "mission-description"></h3>                                    
-                                </div>
-                                <div id="mission-results">
-                                    <h4 id = "mission-results-text"></h4>
-                                </div>
-                                <h4 id = "other-players" class = "popups inner-cover"></h4>
-                                <!--only display this to mission leader-->
-                                <div id="Select-Mission" class = "popups inner-cover">
-                                    <h4>Click on players you want to select for the mission in the player list.</h4>
-                                    <h4 id = "selectInstructions"></h4>
-                                    <!--<ul id= "players-for-mission" class="list-group">-->
-                                    <!--list of players will need to be appended as labeled checkboxes-->
-                                    <!--instructions will be found here: -->
-                                    <!--http://stackoverflow.com/questions/866239/creating-the-checkbox-dynamically-using-javascript-->
-                                    <!--<input type= "checkbox" /> Player 1 <br />-->
-                                    <!--<input type= "checkbox" /> Player 2 <br />-->
-                                    <!--<input type= "checkbox" /> Player 3 <br />-->
-                                    <!--<input type= "checkbox" /> Player 4 <br />-->
-                                    <!--<input type= "checkbox" /> Player 5 <br />-->
-                                    <!--</ul>-->
-                                    <input type="button" class="btn btn-large btn-default" value="Submit" id="Submit-Team-Button">
-                                </div>
-                                <h4 id = "not-on-mission"></h4>
-                                <!--only display this to players on the mission-->
-                                <div class="popups inner-cover" id ="pass-fail">
-                                    <h4>Do you want the mission to succeed or fail?</h4>
-                                    <input type="button" class="btn btn-default" value="Success" id="success">
-                                    <input type="button" class="btn btn-default" value="Fail" id="fail">
-                                </div>
-                                <div class="inner-cover popups">
-                                    <div class="mission-vote">
-                                        <div id="vote-text">Vote on the proposed mission:</div>
-                                        <ul id = "missionList" class="list-group">
-                                            <li class= "list-group-item list-item-dark">player 1</li>
-                                            <li class = "list-group-item list-item-dark">player 2</li>
-                                        </ul>
-                                        <input type="button" class="btn btn-success" value="Yes" id="vote-yes-button">
-                                        <input type="button" class="btn btn-danger" value="No" id="vote-no-button">
-                                    </div>
-                                </div>
-                                <div id="missions-box">
-                                    <h2 id="missions-title">Missions</h2>
-                                    <div id="mission-one">
-                                        <h1 id="mission-one-head">1.</h1>
-                                        <div id="mission-one-circle"></div>
-                                    </div>
-                                    <div id="mission-two">
-                                        <h1 id="mission-two-head">2.</h1>
-                                        <div id="mission-two-circle"></div>
-                                    </div>
-                                    <div id="mission-three">
-                                        <h1 id="mission-three-head">3.</h1>
-                                        <div id="mission-three-circle"></div>
-                                    </div>
-                                    <div id="mission-four">
-                                        <h1 id="mission-four-head">4.</h1>
-                                        <div id="mission-four-circle"></div>
-                                    </div>
-                                    <div id="mission-five">
-                                        <h1 id="mission-five-head">5.</h1>
-                                        <div id="mission-five-circle"></div>
-                                    </div>
-                                </div>
+                    <!-- GameBoard -->
+                    <div class="col-md-8">
+                        <h4 id="other-players" class="inner-cover"></h4>
+                        <!--only display this to mission leader-->
+                        <div id="Select-Mission" class="inner-cover">
+                            <h4>Click on players you want to select for the mission in the player list.</h4>
+                            <h4 id = "selectInstructions"></h4>
+                            <input type="button" class="btn btn-large btn-default" value="Submit" id="Submit-Team-Button">
+                        </div>
+                        <h4 id="not-on-mission"></h4>
+                        <!--only display this to players on the mission-->
+                        <div class="inner-cover" id ="pass-fail">
+                            <h4>Do you want the mission to succeed or fail?</h4>
+                            <input type="button" class="btn btn-default" value="Success" id="success">
+                            <input type="button" class="btn btn-default" value="Fail" id="fail">
+                        </div>
+                        <div class="inner-cover">
+                            <div class="mission-vote">
+                                <div id="vote-text">Vote on the proposed mission:</div>
+                                <ul id = "missionList" class="list-group">
+                                    <li class= "list-group-item list-item-dark">player 1</li>
+                                    <li class = "list-group-item list-item-dark">player 2</li>
+                                </ul>
+                                <input type="button" class="btn btn-success" value="Yes" id="vote-yes-button">
+                                <input type="button" class="btn btn-danger" value="No" id="vote-no-button">
                             </div>
                         </div>
                     </div>
+                    <!-- Player List -->
+                    <div class="col-md-2 player-list-gameplay">
+                        <div class = "player-table">
+                            <table id="inGamePlayerList" class = "table"></table>
+                        </div>
+                    </div>
                 </div>
-                <!-- class room -->
+            </div>
+        </div>
+        <!-- class room -->
+                
+        <!-- waiting room -->
+        <div class="site-wrapper">
+            <div class="site-wrapper-inner">
                 <div class="waiting-room">
                     <div class="cover-container">
                         <div class="masthead clearfix">

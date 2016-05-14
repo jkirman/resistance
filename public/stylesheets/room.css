@@ -1,66 +1,51 @@
 html,
 body {
-  height: 100%;
-  background-color: #333;
+    height: 100%;
+    background-color: #333;
 }
 
-.middle-text{
-  margin-top:50px;
-  margin-bottom:30px;
+.middle-text {
+    margin-top: 50px;
+    margin-bottom: 30px;
 }
 
-.list-item-dark{
-  background-color: #333;
+.list-item-dark {
+    background-color: #333;
 }
 
-.list-item-light{
-  background-color: #777;
+.list-item-light {
+    background-color: #777;
 }
 
-.list-item-selected{
-  background-color: #66FF00;
+.list-item-selected {
+    background-color: #66FF00;
 }
 
-.list-item-selected-you{
-  background-color: #66FF99;
+.list-item-selected-you {
+    background-color: #66FF99;
 }
 
-.popups{
-  margin-top:200px;
-}
-
-.mission-vote{
-  display: none;
-  position: relative;
-  margin-top: -150px; 
-}
-
-.text-box{
-  color: #111;
-  margin-bottom: 20px;
-}
-
-.player-list-gameplay{
-    display: inline-block;
+.mission-vote {
+    display: none;
     position: relative;
-    top: 0;
-    margin-top: 200px;
-    margin-right: -950px;
-    right: 0;
-    width: 200px;
+}
+
+.text-box {
+    color: #111;
+    margin-bottom: 20px;
 }
 
 .selected {
-  border-style: solid;
-  border-color: white;
-  border-width: 0px 20px 0px 0px;
+    border-style: solid;
+    border-color: white;
+    border-width: 0px 20px 0px 0px;
 }
 
-.player-table{
-  width: 50%;
-  margin: 0 auto; 
-  display:inline-block;
-  white-space: nowrap;
+.player-table {
+    width: 50%;
+    margin: 0 auto;
+    display: inline-block;
+    white-space: nowrap;
 }
 
 .table {
@@ -68,310 +53,224 @@ body {
 }
 
 .card-wrapper {
-  display: none;
+    display: none;
 }
 
 #overlay {
     background-color: rgba(0, 0, 0, 0.8);
     z-index: 999;
-    position: absolute;
-    left: 0;
-    top: 0;
+    position: relative;
     width: 100%;
     height: 100%;
     display: none;
 }
 
 #not-on-mission {
-  display: none;
-  text-shadow: 0px 0px 18px rgba(255, 0, 255, 1);
-  position:relative;
-  top: 30px;
+    display: none;
+    text-shadow: 0px 0px 18px rgba(255, 0, 255, 1);
+    position: relative;
 }
 
 #mission-results {
-  display: none;
-  border-color: yellow;
-  border-style: dotted;
-  border-width: medium;
-  position:relative;
-  top: 30px;
+    display: none;
+    border-color: yellow;
+    border-style: dotted;
+    border-width: medium;
+    position: relative;
 }
 
 #mission-details {
-  display: none;
-  font-style: italic;
+    display: none;
+    font-style: italic;
+}
+/*
+#score-display {
+    position: relative;
+    top: 0;
+    margin-top: 10px;
+    margin-right: 10px;
+    right: 20px;
+}
+*/
+#score-box {
+    background-color: #333;
+    position: relative;
 }
 
-#score-display{
-  position:relative;
-  top:0;  
-  margin-top:10px; 
-  margin-right:10px; 
-  right: 20px;
+.name {
+    display: inline-block;
+    position: relative;
+    color: white;
 }
 
-#score-box{
-  background-color: #333;
-  width: 150px;
-  height: 40px;
-  position:relative;
-  left:280px;
-  top: -45px;
+#resistance {
+    right: 100px;
+    text-shadow: 0px 0px 20px rgba(0, 0, 255, 1);
 }
 
-#resistance-name{
-  display:inline-block;
-  position: relative;
-  right: 100px;
-  color: white;
-  text-shadow: 0px 0px 20px rgba(0, 0, 255, 1);
+#spy {
+    left: 100px;
+    text-shadow: 0px 0px 20px rgba(255, 0, 0, 1);
 }
 
-#spy-name{
-  display:inline-block;
-  position: relative;
-  left: 100px;
-  color: white;
-  text-shadow: 0px 0px 20px rgba(255, 0, 0, 1);
+#resistance-score {
+    display: inline-block;
+    font-size: 40px;
+    position: relative;
+    right: 20px;
+    color: white;
+    text-shadow: 0px 0px 20px rgba(0, 0, 255, 1);
 }
 
-#resistance-score{
-  display:inline-block;
-  font-size: 40px;
-  position:relative;
-  top:-10px;
-  right:20px;
-  color: white;
-  text-shadow: 0px 0px 20px rgba(0, 0, 255, 1);
+#dash {
+    display: inline-block;
+    font-size: 40px;
+    position: relative;
+    color: white;
+    text-shadow: 0px 0px 18px rgba(255, 0, 255, 1);
 }
 
-#dash{
-  display:inline-block;
-  font-size: 40px;
-  position:relative;
-  top:-10px;
-  color: white;
-  text-shadow: 0px 0px 18px rgba(255, 0, 255, 1);
+#spy-score {
+    display: inline-block;
+    font-size: 40px;
+    position: relative;
+    left: 20px;
+    color: white;
+    text-shadow: 0px 0px 15px rgba(255, 0, 0, 1);
 }
 
-#spy-score{
-  display:inline-block;
-  font-size: 40px;
-  position:relative;
-  top:-10px;
-  left:20px;
-  color: white;
-  text-shadow: 0px 0px 15px rgba(255, 0, 0, 1);
-}
-
-#missions-box{
+#missions-box {
+/*
     position: absolute;
     top: 0;
     margin-top: 150px;
     margin-left: -200px;
     left: 0;
+*/
 }
 
-#other-players{
+#other-players {
     margin-top: 100px;
     position: relative;
 }
 
-#mission-one-head{
-  display:inline-block;
-  position:relative;
-  left: -20px;
-  top:-10px;
-  text-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
+.mission-head {
+    display: inline-block;
+    position: relative;
+    left: -20px;
+    top: -10px;
+    text-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
 }
 
-#mission-one-circle{
-  width: 50px;
-	height: 50px;
-	background: #333;
-	-moz-border-radius: 50px;
-	-webkit-border-radius: 50px;
-	border-radius: 50px;
-	display:inline-block;
-	text-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
-
-}
-
-#mission-two-head{
-  display:inline-block;
-  position:relative;
-  left: -20px;
-  top:-10px;
-  text-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
-}
-
-#mission-two-circle{
-  width: 50px;
-	height: 50px;
-	background: #333;
-	-moz-border-radius: 50px;
-	-webkit-border-radius: 50px;
-	border-radius: 50px;
-	display:inline-block;
-	text-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
-}
-
-#mission-three-head{
-  display:inline-block;
-  position:relative;
-  left: -20px;
-  top:-10px;
-  text-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
-}
-
-#mission-three-circle{
-  width: 50px;
-	height: 50px;
-	background: #333;
-	-moz-border-radius: 50px;
-	-webkit-border-radius: 50px;
-	border-radius: 50px;
-	display:inline-block;
-	text-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
-}
-
-#mission-four-head{
-  display:inline-block;
-  position:relative;
-  left: -20px;
-  top:-10px;
-  text-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
-}
-
-#mission-four-circle{
-  width: 50px;
-	height: 50px;
-	background: #333;
-	-moz-border-radius: 50px;
-	-webkit-border-radius: 50px;
-	border-radius: 50px;
-	display:inline-block;
-	text-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
-}
-
-#mission-five-head{
-  display:inline-block;
-  position:relative;
-  left: -20px;
-  top:-10px;
-  text-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
-}
-
-#mission-five-circle{
-  width: 50px;
-	height: 50px;
-	background: #333;
-	-moz-border-radius: 50px;
-	-webkit-border-radius: 50px;
-	border-radius: 50px;
-	display:inline-block;
-	text-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
+.mission-circle {
+    width: 50px;
+    height: 50px;
+    background: #333;
+    -moz-border-radius: 50px;
+    -webkit-border-radius: 50px;
+    border-radius: 50px;
+    display: inline-block;
+    text-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
 }
 
 #Select-Mission {
-  position: relative;
-  display:none;
+    position: relative;
+    display: none;
 }
 
 #pass-fail {
-  display: none;
-  position:absolute;
-  top: 200px;
-  margin-left: 150px;
+    display: none;
+    /*
+    position: absolute;
+    top: 200px;
+    margin-left: 150px;
+    */
 }
 
 #pass-fail input {
-  width: 100px;
-  height: 60px;
-  position: relative;
-  font-weight: bold;
-  color: white;
-  display:inline-block;
+    width: 100px;
+    height: 60px;
+    position: relative;
+    font-weight: bold;
+    color: white;
+    display: inline-block;
 }
 
 #pass-fail input:disabled {
-  width: 100px;
-  height: 60px;
-  color: gray;
+    width: 100px;
+    height: 60px;
+    color: gray;
 }
 
 #success {
-  background-color: blue;
-  right:50px;
+    background-color: blue;
+    right: 50px;
 }
 
 #fail {
-  background-color: red;
-  left:50px;
+    background-color: red;
+    left: 50px;
 }
 
-#card{
-  background-color: #ccc;
-  background-image: url("images/playcard-background.jpg");
-  background-size: cover;
-  width : 130px;
-  height : 170px;
-  position:absolute; 
-  top:0;  
-  margin-top:70px; 
-  margin-right:100px;
-  right: 0;
-  box-shadow: 5px 5px 3px black;
-  border-radius: 5px;
+#card-container {
+    padding: 15px;
 }
 
-#card-flip{
-  background-color: #700000;
-  background-size: cover;
-  width : 130px;
-  height : 170px;
-  display: none;
-  position:absolute; 
-  top:0;  
-  margin-top:70px; 
-  margin-right:100px; 
-  right: 0;
-  box-shadow: 5px 5px 3px black;
-  border-radius: 5px;
+#card {
+    background-color: #ccc;
+    background-image: url("images/playcard-background.jpg");
+    background-size: cover;
+    width: 130px;
+    height: 170px;
+    /*position: absolute;
+    top: 0;
+    margin-top: 70px;
+    margin-right: 100px;
+    right: 0;
+    */
+    box-shadow: 5px 5px 3px black;
+    border-radius: 5px;
 }
 
-#playerList{
-  height: 800px;
+#card-flip {
+    background-color: #700000;
+    background-size: cover;
+    width: 130px;
+    height: 170px;
+    display: none;
+    /*
+    position: absolute;
+    top: 0;
+    margin-top: 70px;
+    margin-right: 100px;
+    right: 0;
+    */
+    box-shadow: 5px 5px 3px black;
+    border-radius: 5px;
 }
 
-#vote-text{
-  margin-bottom:30px;
-
+#vote-text {
+    margin-bottom: 30px;
 }
 
-#card-text{
-  position:absolute;
-  top:0;  
-  margin-top:260px; 
-  margin-right:120px; 
-  right: 0;
+#card-text {
+    text-align: center;
+    width: 130px;
+}
+/*
+#card-text-flip {
+    margin-top: 10px;
+    margin-left: 8px;
+}
+*/
+#Submit-Team-Button {
+    margin-top: 20px;
 }
 
-#card-text-flip{
-  margin-top: 10px;
-  margin-left: 8px;
+.waiting-room {
+    display: block;
 }
 
-#Submit-Team-Button{
-  margin-top: 20px;
+.room {
+    display: none;
 }
-
-.waiting-room{
-  display:auto;
-}
-
-.room{
-  display:none;
-}
-
