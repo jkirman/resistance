@@ -22,26 +22,21 @@
         <link rel="stylesheet" type="text/css" href="static/stylesheets/room.css">
     </head>
     <body>
-        <div class="site-wrapper">
-            <div class="site-wrapper-inner">
-                <div id="overlay">
-                    <p class = "lead">Waiting for players in room...</p>
-                </div>
-            </div>
+        <div id="overlay">
+            <p class = "lead">Waiting for players in room...</p>
         </div>
-                
-        <!-- class room -->
-        <div class="room">
-            <div class="container">
+        <div class="container">
+            <!-- class room -->
+            <div class="room">
                 <div class="row">
-                    <div class="col-md-10" id="score-box">
+                    <div class="col-md-10 col-xs-10" id="score-box">
                         <h2 class="name" id="resistance">Resistance</h2>
                         <h2 id="resistance-score">0</h2>
                         <h2 id="dash"> — </h2>
                         <h2 id="spy-score">0</h2>
                         <h2 class="name" id="spy">Spies</h2>
                     </div>
-                    <div class="col-md-2" id="card-container">
+                    <div class="col-md-2 col-xs-2" id="card-container">
                         <div id ="card"></div>
                         <div id ="card-flip">
                             <p id = "card-text-flip">role</p>
@@ -63,31 +58,31 @@
                 </div>
                 <div class="row" style="margin-top: 25px;">
                     <!-- Mission Count -->
-                    <div class="col-md-2" id="missions-box">
-                        <h2 id="missions-title">Missions</h2>
+                    <div class="col-md-2 col-xs-2" id="missions-box">
+                        <h3 id="missions-title">Missions</h2>
                         <div id="mission-one">
-                            <h1 class="mission-head">1.</h1>
-                            <div class="mission-circle"></div>
+                            <h4 class="mission-head">1.</h1>
+                            <div class="mission-circle" id="O1"></div>
                         </div>
                         <div id="mission-two">
-                            <h1 class="mission-head">2.</h1>
-                            <div class="mission-circle"></div>
+                            <h4 class="mission-head">2.</h1>
+                            <div class="mission-circle" id="O2"></div>
                         </div>
                         <div id="mission-three">
-                            <h1 class="mission-head">3.</h1>
-                            <div class="mission-circle"></div>
+                            <h4 class="mission-head">3.</h1>
+                            <div class="mission-circle" id="O3"></div>
                         </div>
                         <div id="mission-four">
-                            <h1 class="mission-head">4.</h1>
-                            <div class="mission-circle"></div>
+                            <h4 class="mission-head">4.</h1>
+                            <div class="mission-circle" id="O4"></div>
                         </div>
                         <div id="mission-five">
-                            <h1 class="mission-head">5.</h1>
-                            <div class="mission-circle"></div>
+                            <h4 class="mission-head">5.</h1>
+                            <div class="mission-circle" id="O5"></div>
                         </div>
                     </div>
                     <!-- GameBoard -->
-                    <div class="col-md-8">
+                    <div class="col-md-8 col-xs-8">
                         <h4 id="other-players" class="inner-cover"></h4>
                         <!--only display this to mission leader-->
                         <div id="Select-Mission" class="inner-cover">
@@ -115,42 +110,45 @@
                         </div>
                     </div>
                     <!-- Player List -->
-                    <div class="col-md-2 player-list-gameplay">
+                    <div class="col-md-2 col-xs-2 player-list-gameplay">
                         <div class = "player-table">
                             <table id="inGamePlayerList" class = "table"></table>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- class room -->
-                
-        <!-- waiting room -->
-        <div class="site-wrapper">
-            <div class="site-wrapper-inner">
-                <div class="waiting-room">
-                    <div class="cover-container">
-                        <div class="masthead clearfix">
-                            <div class="inner">
-                                <h1 class="header">New Game Successfully Created!</h1>
-                                <div class= "lead">
-                                    Share this link with other players : 
-                                    <p id="link"></p>
-                                </div>
-                                <div class="options">
-                                    <input type="text" class="text-box" id="changeName-text">
-                                    <input type="button" class="btn btn-default" value="Change Name" id="changeName-button">
-                                    <input type="button" value="Ready" class="btn btn-default" id="ready-button">
-                                </div>
-                                <div class= "middle-text"> These players have joined so far : </div>
-                                <ul id = "playerList" class="list-group">
-                                </ul>
-                            </div>
+            <!-- class room -->
+            
+            <!-- waiting room -->
+            <div class="waiting-room">
+                <div class="row">
+                    <h2 class="header">New Game Successfully Created!</h2>
+                </div>
+                <div class="row">
+                    <div class= "lead">
+                        Share this link with other players : 
+                        <p id="link"></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-centered">
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" id="changeName-button">Change Name</button>
+                            </span>
+                            <input type="text" class="form-control" placeholder="Enter Name" id="changeName-text">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" id="ready-button">Ready!</button>
+                            </span>
                         </div>
                     </div>
                 </div>
-                <!-- waiting room -->
+                <div class="row">
+                    <div class= "middle-text"> These players have joined so far : </div>
+                    <ul class="col-md-6 col-centered" id="playerList" class="list-group"></ul>
+                </div>
             </div>
+            <!-- waiting room -->
         </div>
         <!-- Bootstrap core JavaScript
             ================================================== -->

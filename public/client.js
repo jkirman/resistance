@@ -51,23 +51,23 @@ $('#inGamePlayerList').on('click', 'tr', function(){
     IO_togglePlayerForMission(UI_getPlayerByName($(this).find('td:first').text()));
 });
 
-$("#mission-one-circle").click( function() {
+$("#O1").click( function() {
     UI_pastMissionResults(1);
 });
 
-$("#mission-two-circle").click( function() {
+$("#O2").click( function() {
     UI_pastMissionResults(2);
 });
 
-$("#mission-three-circle").click( function() {
+$("#O3").click( function() {
     UI_pastMissionResults(3);
 });
 
-$("#mission-four-circle").click( function() {
+$("#O4").click( function() {
     UI_pastMissionResults(4);
 });
 
-$("#mission-five-circle").click( function() {
+$("#O5").click( function() {
     UI_pastMissionResults(5);
 });
 
@@ -264,19 +264,19 @@ function UI_updateMissionCircle(missionNumber, missionPassed) {
          if (missionPassed) {
          switch (missionNumber) {
              case 1:
-                 $("#mission-one-circle").css("background", "blue");
+                 $("#O1").css("background", "blue");
                  break;
              case 2:
-                 $("#mission-two-circle").css("background", "blue");
+                 $("#O2").css("background", "blue");
                  break;
              case 3:
-                 $("#mission-three-circle").css("background", "blue");
+                 $("#O3").css("background", "blue");
                  break;
              case 4:
-                 $("#mission-four-circle").css("background", "blue");
+                 $("#O4").css("background", "blue");
                  break;
              case 5:
-                 $("#mission-five-circle").css("background", "blue");
+                 $("#O5").css("background", "blue");
                  break;
             default:
                 break;
@@ -285,19 +285,19 @@ function UI_updateMissionCircle(missionNumber, missionPassed) {
      else if (!missionPassed){
          switch (missionNumber) {
              case 1:
-                 $("#mission-one-circle").css("background", "red");
+                 $("#O1").css("background", "red");
                  break;
              case 2:
-                 $("#mission-two-circle").css("background", "red");
+                 $("#O2").css("background", "red");
                  break;
              case 3:
-                 $("#mission-three-circle").css("background", "red");
+                 $("#O3").css("background", "red");
                  break;
              case 4:
-                 $("#mission-four-circle").css("background", "red");
+                 $("#O4").css("background", "red");
                  break;
              case 5:
-                 $("#mission-five-circle").css("background", "red");
+                 $("#O5").css("background", "red");
                  break;
             default:
                 break;
